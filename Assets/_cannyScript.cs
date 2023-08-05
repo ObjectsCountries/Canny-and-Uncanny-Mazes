@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using KModkit;
 
-public class templateScript:ModdedModule{
+public class _cannyScript:ModdedModule{
 
     public KMSelectable thing;
 
