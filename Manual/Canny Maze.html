@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/your-table-is.css">
     <script src="js/ktane-utils.js"></script>
 </head>
 <body>
@@ -21,19 +22,51 @@
                 <img src="img/Component/Canny Maze.svg" class="diagram">
                 <h2>On the Subject of Canny Maze</h2>
                 <p class="flavour-text">The thing that gets me about these modules is that the instructions are actually well-written, even though we only see images and text. We create the whole solution in our text-editing software, and it turns out correct.</p>
-                <p>On this module will be one of the following images of Mr. Incredible becoming canny:</p>
-                <img src="img/canny/canny1.png" style="float:left" width="14%">
-                <img src="img/canny/canny2.png" style="float:left" width="14%">
-                <img src="img/canny/canny3.png" style="float:left" width="14%">
-                <img src="img/canny/canny4.png" style="float:left" width="14%">
-                <img src="img/canny/canny5.png" style="float:left" width="14%">
-                <img src="img/canny/canny6.png" style="float:left" width="14%">
-                <img src="img/canny/canny7.png" style="float:left" width="14%">
-                <p>These are numbered 1-7, and are randomly distributed across a grid with dimensions each ranging from 5 to 8.</p><p>The number of rows is equal to (the number of batteries modulo 3)+5, and the number of columns is equal to (the number of ports modulo 3)+5. The current position's row is calculated by the third character of the serial number modulo the number of columns, and vice versa with the sixth character of the serial number. The goal position is calculated by the alphanumeric positions (A=1,B=2,etc.) of the </p>
-                <p></p>
+                <p>On this module will be an image of Mr. Incredible becoming canny alongside four arrows. These images, or "phases", are numbered 1-7, and are randomly distributed across a square grid with dimensions ranging from 5 to 8.</p>
+                <p>Clicking on the center of the module reveals the entire maze, and clicking again returns to the current position. In the view of the whole maze, the starting position is surrounded by a blue border and the goal by a red border. Whichever phase is on the module at first is the type of maze present.</p>
+                <table><tbody>
+                    <tr>
+                        <th colspan=2>YOUR MAZE IS:</th>
+                        <th colspan=2>YOUR MAZE IS:</th>
+                        <th colspan=2>YOUR MAZE IS:</th>
+                    </tr>
+                    <tr>
+                        <td><img src="img/canny/canny1.png" width="50x"></td>
+                        <td>MODULO MAZE</td>
+                        <td><img src="img/canny/canny2.png" width="50x"></td>
+                        <td>BINARY MAZE</td>
+                        <td><img src="img/canny/canny3.png" width="50x"></td>
+                        <td>DIGITAL MAZE</td>
+                    </tr>
+                    <tr>
+                        <th colspan=2>YOUR MAZE IS:</th>
+                        <th colspan=2>YOUR MAZE IS:</th>
+                        <th colspan=2>YOUR MAZE IS:</th>
+                    </tr>
+                    <tr>
+                        <td><img src="img/canny/canny4.png" width="50x"></td>
+                        <td>CAREFUL MAZE</td>
+                        <td><img src="img/canny/canny5.png" width="50x"></td>
+                        <td>CONDITIONS MAZE</td>
+                        <td><img src="img/canny/canny6.png" width="50x"></td>
+                        <td>WALLS MAZE</td>
+                    </tr>
+                    <tr><th colspan=6>YOUR MAZE IS:</th></tr>
+                    <tr><td colspan=3 style="text-align:center"><img src="img/canny/canny7.png" width="100x"></td><td colspan=3>FREE MAZE</td></tr>
+                </tbody></table>
             </div>
-            <div class="page-footer relative-footer">Page 1 of 1</div>
+            <div class="page-footer relative-footer">Page 1 of 2</div>
         </div>
+        <div class="page page-bg-02">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Canny Maze</span>
+            </div>
+            <div class="page-content">
+                <h3>NOTES:</h3>
+                <p>Modulo maze is (summing all orthogonal surrounding phases modulo current phase)+1 and moving to that one (modulo 7 if current phase is 1, backtracking allowed)<br>Binary maze is taking the binary of the phase number and inverting specific bits to get to the next phase<br>Digital maze is taking digital root of all surrounding phases and moving to that phase<br>Careful maze is only being able to move at certain times<br>Conditions maze is only moving in a direction if a condition is met<br>Walls maze is moving according to walls (visible on full maze layout so should be very rare)<br>Free maze is moving wherever whenever and should be extremely rare, perhaps appearing for a unicorn<br>Backtracking allowed wherever applicable</p>
+            </div>
+            <div class="page-footer relative-footer">Page 2 of 2</div>
     </div>
 </body>
 </html>

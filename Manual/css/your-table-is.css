@@ -1,0 +1,13 @@
+th{
+    background-color:#000000;
+    color:#ff0000;
+}
+td{
+    background-color:#000000;
+    color:#ffffff;
+}
+table,th,td{
+    border: 1px solid black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 800;
+}
