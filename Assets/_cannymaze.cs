@@ -6,12 +6,8 @@ using System.Linq;
 using UnityEngine;
 using KModkit;
 
-public class _cannyScript:ModdedModule{
-
-    public KMSelectable thing;
-
+public class _cannymaze:ModdedModule{
     //place module stuff like buttons here
-
     internal bool moduleSolved;
 
 	protected override void Awake(){
@@ -19,7 +15,6 @@ public class _cannyScript:ModdedModule{
     }
 
     void Start(){
-
 	}
 
 #pragma warning disable 414
