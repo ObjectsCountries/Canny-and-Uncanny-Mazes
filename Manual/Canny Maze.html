@@ -22,8 +22,8 @@
                 <img src="img/Component/Canny Maze.svg" class="diagram">
                 <h2>On the Subject of Canny Maze</h2>
                 <p class="flavour-text">The thing that gets me about these modules is that the instructions are actually well-written, even though we only see images and text. We create the whole solution in our text-editing software, and it turns out correct.</p>
-                <p>On this module will be an image of Mr. Incredible becoming canny alongside four arrows. These images, or "phases", are numbered 1-7, and are randomly distributed across a square grid with dimensions ranging from 5 to 8.</p>
-                <p>Clicking on the center of the module reveals the entire maze, and clicking again returns to the current position. In the view of the whole maze, the starting position is surrounded by a blue border and the goal by a red border. Whichever phase is on the module at first is the type of maze present.</p>
+                <p>On this module will be an image of Mr. Incredible becoming canny alongside four arrows. These images, or "phases", are numbered 1-7, and are randomly distributed across a grid with dimensions ranging from 5 to 8.</p>
+                <p>Clicking on the center of the module reveals the entire maze, and clicking again returns to the current position. In the view of the entire maze, the current position is surrounded by a blue border and the goal by a red border. Whichever phase is on the module at first is the type of maze present.</p>
                 <table><tbody>
                     <tr>
                         <th colspan=2>YOUR MAZE IS:</th>
@@ -34,9 +34,9 @@
                         <td><img src="img/canny/canny1.png" width="50x"></td>
                         <td>MODULO MAZE</td>
                         <td><img src="img/canny/canny2.png" width="50x"></td>
-                        <td>BINARY MAZE</td>
-                        <td><img src="img/canny/canny3.png" width="50x"></td>
                         <td>DIGITAL MAZE</td>
+                        <td><img src="img/canny/canny3.png" width="50x"></td>
+                        <td>BINARY MAZE</td>
                     </tr>
                     <tr>
                         <th colspan=2>YOUR MAZE IS:</th>
@@ -63,10 +63,29 @@
                 <span class="page-header-section-title">Canny Maze</span>
             </div>
             <div class="page-content">
-                <h3>NOTES:</h3>
-                <p>Modulo maze is (summing all orthogonal surrounding phases modulo current phase)+1 and moving to that one (modulo 7 if current phase is 1, backtracking allowed)<br>Binary maze is taking the binary of the phase number and inverting specific bits to get to the next phase<br>Digital maze is taking digital root of all surrounding phases and moving to that phase<br>Careful maze is only being able to move at certain times<br>Conditions maze is only moving in a direction if a condition is met<br>Walls maze is moving according to walls (visible on full maze layout so should be very rare)<br>Free maze is moving wherever whenever and should be extremely rare, perhaps appearing for a unicorn<br>Backtracking allowed wherever applicable</p>
+                <h3>Instructions</h3>
+                <p><b>NOTE: Backtracking is always allowed.</b></p>
+                <p>Modulo Maze: Sum all orthogonal phases and modulo the current phase (modulo 7 if current phase is 1), then add 1. Whichever surrounding phase is closest or equal to this number is the phase to navigate to.</p>
+                <p>Digital Maze: Sum all orthogonal phases and take the digital root, then modulo 7 and add 1. Whichever surrounding phase is closest to this number is the phase to navigate to.</p>
+                <p>Binary Maze: Take the binary representation of the current phase. Whichever phase(s) can be reached by inverting any one bit is the phase to navigate to. In the case of more than one phase meeting this condition, any of them can be navigated to.</p>
+                <p>Careful Maze: Can only move up when the last two digits of the timer are a prime number, left/right when timer's last digit matches parity of current phase, and down when the last two digits of the timer are a multiple of the current phase.</p>
+                <p>Conditions Maze: Can only move up or down if going from an odd phase to an even phase, can only move right if moving to a higher phase, can only move left if moving to a lower phase.</p>
+                <p>Walls Maze: Can move at any time, but must avoid walls (see below page).</p>
+                <p>Free Maze: Can move wherever whenever, but this is extremely rare.</p>
             </div>
-            <div class="page-footer relative-footer">Page 2 of 2</div>
+            <div class="page-footer relative-footer">Page 2 of 3</div>
+        </div>
+        <div class="page page-bg-03">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Canny Maze</span>
+            </div>
+            <div class="page-content">
+                <h3>Walls Maze Maps</h3>
+                <p><b>NOTE: Invert the dimensions by rotating the appropriate map 90 degrees counterclockwise (i.e. if the maze is 7x6, rotate the 6x7 map counterclockwise).</b></p>
+            </div>
+            <div class="page-footer relative-footer">Page 3 of 3</div>
+        </div>
     </div>
 </body>
 </html>
