@@ -20,26 +20,23 @@ public class TextureGenerator : MonoBehaviour
         int textureWidth = cols * cellWidth;
         int textureHeight = rows * cellHeight;
 
-        // Create a new Texture2D array to store the copies of the original textures
-        Texture2D[] copiedTextures = new Texture2D[textures.Length];
-
-        // Copy each texture into the new Texture2D array
-        for (int i = 0; i < textures.Length; i++)
-        {
-            copiedTextures[i] = new Texture2D(textures[i].width, textures[i].height, TextureFormat.RGBA32, false);
-            copiedTextures[i].SetPixels(textures[i].GetPixels());
-            copiedTextures[i].Apply();
-        }
-
         // Create the final grid texture
         Texture2D gridTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+
+        // Fill the entire texture with transparent pixels
+        Color[] clearColor = new Color[textureWidth * textureHeight];
+        for (int i = 0; i < clearColor.Length; i++)
+        {
+            clearColor[i] = Color.clear;
+        }
+        gridTexture.SetPixels(clearColor);
 
         for (int y = 0; y < rows; y++)
         {
             for (int x = 0; x < cols; x++)
             {
-                int randomIndex = Random.Range(0, copiedTextures.Length);
-                Texture2D texture = copiedTextures[randomIndex];
+                int randomIndex = Random.Range(0, textures.Length);
+                Texture2D texture = textures[randomIndex];
                 Color[] pixels = texture.GetPixels();
 
                 int startX = x * cellWidth + (cellWidth - texture.width) / 2;
@@ -49,7 +46,13 @@ public class TextureGenerator : MonoBehaviour
                 {
                     for (int i = 0; i < texture.width; i++)
                     {
-                        gridTexture.SetPixel(startX + i, startY + j, pixels[j * texture.width + i]);
+                        int destX = startX + i;
+                        int destY = startY + j;
+
+                        if (destX < textureWidth && destY < textureHeight)
+                        {
+                            gridTexture.SetPixel(destX, destY, pixels[j * texture.width + i]);
+                        }
                     }
                 }
             }
