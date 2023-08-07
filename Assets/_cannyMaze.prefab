@@ -523,8 +523,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: df9d1e85a253863499a6c336d4fba89e, type: 3}
   - {fileID: 2800000, guid: cb372eee530982740b5d41136d3acac4, type: 3}
   - {fileID: 2800000, guid: f3c7c95a1c96d9a499c934430fc9081b, type: 3}
-  rows: 5
-  cols: 5
+  rows: 7
+  cols: 7
 --- !u!114 &114677114686562898
 MonoBehaviour:
   m_ObjectHideFlags: 1

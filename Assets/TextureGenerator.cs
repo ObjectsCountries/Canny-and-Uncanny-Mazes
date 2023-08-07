@@ -23,13 +23,13 @@ public class TextureGenerator : MonoBehaviour
         // Create the final grid texture
         Texture2D gridTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
 
-        // Fill the entire texture with transparent pixels
-        Color[] clearColor = new Color[textureWidth * textureHeight];
-        for (int i = 0; i < clearColor.Length; i++)
+        // Fill the entire texture with light gray pixels
+        Color[] grayColor = new Color[textureWidth * textureHeight];
+        for (int i = 0; i < grayColor.Length; i++)
         {
-            clearColor[i] = Color.clear;
+            grayColor[i] = Color.grey; // You can adjust the color if needed
         }
-        gridTexture.SetPixels(clearColor);
+        gridTexture.SetPixels(grayColor);
 
         for (int y = 0; y < rows; y++)
         {
