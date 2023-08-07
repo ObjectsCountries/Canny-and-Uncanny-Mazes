@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿//thank you chatGPT
+using UnityEngine;
 
 public class TextureGenerator : MonoBehaviour
 {
     public Texture2D[] textures;
-    public int rows = 5;
-    public int cols = 5;
+    public static int rows = 5;
+    public static int cols = 5;
 
     void Start()
     {
@@ -63,7 +64,7 @@ public class TextureGenerator : MonoBehaviour
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         if (renderer != null)
         {
-            Material material = new Material(Shader.Find("Standard"));
+            Material material = new Material(Shader.Find("KT/Mobile/DiffuseTint"));
             material.mainTexture = gridTexture;
             renderer.material = material;
         }
