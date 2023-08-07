@@ -31,11 +31,11 @@
                         <th colspan=2>YOUR MAZE IS:</th>
                     </tr>
                     <tr>
-                        <td><img src="img/canny/canny1.png" width="50x"></td>
-                        <td>MODULO MAZE</td>
-                        <td><img src="img/canny/canny2.png" width="50x"></td>
+                        <td><img src="img/canny/canny1.png" width="75x"></td>
+                        <td>SUM MAZE</td>
+                        <td><img src="img/canny/canny2.png" width="75x"></td>
                         <td>DIGITAL MAZE</td>
-                        <td><img src="img/canny/canny3.png" width="50x"></td>
+                        <td><img src="img/canny/canny3.png" width="75x"></td>
                         <td>BINARY MAZE</td>
                     </tr>
                     <tr>
@@ -44,18 +44,18 @@
                         <th colspan=2>YOUR MAZE IS:</th>
                     </tr>
                     <tr>
-                        <td><img src="img/canny/canny4.png" width="50x"></td>
+                        <td><img src="img/canny/canny4.png" width="75x"></td>
                         <td>CAREFUL MAZE</td>
-                        <td><img src="img/canny/canny5.png" width="50x"></td>
+                        <td><img src="img/canny/canny5.png" width="75x"></td>
                         <td>CONDITIONS MAZE</td>
-                        <td><img src="img/canny/canny6.png" width="50x"></td>
+                        <td><img src="img/canny/canny6.png" width="75x"></td>
                         <td>WALLS MAZE</td>
                     </tr>
-                    <tr><th colspan=6>YOUR MAZE IS:</th></tr>
-                    <tr><td colspan=3 style="text-align:center"><img src="img/canny/canny7.png" width="100x"></td><td colspan=3>FREE MAZE</td></tr>
+                    <tr><td colspan=2 style="background-color:transparent"></td><th colspan=2>YOUR MAZE IS:</th><td colspan=2 style="background-color:transparent"></td></tr>
+                    <tr><td colspan=2 style="background-color:transparent"></td><td><img src="img/canny/canny7.png" width="75x"></td><td>FREE MAZE</td><td colspan=2 style="background-color:transparent"></td></tr>
                 </tbody></table>
             </div>
-            <div class="page-footer relative-footer">Page 1 of 2</div>
+            <div class="page-footer relative-footer">Page 1 of 3</div>
         </div>
         <div class="page page-bg-02">
             <div class="page-header">
@@ -64,10 +64,10 @@
             </div>
             <div class="page-content">
                 <h3>Instructions</h3>
-                <p><b>Backtracking is always allowed. In the case of more than one phase meeting the necessary conditions for the Modulo, Digital, Binary or Conditions Mazes, any applicable phase can be navigated to.</b></p>
-                <p>Modulo Maze: Sum all orthogonal phases and modulo the current phase (modulo 7 if current phase is 1), then add 1. Whichever surrounding phase is closest or equal to this number is the phase to navigate to.</p>
-                <p>Digital Maze: Sum all orthogonal phases and take the digital root, then modulo 7 and add 1. Whichever surrounding phase is closest to this number is the phase to navigate to.</p>
-                <p>Binary Maze: Take the binary representation of the current phase. Whichever phase(s) can be reached by inverting any one bit is the phase to navigate to.</p>
+                <p><b>Backtracking is always allowed. In the case of more than one phase meeting the necessary conditions for the Sum, Digital, Binary or Conditions Mazes, any applicable phase can be navigated to.</b></p>
+                <p>Sum Maze: Sum all orthogonal phases and modulo the current phase (modulo 7 if current phase is 1), then add 1. Whichever surrounding phase is closest or equal to this number is the phase to navigate to.</p>
+                <p>Digital Maze: Sum all orthogonal phases and take the digital root, then modulo 7 and add 1. Whichever surrounding phase is closest or equal to this number is the phase to navigate to.</p>
+                <p>Binary Maze: Take the binary representation of the current phase. Whichever phase can be reached by inverting any one bit is the phase to navigate to.</p>
                 <p>Careful Maze: Can only move up when the last two digits of the timer are a prime number, left/right when timer's last digit matches parity of current phase, and down when the last two digits of the timer are a multiple of the current phase.</p>
                 <p>Conditions Maze: Can only move up or down if going from an odd phase to an even phase or vice versa, can only move right if moving to a higher phase, can only move left if moving to a lower phase.</p>
                 <p>Walls Maze: Can move at any time, but must avoid walls (see below page).</p>
@@ -82,7 +82,8 @@
             </div>
             <div class="page-content">
                 <h3>Walls Maze Maps</h3>
-                <p><b>NOTE: Invert the dimensions by rotating the appropriate map 90 degrees counterclockwise (i.e. if the maze is 7x6, rotate the 6x7 map counterclockwise).</b></p>
+                <p>If needed, invert the dimensions by rotating the appropriate map 90 degrees counterclockwise (i.e. if the maze is 7x6, rotate the 6x7 map counterclockwise).</p>
+                <p>Note to self: Develop maps to fill in this part later, perhaps when mod idea is more fleshed out.</p>
             </div>
             <div class="page-footer relative-footer">Page 3 of 3</div>
         </div>
