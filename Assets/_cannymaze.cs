@@ -10,50 +10,66 @@ using KModkit;
 public class _cannymaze:ModdedModule{
     internal bool moduleSolved;
     public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze;
-    private bool viewingWholeMaze=true;
+    private bool viewingWholeMaze=false;
     private Vector2 currentPosition;
-
+    private string[]coordLetters=new string[]{"EDCBA","FEDCBA","GFEDCBA","HGFEDCBA"};
+    private string currentCoords;
     
 
-	protected override void Awake(){
-        currentPosition=new Vector2((float)UnityEngine.Random.Range(0,TextureGenerator.cols)/TextureGenerator.cols,(float)UnityEngine.Random.Range(0,TextureGenerator.rows)/TextureGenerator.rows);
-        arrowleft.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.x>0.05f){//set to 0.05f to circumvent floating point shenanigans
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(1f/TextureGenerator.cols,0);
-                currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
+	void Start(){
+        int dims=TextureGenerator.gridDimensions;
+        string output="Your layout is:\n";
+        int[,]textures=TextureGenerator.textureIndices;
+        for(int r=0;r<dims;r++){
+            for(int c=0;c<dims;c++){
+                output+=textures[r,c];
+                if(c!=dims-1)output+=" ";
             }
-            Log("Pressed left.");
-            Log(currentPosition*5);
+            if(r!=dims-1)output+="\n";
+        }
+        Log(output);
+        currentPosition=new Vector2((float)UnityEngine.Random.Range(0,dims)/dims,(float)UnityEngine.Random.Range(0,dims)/dims);
+        maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
+        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+        currentCoords=coordLetters[dims-5][(int)(currentPosition.y*dims+.01f)].ToString()+(int)(1+currentPosition.x*dims+.01f);
+        Log("Your current coordinates are: "+currentCoords);
+        arrowleft.Set(onInteract: () => {
+            if(!viewingWholeMaze&&currentPosition.x>.05f){//set to .05f to circumvent floating point shenanigans
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(1f/dims,0);
+                currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
+                currentCoords=coordLetters[dims-5][(int)(currentPosition.y*dims+.01f)].ToString()+(int)(1+currentPosition.x*dims+.01f);//the +.01f is there to, once again, circumvent floating point shenanigans
+            Log("Pressed left, going to "+currentCoords+".");
+            }
         });
         arrowright.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.x<((TextureGenerator.cols-1f)/TextureGenerator.cols)){
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(1f/TextureGenerator.cols,0);
+            if(!viewingWholeMaze&&currentPosition.x<((dims-1f)/dims)){
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(1f/dims,0);
                 currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
+                currentCoords=coordLetters[dims-5][(int)(currentPosition.y*dims+.01f)].ToString()+(int)(1+currentPosition.x*dims+.01f);
+            Log("Pressed right, going to "+currentCoords+".");
             }
-            Log("Pressed right.");
-            Log(currentPosition*5);
         });
         arrowup.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.y<((TextureGenerator.rows-1f)/TextureGenerator.rows)){
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(0,1f/TextureGenerator.rows);
+            if(!viewingWholeMaze&&currentPosition.y<((dims-1f)/dims)){
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(0,1f/dims);
                 currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
+                currentCoords=coordLetters[dims-5][(int)(currentPosition.y*dims+.01f)].ToString()+(int)(1+currentPosition.x*dims+.01f);
+            Log("Pressed up, going to "+currentCoords+".");
             }
-            Log("Pressed up.");
-            Log(currentPosition*5);
         });
         arrowdown.Set(onInteract: () => {
             if(!viewingWholeMaze&&currentPosition.y>0.05f){
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(0,1f/TextureGenerator.rows);
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(0,1f/dims);
                 currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
+                currentCoords=coordLetters[dims-5][(int)(currentPosition.y*dims+.01f)].ToString()+(int)(1+currentPosition.x*dims+.01f);
+            Log("Pressed down, going to "+currentCoords+".");
             }
-            Log("Pressed down.");
-            Log(currentPosition*5);
         });
         maze.Set(onInteract:()=>{
             if(viewingWholeMaze){
-                maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/TextureGenerator.cols,1f/TextureGenerator.rows);
+                maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
                 maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-            } else {
+            }else{
                 maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
                 maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
             }

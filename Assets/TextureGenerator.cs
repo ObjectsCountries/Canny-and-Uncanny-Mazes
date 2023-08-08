@@ -1,11 +1,10 @@
-﻿//thank you chatGPT
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TextureGenerator : MonoBehaviour
 {
     public Texture2D[] textures;
-    public static int rows = 5;
-    public static int cols = 5;
+    public static int gridDimensions;
+    public static int[,] textureIndices;
 
     void Start()
     {
@@ -15,44 +14,35 @@ public class TextureGenerator : MonoBehaviour
             return;
         }
 
-        int cellWidth = textures[0].width;
-        int cellHeight = textures[0].height;
+        gridDimensions = Random.Range(5, 9);
+        int cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
 
-        int textureWidth = cols * cellWidth;
-        int textureHeight = rows * cellHeight;
+        Texture2D gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGBA32, false);
 
-        // Create the final grid texture
-        Texture2D gridTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+        textureIndices = new int[gridDimensions, gridDimensions];
 
-        // Fill the entire texture with light gray pixels
-        Color[] grayColor = new Color[textureWidth * textureHeight];
-        for (int i = 0; i < grayColor.Length; i++)
+        for (int y = 0; y < gridDimensions; y++)
         {
-            grayColor[i] = Color.grey; // You can adjust the color if needed
-        }
-        gridTexture.SetPixels(grayColor);
-
-        for (int y = 0; y < rows; y++)
-        {
-            for (int x = 0; x < cols; x++)
+            for (int x = 0; x < gridDimensions; x++)
             {
                 int randomIndex = Random.Range(0, textures.Length);
+                textureIndices[y, x] = randomIndex+1;
                 Texture2D texture = textures[randomIndex];
                 Color[] pixels = texture.GetPixels();
 
-                int startX = x * cellWidth + (cellWidth - texture.width) / 2;
-                int startY = (rows - y - 1) * cellHeight + (cellHeight - texture.height) / 2;
-
-                for (int j = 0; j < texture.height; j++)
+                for (int j = 0; j < cellSize; j++)
                 {
-                    for (int i = 0; i < texture.width; i++)
+                    for (int i = 0; i < cellSize; i++)
                     {
-                        int destX = startX + i;
-                        int destY = startY + j;
+                        int destX = x * cellSize + i;
+                        int destY = (gridDimensions - y - 1) * cellSize + j;
 
-                        if (destX < textureWidth && destY < textureHeight)
+                        if (destX < gridTexture.width && destY < gridTexture.height)
                         {
-                            gridTexture.SetPixel(destX, destY, pixels[j * texture.width + i]);
+                            int sourceX = Mathf.FloorToInt(i * (float)texture.width / cellSize);
+                            int sourceY = Mathf.FloorToInt(j * (float)texture.height / cellSize);
+
+                            gridTexture.SetPixel(destX, destY, pixels[sourceY * texture.width + sourceX]);
                         }
                     }
                 }
@@ -61,11 +51,23 @@ public class TextureGenerator : MonoBehaviour
 
         gridTexture.Apply();
 
+        // Create a RenderTexture to scale up the texture
+        int finalResolution = 2048; // Choose the desired final resolution
+        RenderTexture renderTexture = new RenderTexture(finalResolution, finalResolution, 0);
+        Graphics.Blit(gridTexture, renderTexture);
+
+        // Create a new Texture2D from the RenderTexture
+        Texture2D finalTexture = new Texture2D(finalResolution, finalResolution, TextureFormat.RGBA32, false);
+        RenderTexture.active = renderTexture;
+        finalTexture.ReadPixels(new Rect(0, 0, finalResolution, finalResolution), 0, 0);
+        finalTexture.Apply();
+        RenderTexture.active = null;
+
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         if (renderer != null)
         {
-            Material material = new Material(Shader.Find("KT/Mobile/DiffuseTint"));
-            material.mainTexture = gridTexture;
+            Material material = new Material(Shader.Find("Standard"));
+            material.mainTexture = finalTexture;
             renderer.material = material;
         }
         else
