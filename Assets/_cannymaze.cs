@@ -12,7 +12,7 @@ public class _cannymaze:ModdedModule{
     public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze;
     private bool viewingWholeMaze=false;
     private Vector2 currentPosition;
-    private string[]coordLetters=new string[]{"EDCBA","FEDCBA","GFEDCBA","HGFEDCBA"};
+    private string coordLetters="ABCDEFGH";
     private string currentCoords;
     private Vector2 currentPhaseIndex;
     private int xcoords,ycoords;
@@ -21,6 +21,7 @@ public class _cannymaze:ModdedModule{
     private int dims;
     private int[,]textures;
     private List<int>adjacentPhases;
+    private bool currentlyMoving=false;
     
 
 	void Start(){
@@ -39,11 +40,11 @@ public class _cannymaze:ModdedModule{
         maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
         adjacentPhases=new List<int>(){};
-        moving("maze");
-        arrowleft.Set(onInteract:()=>{moving("left");});
-        arrowright.Set(onInteract:()=>{moving("right");});
-        arrowup.Set(onInteract:()=>{moving("up");});
-        arrowdown.Set(onInteract:()=>{moving("down");});
+        StartCoroutine(moving("maze"));
+        arrowleft.Set(onInteract:()=>{StartCoroutine(moving("left"));});
+        arrowright.Set(onInteract:()=>{StartCoroutine(moving("right"));});
+        arrowup.Set(onInteract:()=>{StartCoroutine(moving("up"));});
+        arrowdown.Set(onInteract:()=>{StartCoroutine(moving("down"));});
         maze.Set(onInteract:()=>{
             if(viewingWholeMaze){
                 maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
@@ -57,56 +58,92 @@ public class _cannymaze:ModdedModule{
         });
     }
 
-    private void moving(string direction){
+    private IEnumerator moving(string direction){
         switch(direction){
             case"up":
-                if(!(!viewingWholeMaze&&currentPosition.y<((dims-1f)/dims)))return;
-                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(0,1f/dims);
+                if(!(!viewingWholeMaze&&currentPosition.y+.01f<((dims-1f)/dims))||currentlyMoving)
+                    yield break;
+                else{
+                    currentlyMoving=true;
+                    for(int i=0;i<20;i++){
+                        currentPosition+=(new Vector2(0,(1f/dims)/20));
+                        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+                        yield return new WaitForSeconds(.02f);
+                    }
+                    currentlyMoving=false;
+                }
                 break;
             case"down":
-                if(!(!viewingWholeMaze&&currentPosition.y>.05f))return;//set to .05f to circumvent floating point shenanigans
-                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(0,1f/dims);
+                if(!(!viewingWholeMaze&&currentPosition.y>.01f)||currentlyMoving)
+                    yield break;
+                else{
+                    currentlyMoving=true;
+                    for(int i=0;i<20;i++){
+                        currentPosition-=(new Vector2(0,(1f/dims)/20));
+                        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+                        yield return new WaitForSeconds(.02f);
+                    }
+                    currentlyMoving=false;
+                }
                 break;
             case"left":
-                if(!(!viewingWholeMaze&&currentPosition.x>.05f))return;
-                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(1f/dims,0);
+                if(!(!viewingWholeMaze&&currentPosition.x>.01f)||currentlyMoving)
+                    yield break;
+                else{
+                    currentlyMoving=true;
+                    for(int i=0;i<20;i++){
+                        currentPosition-=(new Vector2((1f/dims)/20,0));
+                        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+                        yield return new WaitForSeconds(.02f);
+                    }
+                    currentlyMoving=false;
+                }
                 break;
             case"right":
-                if(!(!viewingWholeMaze&&currentPosition.x<((dims-1f)/dims)))return;
-                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(1f/dims,0);
+                if(!(!viewingWholeMaze&&currentPosition.x+.01f<((dims-1f)/dims))||currentlyMoving)
+                    yield break;
+                else{
+                    currentlyMoving=true;
+                    for(int i=0;i<20;i++){
+                        currentPosition+=(new Vector2((1f/dims)/20,0));
+                        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+                        yield return new WaitForSeconds(.02f);
+                    }
+                    currentlyMoving=false;
+                }
                 break;
             case "maze":
                 break;
         }
         currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
-        xcoords=(int)(currentPosition.y*dims+.01f);
-        ycoords=(int)(currentPosition.x*dims+.01f);
-        currentCoords=coordLetters[dims-5][xcoords].ToString()+(ycoords+1);
+        xcoords=(int)(currentPosition.x*dims+.01f);
+        ycoords=(int)(currentPosition.y*dims+.01f);
+        currentCoords=coordLetters[xcoords].ToString()+(dims-ycoords);
         if(direction!="maze")Log("Pressed "+direction+", going to "+currentCoords+".");
         else Log("Your current coordinates are: "+currentCoords);
-        Log("Your current phase is: "+textures[(dims-xcoords-1),(int)ycoords]);
+        Log("Your current phase is: "+textures[(dims-ycoords-1),xcoords]);
         sum=0;
         numberofAdjacentPhases=0;
         adjacentPhases.Clear();
         modulo=0;
-        if(ycoords!=0){
-            adjacentPhases.Add(textures[(dims-xcoords-1),ycoords-1]);
-            sum+=textures[(dims-xcoords-1),ycoords-1];
-            numberofAdjacentPhases++;
-        }
-        if(ycoords!=dims-1){
-            adjacentPhases.Add(textures[(dims-xcoords-1),ycoords+1]);
-            sum+=textures[(dims-xcoords-1),ycoords+1];
-            numberofAdjacentPhases++;
-        }
         if(xcoords!=0){
-            adjacentPhases.Add(textures[(dims-xcoords),ycoords]);
-            sum+=textures[(dims-xcoords),ycoords];
+            adjacentPhases.Add(textures[(dims-ycoords-1),xcoords-1]);
+            sum+=textures[(dims-ycoords-1),xcoords-1];
             numberofAdjacentPhases++;
         }
         if(xcoords!=dims-1){
-            adjacentPhases.Add(textures[(dims-xcoords-2),ycoords]);
-            sum+=textures[(dims-xcoords-2),ycoords];
+            adjacentPhases.Add(textures[(dims-ycoords-1),xcoords+1]);
+            sum+=textures[(dims-ycoords-1),xcoords+1];
+            numberofAdjacentPhases++;
+        }
+        if(ycoords!=0){
+            adjacentPhases.Add(textures[(dims-ycoords),xcoords]);
+            sum+=textures[(dims-ycoords),xcoords];
+            numberofAdjacentPhases++;
+        }
+        if(ycoords!=dims-1){
+            adjacentPhases.Add(textures[(dims-ycoords-2),xcoords]);
+            sum+=textures[(dims-ycoords-2),xcoords];
             numberofAdjacentPhases++;
         }
         average=(float)sum/numberofAdjacentPhases;
