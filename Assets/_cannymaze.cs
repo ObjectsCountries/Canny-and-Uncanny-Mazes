@@ -16,10 +16,11 @@ public class _cannymaze:ModdedModule{
     private string currentCoords;
     private Vector2 currentPhaseIndex;
     private int xcoords,ycoords;
-    private int sum,numberofAdjacentPhases;
+    private int sum,numberofAdjacentPhases,modulo;
     private float average=0;
     private int dims;
     private int[,]textures;
+    private List<int>adjacentPhases;
     
 
 	void Start(){
@@ -37,56 +38,12 @@ public class _cannymaze:ModdedModule{
         currentPosition=new Vector2((float)UnityEngine.Random.Range(0,dims)/dims,(float)UnityEngine.Random.Range(0,dims)/dims);
         maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-        xcoords=(int)(currentPosition.y*dims+.01f);//the +.01f is there to circumvent floating point shenanigans
-        ycoords=(int)(currentPosition.x*dims+.01f);
-        currentCoords=coordLetters[dims-5][xcoords].ToString()+(ycoords+1);
-        Log("Your current coordinates are: "+currentCoords);
-        Log("Your current phase is: "+textures[(dims-xcoords-1),ycoords]);
-        sum=0;
-        numberofAdjacentPhases=0;
-        if(ycoords!=0){
-            sum+=textures[(dims-xcoords-1),ycoords-1];
-            numberofAdjacentPhases++;
-        }
-        if(ycoords!=dims-1){
-            sum+=textures[(dims-xcoords-1),ycoords+1];
-            numberofAdjacentPhases++;
-        }
-        if(xcoords!=0){
-            sum+=textures[(dims-xcoords),ycoords];
-            numberofAdjacentPhases++;
-        }
-        if(xcoords!=dims-1){
-            sum+=textures[(dims-xcoords-2),ycoords];
-            numberofAdjacentPhases++;
-        }
-        average=(float)sum/numberofAdjacentPhases;
-        Log("The sum of all orthogonally-adjacent phases is "+sum+".");
-        Log("The average of all orthogonally-adjacent phases is "+average+".");
-        arrowleft.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.x>.05f){//set to .05f to circumvent floating point shenanigans
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(1f/dims,0);
-                moving("left");
-            }
-        });
-        arrowright.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.x<((dims-1f)/dims)){
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(1f/dims,0);
-                moving("right");
-            }
-        });
-        arrowup.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.y<((dims-1f)/dims)){
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(0,1f/dims);
-                moving("up");
-            }
-        });
-        arrowdown.Set(onInteract: () => {
-            if(!viewingWholeMaze&&currentPosition.y>0.05f){
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(0,1f/dims);
-                moving("down");
-            }
-        });
+        adjacentPhases=new List<int>(){};
+        moving("maze");
+        arrowleft.Set(onInteract:()=>{moving("left");});
+        arrowright.Set(onInteract:()=>{moving("right");});
+        arrowup.Set(onInteract:()=>{moving("up");});
+        arrowdown.Set(onInteract:()=>{moving("down");});
         maze.Set(onInteract:()=>{
             if(viewingWholeMaze){
                 maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
@@ -101,34 +58,61 @@ public class _cannymaze:ModdedModule{
     }
 
     private void moving(string direction){
+        switch(direction){
+            case"up":
+                if(!(!viewingWholeMaze&&currentPosition.y<((dims-1f)/dims)))return;
+                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(0,1f/dims);
+                break;
+            case"down":
+                if(!(!viewingWholeMaze&&currentPosition.y>.05f))return;//set to .05f to circumvent floating point shenanigans
+                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(0,1f/dims);
+                break;
+            case"left":
+                if(!(!viewingWholeMaze&&currentPosition.x>.05f))return;
+                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition-new Vector2(1f/dims,0);
+                break;
+            case"right":
+                if(!(!viewingWholeMaze&&currentPosition.x<((dims-1f)/dims)))return;
+                else maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition+new Vector2(1f/dims,0);
+                break;
+            case "maze":
+                break;
+        }
         currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
         xcoords=(int)(currentPosition.y*dims+.01f);
         ycoords=(int)(currentPosition.x*dims+.01f);
         currentCoords=coordLetters[dims-5][xcoords].ToString()+(ycoords+1);
-        Log("Pressed "+direction+", going to "+currentCoords+".");
+        if(direction!="maze")Log("Pressed "+direction+", going to "+currentCoords+".");
+        else Log("Your current coordinates are: "+currentCoords);
         Log("Your current phase is: "+textures[(dims-xcoords-1),(int)ycoords]);
         sum=0;
         numberofAdjacentPhases=0;
+        adjacentPhases.Clear();
+        modulo=0;
         if(ycoords!=0){
+            adjacentPhases.Add(textures[(dims-xcoords-1),ycoords-1]);
             sum+=textures[(dims-xcoords-1),ycoords-1];
             numberofAdjacentPhases++;
         }
         if(ycoords!=dims-1){
+            adjacentPhases.Add(textures[(dims-xcoords-1),ycoords+1]);
             sum+=textures[(dims-xcoords-1),ycoords+1];
             numberofAdjacentPhases++;
         }
         if(xcoords!=0){
+            adjacentPhases.Add(textures[(dims-xcoords),ycoords]);
             sum+=textures[(dims-xcoords),ycoords];
             numberofAdjacentPhases++;
         }
         if(xcoords!=dims-1){
+            adjacentPhases.Add(textures[(dims-xcoords-2),ycoords]);
             sum+=textures[(dims-xcoords-2),ycoords];
             numberofAdjacentPhases++;
         }
         average=(float)sum/numberofAdjacentPhases;
-        Log("The sum of all orthogonally-adjacent phases is "+sum+".");
+        modulo=sum%7+1;
+        Log("The sum of all orthogonally-adjacent phases is "+sum+", and the 1+sum modulo 7 is "+modulo+".");
         Log("The average of all orthogonally-adjacent phases is "+average+".");
-
     }
 
 #pragma warning disable 414
