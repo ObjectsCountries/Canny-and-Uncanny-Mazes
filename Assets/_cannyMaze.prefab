@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 114677114686562898}
   - component: {fileID: 114353691376863928}
   m_Layer: 0
-  m_Name: _cannyMaze
+  m_Name: _cannymaze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
