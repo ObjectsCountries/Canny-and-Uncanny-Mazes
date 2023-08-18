@@ -22,12 +22,13 @@ public class _cannymaze:ModdedModule{
     private int[,]textures;
     private List<int>adjacentPhases;
     private bool currentlyMoving=false;
+    public TextureGenerator t;
     
 
 	void Start(){
-        dims=TextureGenerator.gridDimensions;
+        dims=t.gridDimensions;
         string output="Your layout is:\n";
-        textures=TextureGenerator.textureIndices;
+        textures=t.textureIndices;
         for(int r=0;r<dims;r++){
             for(int c=0;c<dims;c++){
                 output+=textures[r,c];
@@ -85,8 +86,8 @@ public class _cannymaze:ModdedModule{
                     currentlyMoving=true;
                     currentPosition+=new Vector2(0,1f/(n*dims));
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-                    for(int i=1;i<n+1;i++){
-                        currentPosition-=new Vector2(0,f((n-i)*1f/n)*1f/n);//Riemann sum
+                    for(int i=n-1;i>0;i--){
+                        currentPosition-=new Vector2(0,f(i*1f/n)*1f/n);//Riemann sum
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;//necessary for the animation to play
                     }
@@ -100,8 +101,8 @@ public class _cannymaze:ModdedModule{
                     currentlyMoving=true;
                     currentPosition-=new Vector2(0,1f/(n*dims));
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-                    for(int i=1;i<n+1;i++){
-                        currentPosition+=new Vector2(0,f((n-i)*1f/n)*1f/n);
+                    for(int i=n-1;i>0;i--){
+                        currentPosition+=new Vector2(0,f(i*1f/n)*1f/n);
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;
                     }
@@ -115,8 +116,8 @@ public class _cannymaze:ModdedModule{
                     currentlyMoving=true;
                     currentPosition-=new Vector2(1f/(n*dims),0);
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-                    for(int i=1;i<n+1;i++){
-                        currentPosition+=new Vector2(f((n-i)*1f/n)*1f/n,0);
+                    for(int i=n-1;i>0;i--){
+                        currentPosition+=new Vector2(f(i*1f/n)*1f/n,0);
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;
                     }
@@ -130,8 +131,8 @@ public class _cannymaze:ModdedModule{
                     currentlyMoving=true;
                     currentPosition+=new Vector2(1f/(n*dims),0);
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-                    for(int i=1;i<n+1;i++){
-                        currentPosition-=new Vector2(f((n-i)*1f/n)*1f/n,0);
+                    for(int i=n-1;i>0;i--){
+                        currentPosition-=new Vector2(f(i*1f/n)*1f/n,0);
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;
                     }

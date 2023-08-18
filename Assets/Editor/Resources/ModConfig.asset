@@ -14,17 +14,20 @@ MonoBehaviour:
   id: cannymaze
   title: Canny Maze
   author: ObjectsCountries
-  description: 'Flavor text here.
+  description: 'The thing that gets me about these modules is that the instructions
+    are actually well-written, even though we only see images and text. We create
+    the whole solution in our text-editing software, and it turns out correct.
 
 
-    ID: module
+    ID: cannymaze
 
-    Credits: me because i am awesome and cool and stuff
+    Credits: me because i am awesome and cool and stuff, and chatgpt for the texture
+    generation
 
 
-    [url=http://ktane.timwi.de/HTML/Module.html]HTML Manual[/url]
+    [url=https://ktane.timwi.de/HTML/Canny%20Maze.html]HTML Manual[/url]
 
-    [url=http://ktane.timwi.de/PDF/Module.html]PDF Manual[/url]'
+    [url=https://ktane.timwi.de/PDF/Canny%20Maze.pdf]PDF Manual[/url]'
   version: 1
   outputFolder: C:\Program Files (x86)\Steam\steamapps\common\Keep Talking and Nobody
     Explodes\mods
