@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ModuleType: cannymaze
   ModuleDisplayName: Canny Maze
-  RequiresTimerVisibility: 1
+  RequiresTimerVisibility: 0
 --- !u!114 &114171968764318144
 MonoBehaviour:
   m_ObjectHideFlags: 1
