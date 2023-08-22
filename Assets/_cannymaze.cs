@@ -26,14 +26,14 @@ public class _cannymaze:ModdedModule{
     public TextureGenerator t;
     private bool TwitchPlaysActive;
     private int n;
-    private Config<settings> cmSettings;
+    private Config<cannymazesettings> cmSettings;
 	
     [Serializable]
-    public sealed class settings{
+    public sealed class cannymazesettings{
         public int animationSpeed=30;
     }
 
-    public static Dictionary<string,object>[]cannymazesettings=new Dictionary<string,object>[]{
+    public static Dictionary<string,object>[]cmDetails=new Dictionary<string,object>[]{
         new Dictionary<string,object>{
             {"Filename","cannymaze-settings.json"},
             {"Name","Canny Maze"},
@@ -48,7 +48,7 @@ public class _cannymaze:ModdedModule{
     };
 
 	void Start(){
-        cmSettings=new Config<settings>();
+        cmSettings=new Config<cannymazesettings>();
         n=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         cmSettings.Write("{\"animationSpeed\":"+n+"}");
         if(TwitchPlaysActive)n=1;
