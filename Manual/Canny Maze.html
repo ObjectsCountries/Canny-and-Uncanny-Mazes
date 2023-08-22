@@ -44,7 +44,7 @@
                         <td><img src="img/canny/canny5.png" width="75x"></td>
                         <td>AVOID MAZE</td>
                         <td><img src="img/canny/canny6.png" width="75x"></td>
-                        <td>CONDITIONS MAZE</td>
+                        <td>STRICT MAZE</td>
                     </tr>
                     <tr><td colspan=2 style="background-color:transparent"></td><td><img src="img/canny/canny7.png" width="75x"></td><td>WALLS MAZE</td><td colspan=2 style="background-color:transparent"></td></tr>
                 </tbody></table>
@@ -61,7 +61,7 @@
                 <p>Average/Digital/Sum Mazes: Sum all orthogonally adjacent phases and take the average, rounding to the nearest whole number/take the digital root/leave the sum as is, then modulo 7 and add 1. Whichever surrounding phase is closest or equal to this number is the phase to navigate to.</p>
                 <p>Binary Maze: Take the binary representation of the current phase. Whichever phase can be reached by inverting any one bit is the phase to navigate to.</p>
                 <p>Avoid Maze: Cannot move up to phases 1 or 2, cannot move right to phases 3 or 4, cannot move down to phases 5 or 6, cannot move left to phase 7.</p>
-                <p>Conditions Maze: Can only move up or down if going from an odd phase to an even phase or vice versa, can only move right if moving to a higher phase, can only move left if moving to a lower phase.</p>
+                <p>Strict Maze: Can only move up or down if going from an odd phase to an even phase or vice versa, can only move right if moving to a higher phase, can only move left if moving to a lower phase.</p>
                 <p>Walls Maze: Must avoid walls (see below page).</p>
                 <p>Backtracking is always allowed. In the case of more than one tile meeting the necessary conditions, any applicable phase can be navigated to. This also applies while backtracking. For the average/digital/sum mazes, consider the tile(s) on which you have already traversed in your sums, but do not consider them when determining the closest to the result.</p>
             </div>
