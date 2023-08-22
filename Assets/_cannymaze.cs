@@ -26,16 +26,18 @@ public class _cannymaze:ModdedModule{
     public TextureGenerator t;
     private bool TwitchPlaysActive;
     private int n;
-    private settings cmSettings;
+    private Config<settings> cmSettings;
     
     [Serializable]
     public sealed class settings{
-        public int animationSmoothness {get;set;}
+        public int animationSmoothness=30;
     }
 
 	void Start(){
-        cmSettings=new Config<settings>().Read();
-        n=cmSettings.animationSmoothness;
+        cmSettings=new Config<settings>();
+        n=Mathf.Clamp(cmSettings.Read().animationSmoothness,10,60);
+        cmSettings.Write("{\"animationSmoothness\":"+n+"}");
+        if(TwitchPlaysActive)n=1;
         dims=t.gridDimensions;
         string output="Your layout is:\n";
         textures=t.textureIndices;
@@ -86,9 +88,6 @@ public class _cannymaze:ModdedModule{
     }
 
     private IEnumerator Moving(string direction){
-        if(n<10)n=10;
-        if(n>60)n=60;
-        if(TwitchPlaysActive)n=1;
         switch(direction){
             case"up":
                 if(!(!viewingWholeMaze&&currentPosition.y+.01f<((dims-1f)/dims))||currentlyMoving)
