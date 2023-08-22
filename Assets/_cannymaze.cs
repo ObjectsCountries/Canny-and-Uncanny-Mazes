@@ -27,7 +27,24 @@ public class _cannymaze:ModdedModule{
     private bool TwitchPlaysActive;
     private int n;
     private Config<settings> cmSettings;
-    
+
+static Dictionary<string, object>[] TweaksEditorSettings = new Dictionary<string, object>[]
+    {
+        new Dictionary<string, object>
+        {
+            { "Filename", "cannymaze-settings.json" },
+            { "Name", "Canny Maze Settings" },
+            { "Listings", new List<Dictionary<string, object>> {
+                new Dictionary<string, object>
+                {
+                    { "Key", "animationSmoothness" },
+                    { "Text", "Animation Smoothness" },
+                    { "Description", "Change the smoothness of the module’s moving animation. Accepts values between 10 and 60." }
+                }
+            }}
+        }
+};
+	
     [Serializable]
     public sealed class settings{
         public int animationSmoothness=30;
