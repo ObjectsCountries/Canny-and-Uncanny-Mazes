@@ -33,7 +33,7 @@ public class _cannymaze:ModdedModule{
         public int animationSpeed=30;
     }
 
-    public static Dictionary<string,object>[]cmDetails=new Dictionary<string,object>[]{
+    public static Dictionary<string,object>[]TweaksEditorSettings=new Dictionary<string,object>[]{
         new Dictionary<string,object>{
             {"Filename","cannymaze-settings.json"},
             {"Name","Canny Maze"},
@@ -41,7 +41,7 @@ public class _cannymaze:ModdedModule{
                 new Dictionary<string,object>{
                     {"Key","animationSpeed"},
                     {"Text","Animation Speed"},
-                    {"Description","Set the speed of the module's moving animation in frames. Should be from 10 to 60."}
+                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60."}
                 }
             }}
         }
