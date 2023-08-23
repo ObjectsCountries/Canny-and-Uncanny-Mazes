@@ -27,6 +27,18 @@ public class _cannymaze:ModdedModule{
     private bool TwitchPlaysActive;
     private int n;
     private Config<cannymazesettings> cmSettings;
+    private enum MazeTypes{
+        Sum=1,
+        Compare=2,
+        Movement=3,
+        Binary=4,
+        Avoid=5,
+        Strict=6,
+        Walls=7,
+        Average=-1,
+        Digital=-2,
+        Fours=-3//these last three are exclusive to ruleseeds
+    }
 	
     [Serializable]
     public sealed class cannymazesettings{
@@ -85,15 +97,17 @@ public class _cannymaze:ModdedModule{
             Shake(arrowdown,1,Sound.BigButtonPress);
             });
         maze.Set(onInteract:()=>{
-            if(viewingWholeMaze){
-                maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-            }else{
-                maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
+            if(!currentlyMoving){
+                if(viewingWholeMaze){
+                    maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+                }else{
+                    maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
+                }
+                viewingWholeMaze=!viewingWholeMaze;
+                Log("Pressed the maze.");
             }
-            viewingWholeMaze=!viewingWholeMaze;
-            Log("Pressed the maze.");
         });
     }
 
@@ -166,8 +180,13 @@ public class _cannymaze:ModdedModule{
         xcoords=(int)(currentPosition.x*dims+.01f);
         ycoords=(int)(currentPosition.y*dims+.01f);
         currentCoords=coordLetters[xcoords].ToString()+(dims-ycoords);
-        if(direction!="maze")Log("Pressed "+direction+", going to "+currentCoords+".");
-        else Log("Your current coordinates are: "+currentCoords);
+        if(direction=="maze"){
+            Log("Your maze is: "+((MazeTypes)(textures[(dims-ycoords-1),xcoords]))+" Maze");
+            Log("Your current coordinates are: "+currentCoords);
+        }else{
+            Log("---");//makes the log a bit easier to read
+            Log("Pressed "+direction+", going to "+currentCoords+".");
+        }
         Log("Your current phase is: "+textures[(dims-ycoords-1),xcoords]);
         sum=0;
         numberofAdjacentPhases=0;

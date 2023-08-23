@@ -5,31 +5,18 @@
 * Maze with the cannys 1-7
 * Dimensions of the maze range from 5 to 8, randomly generated
 * No wraparound, also no penalty for trying to go past the edge
-* I need to make it distinct enough so that I can't just replace the cannys with numbers to get the exact same concept
+* I need to make it distinct enough so that I can't just replace the cannys with numbers to get the exact same concept (maybe I don't have to worry about this??? unsure)
 
 ## To-Do
 
 * Implement button on module to view numbers instead of cannys when viewing entire maze (makes communication far easier)
-* Ask for help implementing everything about solving the module
-* Also ask for help with making mazes for manual
-* Add enum of maze types (including ruleseed-exclusive)
+* Ask for help with:
+  * Making mazes for manual
+  * Reworking highlight models
+  * Implementing pretty much everything about solving the module
+  * If the concept has to be "unique" enough to the point where the theming is actually relevant to the module itself
 
-```cs
-private enum MazeTypes{
-  Sum=1,
-  Compare=2,
-  Movement=3,
-  Binary=4,
-  Avoid=5,
-  Strict=6,
-  Walls=7,
-  Average=-1,
-  Digital=-2,
-  Fours=-3//these last three are exclusive to ruleseeds
-}
-```
-
-## Ruleseed
+## Ruleseed Plans
 
 * Sum Maze: Keep for some ruleseeds, replace with either of the following for others:
   * Average Maze
