@@ -10,9 +10,9 @@ using KModkit;
 
 public class _cannymaze:ModdedModule{
     internal bool moduleSolved;
-    public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze;
+    public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze,numbersButton,resetButton;
     private bool viewingWholeMaze=false;
-    private Vector2 currentPosition;
+    private Vector2 currentPosition,startingPosition;
     private string coordLetters="ABCDEFGH";
     private string currentCoords;
     private Vector2 currentPhaseIndex;
@@ -76,6 +76,7 @@ public class _cannymaze:ModdedModule{
         }
         Log(output);
         currentPosition=new Vector2((float)UnityEngine.Random.Range(0,dims)/dims,(float)UnityEngine.Random.Range(0,dims)/dims);
+        startingPosition=currentPosition;
         maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
         adjacentPhases=new List<int>(){};
@@ -108,6 +109,10 @@ public class _cannymaze:ModdedModule{
                 viewingWholeMaze=!viewingWholeMaze;
                 Log("Pressed the maze.");
             }
+        });
+        resetButton.Set(onInteract:()=>{
+            if(!currentlyMoving&&!viewingWholeMaze)StartCoroutine(Moving("reset"));
+            Shake(resetButton,1,Sound.BigButtonPress);
         });
     }
 
@@ -173,8 +178,12 @@ public class _cannymaze:ModdedModule{
                     currentlyMoving=false;
                 }
                 break;
-            case "maze":
+            case"reset":
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=startingPosition;
                 break;
+            case"maze":
+                break;
+            
         }
         currentPosition=maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
         xcoords=(int)(currentPosition.x*dims+.01f);
@@ -185,7 +194,8 @@ public class _cannymaze:ModdedModule{
             Log("Your current coordinates are: "+currentCoords);
         }else{
             Log("---");//makes the log a bit easier to read
-            Log("Pressed "+direction+", going to "+currentCoords+".");
+            if(direction=="reset")Log("Reset the maze.");
+            else Log("Pressed "+direction+", going to "+currentCoords+".");
         }
         Log("Your current phase is: "+textures[(dims-ycoords-1),xcoords]);
         sum=0;
