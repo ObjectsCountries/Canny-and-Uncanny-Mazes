@@ -114,6 +114,9 @@ public class _cannymaze:ModdedModule{
             if(!currentlyMoving&&!viewingWholeMaze)StartCoroutine(Moving("reset"));
             Shake(resetButton,1,Sound.BigButtonPress);
         });
+        numbersButton.Set(onInteract:()=>{
+            Shake(numbersButton,1,Sound.BigButtonPress);
+        });
     }
 
     private float f(float j){
@@ -229,7 +232,7 @@ public class _cannymaze:ModdedModule{
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage=@"Use !{0} u/d/l/r to navigate the maze (can be strung together), and !{0} maze to toggle between the view of the entire maze and the current position.";
+    private readonly string TwitchHelpMessage=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} r/reset to reset.";
     private readonly string TwitchManualCode="https://ktane.timwi.de/HTML/Canny%20Maze.html";
 #pragma warning restore 414
 

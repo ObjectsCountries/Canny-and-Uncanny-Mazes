@@ -33,7 +33,3 @@
 * Strict Maze: Sometimes prime/composite rather than odd/even (1 is composite to balance things out), sometimes move right to lower or left to higher tiles, sometimes up/down and left/right swap mixed with changed conditions
 * Walls Maze: Different wall generation
 * Swap around the maze types associated with each image
-
-## Twitch Plays Support
-
-!{0} u/d/l/r to move up/down/left/right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze.
