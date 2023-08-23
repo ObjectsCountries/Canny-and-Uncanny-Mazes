@@ -9,7 +9,8 @@
 
 ## To-Do
 
-* Implement button on module to view numbers instead of cannys when viewing entire maze (makes communication far easier)
+* Implement button on module to view numbers instead of cannys when viewing entire maze (makes communication far easier) ideally in bottom-left corner
+* Add button to completely reset the maze (not regenerate the maze; begin from the starting position and clear out traversed tiles) ideally in bottom-right corner
 * Ask for help with:
   * Making mazes for manual
   * Reworking highlight models
