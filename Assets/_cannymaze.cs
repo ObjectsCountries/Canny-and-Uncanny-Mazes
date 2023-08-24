@@ -24,9 +24,11 @@ public class _cannymaze:ModdedModule{
     private List<int>adjacentPhases;
     private bool currentlyMoving=false;
     public TextureGenerator t;
-    private bool TwitchPlaysActive;
+    internal bool TwitchPlaysActive;
     private int n;
     private Config<cannymazesettings> cmSettings;
+    public GameObject numbers;
+    ///<value>The different types of mazes that the module can have. The last three are exclusive to ruleseeds other than 1.</value>
     private enum MazeTypes{
         Sum=1,
         Compare=2,
@@ -37,7 +39,7 @@ public class _cannymaze:ModdedModule{
         Walls=7,
         Average=-1,
         Digital=-2,
-        Fours=-3//these last three are exclusive to ruleseeds
+        Fours=-3
     }
 	
     [Serializable]
@@ -64,8 +66,9 @@ public class _cannymaze:ModdedModule{
         n=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         cmSettings.Write("{\"animationSpeed\":"+n+"}");
         if(TwitchPlaysActive)n=1;
+        numbers.SetActive(false);
         dims=t.gridDimensions;
-        string output="Your layout is:\n";
+        string output="";
         textures=t.textureIndices;
         for(int r=0;r<dims;r++){
             for(int c=0;c<dims;c++){
@@ -74,7 +77,22 @@ public class _cannymaze:ModdedModule{
             }
             if(r!=dims-1)output+="\n";
         }
-        Log(output);
+        Log("Your layout is:\n"+output);
+        switch(dims){
+            case 5:
+                numbers.GetComponent<TextMesh>().fontSize=30;
+                break;
+            case 6:
+                numbers.GetComponent<TextMesh>().fontSize=25;
+                break;
+            case 7:
+                numbers.GetComponent<TextMesh>().fontSize=22;
+                break;
+            case 8:
+                numbers.GetComponent<TextMesh>().fontSize=19;
+                break;
+        }
+        numbers.GetComponent<TextMesh>().text=output;
         currentPosition=new Vector2((float)UnityEngine.Random.Range(0,dims)/dims,(float)UnityEngine.Random.Range(0,dims)/dims);
         startingPosition=currentPosition;
         maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
@@ -100,6 +118,10 @@ public class _cannymaze:ModdedModule{
         maze.Set(onInteract:()=>{
             if(!currentlyMoving){
                 if(viewingWholeMaze){
+                    if(numbers.activeInHierarchy){
+                        numbers.SetActive(false);
+                        t.changeTexture(t.finalTexture);
+                    }
                     maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                 }else{
@@ -111,10 +133,20 @@ public class _cannymaze:ModdedModule{
             }
         });
         resetButton.Set(onInteract:()=>{
-            if(!currentlyMoving&&!viewingWholeMaze)StartCoroutine(Moving("reset"));
+            if(!currentlyMoving&&!viewingWholeMaze)
+                StartCoroutine(Moving("reset"));
             Shake(resetButton,1,Sound.BigButtonPress);
         });
         numbersButton.Set(onInteract:()=>{
+            if(viewingWholeMaze){
+                if(!numbers.activeInHierarchy){
+                    numbers.SetActive(true);
+                    t.changeTexture(t.whiteBG);
+                }else{
+                    numbers.SetActive(false);
+                    t.changeTexture(t.finalTexture);
+                }
+            }
             Shake(numbersButton,1,Sound.BigButtonPress);
         });
     }

@@ -3,17 +3,15 @@
 public class TextureGenerator : MonoBehaviour
 {
     public Texture2D[] textures;
-    public int gridDimensions;
-    public int[,] textureIndices;
+    public Texture2D whiteBG;
+    internal int gridDimensions;
+    internal int[,] textureIndices;
+    internal Texture2D finalTexture;
+    internal RenderTexture renderTexture;
+    private Material mat;
+    private MeshRenderer renderer;
 
-    void Awake()
-    {
-        if (textures.Length == 0)
-        {
-            Debug.LogError("Please assign textures to the TextureGenerator script in the inspector.");
-            return;
-        }
-
+    void Awake(){
         gridDimensions = Random.Range(5, 9);
         int cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
 
@@ -53,27 +51,28 @@ public class TextureGenerator : MonoBehaviour
 
         // Create a RenderTexture to scale up the texture
         int finalResolution = gridDimensions*cellSize; // Choose the desired final resolution
-        RenderTexture renderTexture = new RenderTexture(finalResolution, finalResolution, 24);
+        renderTexture = new RenderTexture(finalResolution, finalResolution, 24);
         Graphics.Blit(gridTexture, renderTexture);
 
         // Create a new Texture2D from the RenderTexture
-        Texture2D finalTexture = new Texture2D(finalResolution, finalResolution, TextureFormat.RGB24, false);
+        finalTexture = new Texture2D(finalResolution, finalResolution, TextureFormat.RGB24, false);
         RenderTexture.active = renderTexture;
         finalTexture.filterMode=FilterMode.Trilinear;
         finalTexture.ReadPixels(new Rect(0, 0, finalResolution, finalResolution), 0, 0,false);
         finalTexture.Apply();
         RenderTexture.active = null;
 
-        MeshRenderer renderer = GetComponent<MeshRenderer>();
-        if (renderer != null)
-        {
-            Material material = new Material(Shader.Find("Standard"));
-            material.mainTexture = finalTexture;
-            renderer.material = material;
-        }
-        else
-        {
-            Debug.LogError("MeshRenderer component not found on the plane.");
-        }
+        renderer = GetComponent<MeshRenderer>();
+        mat = new Material(Shader.Find("KT/Mobile/DiffuseTint"));
+        mat.mainTexture = finalTexture;
+        renderer.material = mat;
+    }
+
+    internal void changeTexture(Texture2D t){
+        RenderTexture.active=renderTexture;
+        t.Apply();
+        RenderTexture.active=null;
+        mat.mainTexture = t;
+        renderer.material=mat;
     }
 }
