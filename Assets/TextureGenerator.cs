@@ -9,7 +9,7 @@ public class TextureGenerator : MonoBehaviour
     internal Texture2D finalTexture;
     internal RenderTexture renderTexture;
     private Material mat;
-    private MeshRenderer renderer;
+    new private MeshRenderer renderer;
 
     void Awake(){
         gridDimensions = Random.Range(5, 9);

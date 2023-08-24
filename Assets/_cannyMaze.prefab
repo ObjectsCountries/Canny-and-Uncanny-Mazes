@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 114190063374523446}
   - component: {fileID: 114415863554451714}
   - component: {fileID: 114137204305456112}
+  - component: {fileID: 114376254827896796}
   - component: {fileID: 114677114686562898}
   - component: {fileID: 114353691376863928}
   m_Layer: 0
@@ -1758,6 +1759,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightScale: {x: 1.12, y: 1.12, z: 1.12}
   OutlineAmount: 0.01
+--- !u!114 &114376254827896796
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1721723576664250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15090758743ffaf47ab3e219e3b6aef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TwitchHelpMessage: '!{0} u/d/l/r to move up, down, left, or right respectively;
+    multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view
+    of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole
+    maze. !{0} reset to reset. If an invalid character is entered, the module will
+    move up until the invalid character is reached. NOTE: Do not use !{0} r to reset;
+    this will register as a command to move right.'
+  TwitchManualCode: 
+  TwitchAbandonModule: []
+  Module: {fileID: 114353691376863928}
 --- !u!114 &114400410245350976
 MonoBehaviour:
   m_ObjectHideFlags: 1

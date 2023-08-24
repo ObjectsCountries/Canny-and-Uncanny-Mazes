@@ -11,7 +11,7 @@ using KModkit;
 public class _cannymaze:ModdedModule{
     internal bool moduleSolved;
     public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze,numbersButton,resetButton;
-    private bool viewingWholeMaze=false;
+    internal bool viewingWholeMaze=false;
     private Vector2 currentPosition,startingPosition;
     private string coordLetters="ABCDEFGH";
     private string currentCoords;
@@ -24,7 +24,6 @@ public class _cannymaze:ModdedModule{
     private List<int>adjacentPhases;
     private bool currentlyMoving=false;
     public TextureGenerator t;
-    private bool TwitchPlaysActive;
     private int n;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers;
@@ -65,7 +64,7 @@ public class _cannymaze:ModdedModule{
         cmSettings=new Config<cannymazesettings>();
         n=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         cmSettings.Write("{\"animationSpeed\":"+n+"}");
-        if(TwitchPlaysActive)n=2;
+        /*if(IsTP)*/n=2;
         numbers.SetActive(false);
         dims=t.gridDimensions;
         string output="";
@@ -262,7 +261,7 @@ public class _cannymaze:ModdedModule{
         Log("The sum of all orthogonally-adjacent phases is "+sum+", and the 1+sum modulo 7 is "+modulo+".");
         Log("The average of all orthogonally-adjacent phases is "+average+".");
     }
-
+/*
 #pragma warning disable 414
     private readonly string TwitchHelpMessage=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} reset to reset. If an invalid character is entered, the module will move up until the invalid character is reached. NOTE: Do not use !{0} r to reset; this will register as a command to move right.";
     private readonly string TwitchManualCode="https://ktane.timwi.de/HTML/Canny%20Maze.html";
@@ -311,4 +310,5 @@ public class _cannymaze:ModdedModule{
     IEnumerator TwitchHandleForcedSolve(){
         yield return null;//placeholder
     }
+    */
 }
