@@ -7,15 +7,12 @@
 * No wraparound, also no penalty for trying to go past the edge
 * I need to make it distinct enough so that I can't just replace the cannys with numbers to get the exact same concept (maybe I don't have to worry about this??? unsure)
 
-## To-Do
+## Ask for Help With
 
-* Implement button on module to view numbers instead of cannys when viewing entire maze (makes communication far easier) ideally in bottom-left corner
-* Add button to completely reset the maze (not regenerate the maze; begin from the starting position and clear out traversed tiles) ideally in bottom-right corner
-* Ask for help with:
-  * Making mazes for manual
-  * Reworking highlight models
-  * Implementing pretty much everything about solving the module
-  * If the concept has to be "unique" enough to the point where the theming is actually relevant to the module itself
+* Making mazes for manual
+* Reworking highlight models
+* Implementing pretty much everything about solving the module
+* If the concept has to be "unique" enough to the point where the theming is actually relevant to the module itself
 
 ## Ruleseed Plans
 
