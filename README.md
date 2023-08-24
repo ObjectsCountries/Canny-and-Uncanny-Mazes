@@ -1,18 +1,10 @@
 # Canny Maze
 
-## Current Plan
-
-* Maze with the cannys 1-7
-* Dimensions of the maze range from 5 to 8, randomly generated
-* No wraparound, also no penalty for trying to go past the edge
-* I need to make it distinct enough so that I can't just replace the cannys with numbers to get the exact same concept (maybe I don't have to worry about this??? unsure)
-
 ## Ask for Help With
 
 * Making mazes for manual
 * Reworking highlight models
 * Implementing pretty much everything about solving the module
-* If the concept has to be "unique" enough to the point where the theming is actually relevant to the module itself
 
 ## Ruleseed Plans
 

@@ -24,7 +24,7 @@ public class _cannymaze:ModdedModule{
     private List<int>adjacentPhases;
     private bool currentlyMoving=false;
     public TextureGenerator t;
-    internal bool TwitchPlaysActive;
+    private bool TwitchPlaysActive;
     private int n;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers;
@@ -65,7 +65,7 @@ public class _cannymaze:ModdedModule{
         cmSettings=new Config<cannymazesettings>();
         n=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         cmSettings.Write("{\"animationSpeed\":"+n+"}");
-        if(TwitchPlaysActive)n=1;
+        if(TwitchPlaysActive)n=2;
         numbers.SetActive(false);
         dims=t.gridDimensions;
         string output="";
@@ -264,12 +264,48 @@ public class _cannymaze:ModdedModule{
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} r/reset to reset.";
+    private readonly string TwitchHelpMessage=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} reset to reset. If an invalid character is entered, the module will move up until the invalid character is reached. NOTE: Do not use !{0} r to reset; this will register as a command to move right.";
     private readonly string TwitchManualCode="https://ktane.timwi.de/HTML/Canny%20Maze.html";
 #pragma warning restore 414
-
-    IEnumerator ProcessTwitchCommand(string command){
-        yield return null;//placeholder
+    private const string letters="udlr";
+    private List<KMSelectable>buttons=new List<KMSelectable>();
+    List<KMSelectable>ProcessTwitchCommand(string command){
+        command=command.ToLowerInvariant();
+        buttons.Clear();
+        switch(command){
+            case"m":
+            case"maze":
+                return new List<KMSelectable>(){maze};
+            case"n":
+            case"numbers":
+                if(!viewingWholeMaze)return new List<KMSelectable>(){maze,numbersButton};
+                return new List<KMSelectable>(){numbersButton};
+            case"reset":
+                if(viewingWholeMaze)return new List<KMSelectable>(){maze,resetButton};
+                return new List<KMSelectable>(){resetButton};
+            default:
+                break;
+        }
+        if(viewingWholeMaze)buttons.Add(maze);
+        foreach(char c in command){
+            switch(c){
+                case'u':
+                    buttons.Add(arrowup);
+                    break;
+                case'd':
+                    buttons.Add(arrowdown);
+                    break;
+                case'l':
+                    buttons.Add(arrowleft);
+                    break;
+                case'r':
+                    buttons.Add(arrowright);
+                    break;
+                default:
+                    return buttons;
+            }
+        }
+        return buttons;
     }
 
     IEnumerator TwitchHandleForcedSolve(){
