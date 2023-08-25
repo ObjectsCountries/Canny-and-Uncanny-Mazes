@@ -1778,7 +1778,6 @@ MonoBehaviour:
     this will register as a command to move right.'
   TwitchManualCode: 
   TwitchAbandonModule: []
-  Module: {fileID: 114353691376863928}
 --- !u!114 &114400410245350976
 MonoBehaviour:
   m_ObjectHideFlags: 1
