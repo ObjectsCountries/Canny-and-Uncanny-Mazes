@@ -5,8 +5,15 @@ using Wawa.TwitchPlays;
 using Wawa.TwitchPlays.Domains;
 
 public sealed class cannymazeTP:Twitch<_cannymaze> {
-	new public string Help=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} reset to reset. If an invalid character is entered, the module will move up until the invalid character is reached. NOTE: Do not use !{0} r to reset; this will register as a command to move right.";
-    new public _cannymaze Module;
+    private IEnumerator waitforStart(){
+        yield return new WaitUntil(()=>Module.done);
+        if(IsTP)
+            Module.n=2;
+    }
+    void Start(){
+        StartCoroutine(waitforStart());
+    }
+	//new public string Help=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} reset to reset. If an invalid character is entered, the module will move up until the invalid character is reached. NOTE: Do not use !{0} r to reset; this will register as a command to move right.";
     [Command("")]
 	IEnumerable<Instruction> Press(string movement){
 		movement=movement.ToLowerInvariant();

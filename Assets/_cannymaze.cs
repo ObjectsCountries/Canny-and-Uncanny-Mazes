@@ -24,9 +24,10 @@ public class _cannymaze:ModdedModule{
     private List<int>adjacentPhases;
     private bool currentlyMoving=false;
     public TextureGenerator t;
-    private int n;
+    internal int n;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers;
+    internal bool done=false;
     ///<value>The different types of mazes that the module can have. The last three are exclusive to ruleseeds other than 1.</value>
     private enum MazeTypes{
         Sum=1,
@@ -64,7 +65,6 @@ public class _cannymaze:ModdedModule{
         cmSettings=new Config<cannymazesettings>();
         n=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         cmSettings.Write("{\"animationSpeed\":"+n+"}");
-        /*if(IsTP)*/n=2;
         numbers.SetActive(false);
         dims=t.gridDimensions;
         string output="";
@@ -148,6 +148,7 @@ public class _cannymaze:ModdedModule{
             }
             Shake(numbersButton,1,Sound.BigButtonPress);
         });
+        done=true;
     }
 
     private float f(float j){
