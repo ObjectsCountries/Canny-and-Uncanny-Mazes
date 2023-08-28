@@ -14,7 +14,7 @@ public class _cannymaze:ModdedModule{
     internal bool viewingWholeMaze=false;
     private Vector2 currentPosition,startingPosition;
     private string coordLetters="ABCDEFGH";
-    private string currentCoords;
+    private string currentCoords,leftTile,rightTile,aboveTile,belowTile;
     private int xcoords,ycoords;
     private int dims;
     private int[,]textures;
@@ -27,6 +27,8 @@ public class _cannymaze:ModdedModule{
     ///<value>The different types of mazes that the module can have. The last three are exclusive to ruleseeds other than 1.</value>
     private string[]mazeNames=new string[]{"Sum","Compare","Movement","Binary","Avoid","Strict","Walls","Average","Digital","Fours"};
     private List<string> j;
+    private int startingTile;
+    private List<string> tilesTraversed;
     [Serializable]
     public sealed class cannymazesettings{
         public int animationSpeed=30;
@@ -48,6 +50,7 @@ public class _cannymaze:ModdedModule{
 
 	void Start(){
         j=new List<string>();
+        tilesTraversed=new List<string>();
         cmSettings=new Config<cannymazesettings>();
         n=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         cmSettings.Write("{\"animationSpeed\":"+n+"}");
@@ -82,7 +85,7 @@ public class _cannymaze:ModdedModule{
         startingPosition=currentPosition;
         maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-        StartCoroutine(Moving("maze"));
+        StartCoroutine(Moving("init"));
         arrowleft.Set(onInteract:()=>{
             StartCoroutine(Moving("left"));
             Shake(arrowleft,1,Sound.BigButtonPress);
@@ -134,15 +137,19 @@ public class _cannymaze:ModdedModule{
         });
     }
 
-    private float f(float j){
-        return (j*-2/dims)-(-2/dims);
+    private float f(float x){
+        return (x*-2/dims)-(-2/dims);
     }
 
     private IEnumerator Moving(string direction){
-        if(viewingWholeMaze||currentlyMoving)
+        if(viewingWholeMaze||currentlyMoving
+        ||(xcoords==0     &&direction=="left")
+        ||(xcoords==dims-1&&direction=="right")
+        ||(ycoords==dims-1&&direction=="up")
+        ||(ycoords==0     &&direction=="down"))
             yield break;
-        if(direction!="maze"&&direction!="reset"){
-            canMoveInThatDirection = j.Contains(direction);
+        if(direction!="init"&&direction!="reset"){
+            canMoveInThatDirection = j.Contains(direction) || tilesTraversed.Contains(tileinDirection(direction));
             if(!canMoveInThatDirection){
                 Strike("Tried to move "+direction+", not allowed.");
                 yield break;
@@ -212,7 +219,7 @@ public class _cannymaze:ModdedModule{
             case"reset":
                 maze.GetComponent<MeshRenderer>().material.mainTextureOffset=startingPosition;
                 break;
-            case"maze":
+            case"init":
                 break;
             
         }
@@ -220,26 +227,70 @@ public class _cannymaze:ModdedModule{
         xcoords=(int)(currentPosition.x*dims+.01f);
         ycoords=(int)(currentPosition.y*dims+.01f);
         currentCoords=coordLetters[xcoords].ToString()+(dims-ycoords);
-        if(direction=="maze"){
+        tilesTraversed.Add(currentCoords);
+        
+        if(xcoords!=0)
+            leftTile=coordLetters[xcoords-1].ToString()+(dims-ycoords);
+        else leftTile="";
+
+        if(xcoords!=dims-1)
+            rightTile=coordLetters[xcoords+1].ToString()+(dims-ycoords);
+        else rightTile="";
+
+        if(ycoords!=dims-1)
+            aboveTile=coordLetters[xcoords].ToString()+(dims-ycoords-1);
+        else aboveTile="";
+
+        if(ycoords!=0)
+            belowTile=coordLetters[xcoords].ToString()+(dims-ycoords+1);
+        else belowTile="";
+
+        if(direction=="init"){
             Log("Your maze is: "+(mazeNames[(textures[(dims-ycoords-1),xcoords])-1])+" Maze");
             Log("Your current coordinates are: "+currentCoords);
+            startingTile=textures[(dims-ycoords-1),xcoords];
         }else{
             Log("---");//makes the log a bit easier to read
-            if(direction=="reset")
+            if(direction=="reset"){
                 Log("Reset the maze.");
+                tilesTraversed.Clear();
+            }
             else Log("Pressed "+direction+", going to "+currentCoords+".");
         }
         Log("Your current tile is: "+textures[(dims-ycoords-1),xcoords]);
         j=mazeType();
+        Log("Possible directions are: "+String.Join(", ", j.ToArray()));
     }
 
+    ///<summary>A method to determine which type of maze is to be used.</summary>
+    ///<returns>A <c>List&lt;string&gt;</c> containing the directions in which the<br/>defuser is allowed to move. This will contain at least one of<br/>any of the following: left, right, up, down.</returns>
+    ///<remarks>Note: Incomplete, <c>switch</c> will be inaccurate until all maze<br/>types have been implemented.</remarks>
     private List<string> mazeType(){
-        /*switch(textures[(dims-ycoords-1),xcoords]){
-            case 0:*/
+        switch(startingTile){
+            case 1:
+            case 3:
+            case 5:
+            case 7:
                 return sumDigitalAverageMaze();
-        //}
+            default:
+                return compareMaze();
+        }
     }
 
+    private string tileinDirection(string direction){
+        switch(direction){
+            case "left":
+                return leftTile;
+            case "right":
+                return rightTile;
+            case "up":
+                return aboveTile;
+            case "down":
+                return belowTile;
+            default:
+                return "";
+        }
+    }
     private List<string> sumDigitalAverageMaze(){
         int sum=0;
         Dictionary<string,int> adjacentTiles=new Dictionary<string,int>();
@@ -251,13 +302,13 @@ public class _cannymaze:ModdedModule{
             adjacentTiles.Add("right",textures[(dims-ycoords-1),xcoords+1]);
             sum+=textures[(dims-ycoords-1),xcoords+1];
         }
-        if(ycoords!=0){
-            adjacentTiles.Add("up",textures[(dims-ycoords),xcoords]);
-            sum+=textures[(dims-ycoords),xcoords];
-        }
         if(ycoords!=dims-1){
-            adjacentTiles.Add("down",textures[(dims-ycoords-2),xcoords]);
+            adjacentTiles.Add("up",textures[(dims-ycoords-2),xcoords]);
             sum+=textures[(dims-ycoords-2),xcoords];
+        }
+        if(ycoords!=0){
+            adjacentTiles.Add("down",textures[(dims-ycoords),xcoords]);
+            sum+=textures[(dims-ycoords),xcoords];
         }
         int modulo=0;
         int average=0;
@@ -278,22 +329,55 @@ public class _cannymaze:ModdedModule{
             modulo=digital%7+1;
             Log("The digital root of the sum of all orthogonally-adjacent tiles is "+digital+". Modulo 7 and adding 1, this is "+modulo+".");
         }
+        List<string> possibleDirections=new List<string>();
         for(int i=0;i<adjacentTiles.Count;i++){
+            if(tilesTraversed.Contains(tileinDirection(adjacentTiles.ElementAt(i).Key))){
+                possibleDirections.Add(adjacentTiles.ElementAt(i).Key);
+                Log("Can go "+adjacentTiles.ElementAt(i).Key+" because of backtracking.");//debug
+            }
             adjacentTiles[adjacentTiles.ElementAt(i).Key]-=modulo;
             if(adjacentTiles[adjacentTiles.ElementAt(i).Key]<0)
                 adjacentTiles[adjacentTiles.ElementAt(i).Key]*=-1;//turn the tile numbers into absolute value of distance from modulo
         }
-        List<string> possibleDirections=new List<string>();
+        int totalSoFar=possibleDirections.Count;
         int min=adjacentTiles.Aggregate((l,r)=>l.Value<r.Value?l:r).Value;//find the minimum distance
-        for(int i=0;i<4;i++){
-            if(possibleDirections.Count==0){
+        for(int i=0;i<7;i++){
+            if(possibleDirections.Count==totalSoFar){
                 foreach(KeyValuePair<string,int> tile in adjacentTiles){
-                    if(tile.Value==min+i||tile.Value==min-i)
+                    if((tile.Value==min+i||tile.Value==min-i)&&!possibleDirections.Contains(tile.Key))
                         possibleDirections.Add(tile.Key);//get all tile directions that are this distance or the nearest away from modulo
                 }
             }
         }
-        Log("Possible directions are: "+String.Join(", ", possibleDirections.ToArray()));
         return possibleDirections;
+    }
+
+    private List<string> compareMaze(){
+        int horizSum=0;
+        int vertSum=0;
+        List<string>horizDirs=new List<string>();
+        List<string>vertDirs=new List<string>();
+        if(xcoords!=0){
+            horizSum+=textures[(dims-ycoords-1),xcoords-1];
+            horizDirs.Add("left");
+        }
+        if(xcoords!=dims-1){
+            horizSum+=textures[(dims-ycoords-1),xcoords+1];
+            horizDirs.Add("right");
+        }
+        if(ycoords!=dims-1){
+            vertSum+=textures[(dims-ycoords-2),xcoords];
+            vertDirs.Add("up");
+        }
+        if(ycoords!=0){
+            vertSum+=textures[(dims-ycoords),xcoords];
+            vertDirs.Add("down");
+        }
+        if(horizSum>vertSum)
+            return horizDirs;
+        if(horizSum<vertSum)
+            return vertDirs;
+        horizDirs.AddRange(vertDirs);
+        return horizDirs;
     }
 }
