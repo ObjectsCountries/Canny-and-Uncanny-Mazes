@@ -9,7 +9,6 @@ using UnityEngine;
 using KModkit;
 
 public class _cannymaze:ModdedModule{
-    internal bool moduleSolved;
     public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze,numbersButton,resetButton;
     internal bool viewingWholeMaze=false;
     private Vector2 currentPosition,startingPosition;
@@ -26,7 +25,7 @@ public class _cannymaze:ModdedModule{
     private bool tookTooLong=false;
     internal int animSpeed;
     private Config<cannymazesettings> cmSettings;
-    public GameObject numbers,gm;
+    public GameObject numbers,gm,currentBox,goalBox,anchor;
     ///<value>The different types of mazes that the module can have. The last four are exclusive to ruleseeds other than 1.</value>
     private string[]mazeNames=new string[]{"Sum","Compare","Movement Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Fours","Movement Moves"};
     private List<string> j;
@@ -34,6 +33,7 @@ public class _cannymaze:ModdedModule{
     private List<string> tilesTraversed;
     private List<string> allDirs;
     private List<string> correctPath;
+    private float m,b;
     [Serializable]
     public sealed class cannymazesettings{
         public int animationSpeed=30;
@@ -64,63 +64,68 @@ public class _cannymaze:ModdedModule{
         numbers.SetActive(false);
         StartCoroutine(Initialization());
         arrowleft.Set(onInteract:()=>{
-            if(mazeGenerated)
+            if(mazeGenerated&&!Status.IsSolved)
                 StartCoroutine(Moving("left",animSpeed));
             Shake(arrowleft,1,Sound.BigButtonPress);
             });
         arrowright.Set(onInteract:()=>{
-            if(mazeGenerated)
+            if(mazeGenerated&&!Status.IsSolved)
                 StartCoroutine(Moving("right",animSpeed));
             Shake(arrowright,1,Sound.BigButtonPress);
             });
         arrowup.Set(onInteract:()=>{
-            if(mazeGenerated)
+            if(mazeGenerated&&!Status.IsSolved)
                 StartCoroutine(Moving("up",animSpeed));
             Shake(arrowup,1,Sound.BigButtonPress);
             });
         arrowdown.Set(onInteract:()=>{
-            if(mazeGenerated)
+            if(mazeGenerated&&!Status.IsSolved)
                 StartCoroutine(Moving("down",animSpeed));
             Shake(arrowdown,1,Sound.BigButtonPress);
             });
         resetButton.Set(onInteract:()=>{
             if(tookTooLong)
                 Solve("Solved by pressing the Reset button after generation took too long.");
-            else if(mazeGenerated)
+            else if(mazeGenerated&&!Status.IsSolved){
+                Log("Reset the maze.");
                 StartCoroutine(Moving("reset",2));
+            }
             Shake(resetButton,1,Sound.BigButtonPress);
         });
         maze.Set(onInteract:()=>{
-            if(mazeGenerated){
-                if(!currentlyMoving){
-                    if(viewingWholeMaze){
-                        if(numbers.activeInHierarchy){
-                            numbers.SetActive(false);
-                            t.changeTexture(t.finalTexture);
-                        }
-                        maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
-                        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-                    }else{
-                        maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
-                        maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
-                    }
-                viewingWholeMaze=!viewingWholeMaze;
-                Log("Pressed the maze.");
+        if(mazeGenerated&&!currentlyMoving&&!Status.IsSolved){
+            if(viewingWholeMaze){
+                if(numbers.activeInHierarchy){
+                    numbers.SetActive(false);
+                    t.changeTexture(t.finalTexture);
+                }
+                currentBox.SetActive(false);
+                goalBox.SetActive(false);
+                maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+            }else{
+                currentBox.SetActive(true);
+                goalBox.SetActive(true);
+                maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
+                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
             }
+            viewingWholeMaze=!viewingWholeMaze;
         }
         });
         numbersButton.Set(onInteract:()=>{
             if(tookTooLong)
                 Solve("Solved by pressing the Numbers button after generation took too long.");
-            if(mazeGenerated){
-                if(viewingWholeMaze){
-                    if(!numbers.activeInHierarchy){
-                        numbers.SetActive(true);
-                        t.changeTexture(t.whiteBG);
-                    }else{
-                        numbers.SetActive(false);
-                        t.changeTexture(t.finalTexture);
-                    }
+            if(mazeGenerated&&viewingWholeMaze&&!Status.IsSolved){
+                if(!numbers.activeInHierarchy){
+                    numbers.SetActive(true);
+                    t.changeTexture(t.whiteBG);
+                    currentBox.SetActive(false);
+                    goalBox.SetActive(false);
+                }else{
+                    numbers.SetActive(false);
+                    t.changeTexture(t.finalTexture);
+                    currentBox.SetActive(true);
+                    goalBox.SetActive(true);
                 }
             }
             Shake(numbersButton,1,Sound.BigButtonPress);
@@ -193,31 +198,45 @@ public class _cannymaze:ModdedModule{
             switch(dims){
                 case 5:
                     numbers.GetComponent<TextMesh>().fontSize=30;
+                    m=.2f;
+                    b=1.1f;
+                    anchor.transform.localPosition=new Vector3(.7f,.7f,0);
                     break;
                 case 6:
                     numbers.GetComponent<TextMesh>().fontSize=25;
+                    m=.167429f;
+                    b=1.08143f;
+                    anchor.transform.localPosition=new Vector3(2/3f,2/3f,0);
                     break;
                 case 7:
                     numbers.GetComponent<TextMesh>().fontSize=22;
+                    m=.1405f;
+                    b=1.07f;
+                    anchor.transform.localPosition=new Vector3(.65f,.65f,0);
                     break;
                 case 8:
                     numbers.GetComponent<TextMesh>().fontSize=19;
+                    m=.125f;
+                    b=1.065f;
+                    anchor.transform.localPosition=new Vector3(.625f,.625f,0);
                     break;
             }
+            numbers.GetComponent<TextMesh>().text=output;
             currentCoords=startingCoords;
-            StartCoroutine(Moving("reset",2,false));
+            currentBox.transform.localScale=new Vector3(7f/dims,1,7f/dims);
+            goalBox.transform.localScale=new Vector3(7f/dims,1,7f/dims);
+            goalBox.transform.localPosition=new Vector3(m*xGoal-b,-.01f,-m*yGoal+b);
+            yield return StartCoroutine(Moving("reset",2,false));
             Log("Your maze is: "+(mazeNames[(textures[(dims-ycoords-1),xcoords])-1])+" Maze");
             Log("Your current coordinates are: "+currentCoords);
             Log("Your goal is: "+goalCoords);
             Log("A possible route is: "+String.Join(", ", correctPath.ToArray()));
-            Log("Your current tile is: "+textures[(dims-ycoords-1),xcoords]);
-            Log("Possible directions are: "+String.Join(", ", j.ToArray()));
+            yield return StartCoroutine(Moving("reset",2,true));
             mazeGenerated=true;
             gm.SetActive(false);
             t.changeTexture(t.finalTexture);
             maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
             maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-            StartCoroutine(Moving("reset",2,false));
             yield break;
         }
         else{
@@ -307,7 +326,9 @@ public class _cannymaze:ModdedModule{
         xcoords=(int)(currentPosition.x*dims+.01f);
         ycoords=(int)(currentPosition.y*dims+.01f);
         currentCoords=coordLetters[xcoords].ToString()+(dims-ycoords);
-        tilesTraversed.Add(currentCoords);
+        if(!tilesTraversed.Contains(currentCoords))
+            tilesTraversed.Add(currentCoords);
+        currentBox.transform.localPosition=new Vector3(m*xcoords-b,-.01f,-m*ycoords+b);
         
         if(xcoords!=0)
             leftTile=coordLetters[xcoords-1].ToString()+(dims-ycoords);
@@ -327,11 +348,9 @@ public class _cannymaze:ModdedModule{
 
         if(logging)
             Log("---");//makes the log a bit easier to read
-        if(direction=="reset"){
-            if(logging)
-                Log("Reset the maze.");
+        if(direction=="reset")
             tilesTraversed.Clear();
-        }else{
+        else{
             if(logging)
                 Log("Pressed "+direction+", going to "+currentCoords+".");
         }
@@ -353,13 +372,17 @@ public class _cannymaze:ModdedModule{
         List<string> temp=new List<string>();
         switch(startingTile){
             case 1:
-            case 3:
-            case 5:
-            case 7:
+            case 2:
                 temp=sumDigitalAverageMaze(logging);
                 break;
-            default:
+            case 3:
+            case 4:
+            case 5:
                 temp=compareMaze();
+                break;
+            case 6:
+            case 7:
+                temp=movementMaze(logging);
                 break;
         }
         if(includeBacktracking){
@@ -508,20 +531,20 @@ public class _cannymaze:ModdedModule{
     private IEnumerator generatingMazeIdle(){
         generatingMazeIdleCurrentlyRunning=true;
         gm.GetComponent<TextMesh>().fontSize=45;
-        string gen="GENERATING\nMAZE";
+        string gen="GENERATING\nMAZE.";
         int totaltime=0;
         while(!mazeGenerated){
-            gm.GetComponent<TextMesh>().text=gen+".";
+            gm.GetComponent<TextMesh>().text=gen;
             yield return new WaitForSeconds(.75f);
-            if(totaltime==26){
+            if(totaltime==4&&!mazeGenerated){
                 gm.GetComponent<TextMesh>().fontSize=27;
                 gm.GetComponent<TextMesh>().text="SORRY THE MODULE\nTOOK SO LONG TO\nLOAD. PRESS EITHER\nOF THE TWO RED\nBUTTONS BELOW TO\nSOLVE IMMEDIATELY.";
                 tookTooLong=true;
                 yield break;
             }
-            gm.GetComponent<TextMesh>().text=gen+"..";
+            gm.GetComponent<TextMesh>().text=gen+".";
             yield return new WaitForSeconds(.75f);
-            gm.GetComponent<TextMesh>().text=gen+"...";
+            gm.GetComponent<TextMesh>().text=gen+"..";
             yield return new WaitForSeconds(.75f);
             totaltime++;
         }
