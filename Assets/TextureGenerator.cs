@@ -11,7 +11,7 @@ public class TextureGenerator : MonoBehaviour
     private Material mat;
     new private MeshRenderer renderer;
 
-    void Awake(){
+    public void Awake(){
         gridDimensions = Random.Range(5, 9);
         int cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
 
