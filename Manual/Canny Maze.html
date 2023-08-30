@@ -37,7 +37,7 @@
                         <td><img src="img/canny/canny2.png" width="75x"></td>
                         <td>COMPARE MAZE</td>
                         <td><img src="img/canny/canny3.png" width="75x"></td>
-                        <td>MOVEMENT MAZE</td>
+                        <td>TILES MAZE</td>
                     </tr>
                     <tr>
                         <td><img src="img/canny/canny4.png" width="75x"></td>
@@ -61,7 +61,7 @@
                 <h3>Instructions</h3>
                 <p>Sum Maze: Sum all orthogonally adjacent tiles, then modulo 7 and add 1. Whichever surrounding tile is closest or equal to this number is the tile to navigate to. Include the tiles that have already been traversed in the sum, but do not consider them when determining the closest to the result.</p>
                 <p>Compare Maze: Compare the sum of the tiles immediately to the left and right with that of the tiles immediately above and below. The defuser can only move in the directions of whichever pair is larger. In the case of them being equal, the defuser can move in any direction.</p>
-                <p>Movement Maze: Take (the total number of tiles traversed multiplied by the current tile) modulo 7 and add 1. Whichever surrounding tile is closest or equal to this number is the tile to navigate to. Do not consider tiles that have already been traversed when determining the closest to the result.</p>
+                <p>Tiles Maze: Take (the total number of tiles traversed multiplied by the current tile) modulo 7 and add 1. Whichever surrounding tile is closest or equal to this number is the tile to navigate to. Do not consider tiles that have already been traversed when determining the closest to the result.</p>
                 <p>Binary Maze: Take the binary representation of the current tile. Whichever tile can be reached by inverting any one bit is the tile to navigate to.</p>
                 <p>Avoid Maze: Cannot move up to tiles 1 or 2, cannot move right to tiles 3 or 4, cannot move down to tiles 5 or 6, cannot move left to tile 7.</p>
                 <p>Strict Maze: Can only move up or down if going from an odd tile to an even tile or vice versa, can only move right if moving to a higher tile, can only move left if moving to a lower tile.</p>

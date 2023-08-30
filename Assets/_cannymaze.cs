@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using KModkit;
 
@@ -26,14 +27,33 @@ public class _cannymaze:ModdedModule{
     internal int animSpeed;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers,gm,currentBox,goalBox,anchor;
-    ///<value>The different types of mazes that the module can have. The last four are exclusive to ruleseeds other than 1.</value>
-    private string[]mazeNames=new string[]{"Sum","Compare","Movement Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Fours","Movement Moves"};
+    ///<value>The different types of mazes that the module can have. The last five are exclusive to ruleseeds other than 1.</value>
+    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Fours","Movement","Double Binary"};
     private List<string> j;
-    private int startingTile;
+    private int startingTile,currentTile;
+    private int movementsMade=0;
     private List<string> tilesTraversed;
     private List<string> allDirs;
     private List<string> correctPath;
     private float m,b;
+    private int[][]anyOneBit=new int[][]{
+            new int[]{3,5},
+            new int[]{3,6},
+            new int[]{1,2,7},
+            new int[]{5,6},
+            new int[]{1,4,7},
+            new int[]{2,4,7},
+            new int[]{3,5,6}
+    };
+    private int[][]anyTwoBits=new int[][]{
+            new int[]{2,4,7},
+            new int[]{1,4,7},
+            new int[]{5,6},
+            new int[]{1,2,7},
+            new int[]{3,6},
+            new int[]{3,5},
+            new int[]{1,2,4}
+    };
     [Serializable]
     public sealed class cannymazesettings{
         public int animationSpeed=30;
@@ -161,6 +181,7 @@ public class _cannymaze:ModdedModule{
             goalCoords=coordLetters[xGoal].ToString()+(dims-yGoal);
         }while(goalCoords==currentCoords);
         int index;
+        currentTile=textures[(dims-ycoords-1),xcoords];
         j=mazeType(false,false);
         while(currentCoords!=goalCoords&&attempts<3){
             if(j.Count==0)
@@ -168,12 +189,13 @@ public class _cannymaze:ModdedModule{
             index=UnityEngine.Random.Range(0,j.Count);
             correctPath.Add(j.ElementAt(index));
             yield return StartCoroutine(Moving(j.ElementAt(index),2,false,false));
-            if(correctPath.Count>2&&(
+            if(mazeNames[startingTile]!="Movement"&&
+              (correctPath.Count>2&&(
               (correctPath.ElementAt(correctPath.Count-1)=="left" &&correctPath.ElementAt(correctPath.Count-2)=="right")
             ||(correctPath.ElementAt(correctPath.Count-1)=="right"&&correctPath.ElementAt(correctPath.Count-2)=="left")
             ||(correctPath.ElementAt(correctPath.Count-1)=="up"   &&correctPath.ElementAt(correctPath.Count-2)=="down")
             ||(correctPath.ElementAt(correctPath.Count-1)=="down" &&correctPath.ElementAt(correctPath.Count-2)=="up")
-            )){
+            ))){
                 correctPath.RemoveAt(correctPath.Count-1);
                 correctPath.RemoveAt(correctPath.Count-1);
             }
@@ -326,6 +348,7 @@ public class _cannymaze:ModdedModule{
         xcoords=(int)(currentPosition.x*dims+.01f);
         ycoords=(int)(currentPosition.y*dims+.01f);
         currentCoords=coordLetters[xcoords].ToString()+(dims-ycoords);
+        currentTile=textures[(dims-ycoords-1),xcoords];
         if(!tilesTraversed.Contains(currentCoords))
             tilesTraversed.Add(currentCoords);
         currentBox.transform.localPosition=new Vector3(m*xcoords-b,-.01f,-m*ycoords+b);
@@ -348,8 +371,11 @@ public class _cannymaze:ModdedModule{
 
         if(logging)
             Log("---");//makes the log a bit easier to read
-        if(direction=="reset")
+        if(direction=="reset"){
             tilesTraversed.Clear();
+            tilesTraversed.Add(currentCoords);
+            movementsMade=0;
+        }
         else{
             if(logging)
                 Log("Pressed "+direction+", going to "+currentCoords+".");
@@ -358,6 +384,7 @@ public class _cannymaze:ModdedModule{
             Solve("Your module is: solved module");
             yield break;
         }
+        movementsMade++;
         j=mazeType(logging,includeBacktracking);
         if(logging){
             Log("Your current tile is: "+textures[(dims-ycoords-1),xcoords]);
@@ -372,17 +399,23 @@ public class _cannymaze:ModdedModule{
         List<string> temp=new List<string>();
         switch(startingTile){
             case 1:
-            case 2:
                 temp=sumDigitalAverageMaze(logging);
                 break;
-            case 3:
-            case 4:
-            case 5:
+            case 2:
                 temp=compareMaze();
+                break;
+            case 3:
+                temp=tilesMovementMaze(logging);
+                break;
+            case 4:
+                temp=binaryMaze();
+                break;
+            case 5:
+                temp=avoidMaze();
                 break;
             case 6:
             case 7:
-                temp=movementMaze(logging);
+                temp=strictMaze();
                 break;
         }
         if(includeBacktracking){
@@ -430,18 +463,18 @@ public class _cannymaze:ModdedModule{
         int modulo=0;
         int average=0;
         int digital=0;
-        if(mazeNames[0]=="Sum"){
+        if(mazeNames[startingTile-1]=="Sum"){
             modulo=sum%7+1;
             if(logging)
                 Log("The sum of all orthogonally-adjacent tiles is "+sum+". Modulo 7 and adding 1, this is "+modulo+".");
         }
-        if(mazeNames[0]=="Average"){
+        if(mazeNames[startingTile-1]=="Average"){
             average=(int)((sum/adjacentTiles.Count)+.5f);
             modulo=average%7+1;
             if(logging)
                 Log("The average of the sum of all orthogonally-adjacent tiles is "+average+". Modulo 7 and adding 1, this is "+modulo+".");
         }
-        if(mazeNames[0]=="Digital"){
+        if(mazeNames[startingTile-1]=="Digital"){
             digital=(sum/10)+(sum%10);
             while(digital>9)
                 digital=(digital/10)+(digital%10);
@@ -496,11 +529,17 @@ public class _cannymaze:ModdedModule{
         return horizDirs;
     }
 
-    private List<string> movementMaze(bool logging){
-        int currentTile=textures[(dims-ycoords-1),xcoords];
-        int modulo=((currentTile*tilesTraversed.Count)%7)+1;
+    private List<string> tilesMovementMaze(bool logging){
+        string distinct="";
+        int modulo;
+        int total=movementsMade;
+        if(mazeNames[startingTile-1]=="Tiles"){
+            distinct="distinct ";
+            total=tilesTraversed.Count;
+        }
+        modulo=((currentTile*total)%7)+1;
         if(logging)
-            Log("The total number of tiles traversed so far is "+tilesTraversed.Count+", and multiplying by the current tile yields "+(currentTile*tilesTraversed.Count)+". Modulo 7 and adding 1, this is "+modulo+".");
+            Log("The total number of "+distinct+"tiles traversed so far is "+total+", and multiplying by the current tile yields "+(currentTile*total)+". Modulo 7 and adding 1, this is "+modulo+".");
         Dictionary<string,int> adjacentTiles=new Dictionary<string,int>();
         if(xcoords!=0)
             adjacentTiles.Add("left",textures[(dims-ycoords-1),xcoords-1]);
@@ -526,6 +565,117 @@ public class _cannymaze:ModdedModule{
             }
         }
         return possibleDirections;
+    }
+
+    private List<string> binaryMaze(){
+        List<string> dirs=new List<string>();
+        int[][]bit;
+        switch(mazeNames[startingTile-1]){
+            case "Fours":
+                return foursMaze();
+            case "Double Binary":
+                bit=anyTwoBits;
+                break;
+            case "Binary":
+            default:
+                bit=anyOneBit;
+                break;
+        }
+        if(xcoords!=0&&
+           Array.Exists(bit[currentTile-1],
+           t=>t==textures[(dims-ycoords-1),xcoords-1]))
+            dirs.Add("left");
+
+        if(xcoords!=dims-1&&
+           Array.Exists(bit[currentTile-1],
+           t=>t==textures[(dims-ycoords-1),xcoords+1]))
+            dirs.Add("right");
+
+        if(ycoords!=dims-1&&
+           Array.Exists(bit[currentTile-1],
+           t=>t==textures[(dims-ycoords-2),xcoords]))
+            dirs.Add("up");
+
+        if(ycoords!=0&&
+           Array.Exists(bit[currentTile-1],
+           t=>t==textures[(dims-ycoords),xcoords]))
+            dirs.Add("down");
+
+        return dirs;
+    }
+
+    private List<string> avoidMaze(){
+        List<string> dirs=new List<string>();
+        if(xcoords!=0
+           &&textures[(dims-ycoords-1),xcoords-1]!=1
+           &&textures[(dims-ycoords-1),xcoords-1]!=2)
+            dirs.Add("left");
+
+        if(xcoords!=dims-1
+           &&textures[(dims-ycoords-1),xcoords+1]!=3
+           &&textures[(dims-ycoords-1),xcoords+1]!=4)
+            dirs.Add("right");
+
+        if(ycoords!=dims-1
+           &&textures[(dims-ycoords-2),xcoords]!=5
+           &&textures[(dims-ycoords-2),xcoords]!=6)
+            dirs.Add("up");
+
+        if(ycoords!=0
+           &&textures[(dims-ycoords),xcoords]!=7)
+            dirs.Add("down");
+
+        return dirs;
+    }
+
+    private List<string> foursMaze(){
+        Dictionary<string,int> adjacentTiles=new Dictionary<string,int>();
+        if(xcoords!=0)
+            adjacentTiles.Add("left",textures[(dims-ycoords-1),xcoords-1]%4);
+        if(xcoords!=dims-1)
+            adjacentTiles.Add("right",textures[(dims-ycoords-1),xcoords+1]%4);
+        if(ycoords!=dims-1)
+            adjacentTiles.Add("up",textures[(dims-ycoords-2),xcoords]%4);
+        if(ycoords!=0)
+            adjacentTiles.Add("down",textures[(dims-ycoords),xcoords]%4);
+        List<string> possibleDirections=new List<string>();
+        int mostCommon=adjacentTiles.Select(d => d.Value)
+                             .GroupBy(k => k)
+                             .OrderByDescending(k => k.Count())
+                             .First()
+                             .Key;
+        foreach(KeyValuePair<string,int> tile in adjacentTiles){
+            if(!tilesTraversed.Contains(tileinDirection(tile.Key))&&tile.Value==mostCommon)
+                possibleDirections.Add(tile.Key);//get all tile directions that are this distance or the nearest away from modulo
+        }
+        return possibleDirections;
+    }
+
+    private List<string> strictMaze(){
+        List<string> dirs=new List<string>();
+        if(xcoords!=0
+           &&textures[(dims-ycoords-1),xcoords-1]<currentTile)
+            dirs.Add("left");
+
+        if(xcoords!=dims-1
+           &&textures[(dims-ycoords-1),xcoords+1]>currentTile)
+            dirs.Add("right");
+
+        if(ycoords!=dims-1
+           &&((textures[(dims-ycoords-2),xcoords]%2!=0&&currentTile%2==0)
+           || (textures[(dims-ycoords-2),xcoords]%2==0&&currentTile%2!=0)))
+            dirs.Add("up");
+
+        if(ycoords!=0
+           &&((textures[(dims-ycoords),xcoords]%2!=0&&currentTile%2==0)
+           || (textures[(dims-ycoords),xcoords]%2==0&&currentTile%2!=0)))
+            dirs.Add("down");
+
+        return dirs;
+    }
+
+    private List<string>wallsMaze(){
+        return allDirs;//placeholder until i learn to make the Walls Maze
     }
 
     private IEnumerator generatingMazeIdle(){
