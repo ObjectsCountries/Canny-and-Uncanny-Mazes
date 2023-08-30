@@ -1,11 +1,5 @@
 # Canny Maze
 
-## Ask for Help With
-
-* Making mazes for manual
-* Reworking highlight models
-* Implementing pretty much everything about solving the module
-
 ## Ruleseed Plans
 
 * Sum Maze: Keep for some ruleseeds, replace with either of the following for others: (**IMPLEMENTED**)
