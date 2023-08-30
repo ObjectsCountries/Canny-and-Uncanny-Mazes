@@ -1,14 +1,137 @@
-th{
+th#yourMazeIs{
     background-color:black;
     color:red;
 }
-td{
+td#mazeType{
     background-color:black;
     color:white;
 }
-table,th,td{
+table.mazeTypes, th#yourMazeIs, td#mazeType{
     border: 0px solid black;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: 800;
     text-align: center;
 }
+
+table.wallsMazeMaps{
+    border-top-style: hidden;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td#wallsMazeHeader{
+    border-top-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+    text-align: center;
+}
+
+td#left{
+    border-top-style: hidden;
+    border-bottom-style: hidden;
+    border-left-style: 4px solid black;
+    border-right-style: hidden;
+}
+
+td#right{
+    border-top-style: hidden;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-right-style: 4px solid black;
+}
+
+td#up{
+    border-top-style: 4px solid black;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+}
+
+td#down{
+    border-top-style: hidden;
+    border-bottom-style: 4px solid black;
+    border-left-style: hidden;
+    border-right-style: hidden;
+}
+
+td#leftright{
+    border-top-style: hidden;
+    border-bottom-style: hidden;
+    border-left-style: 4px solid black;
+    border-right-style: 4px solid black;
+}
+
+td#leftup{
+    border-top-style: 4px solid black;
+    border-bottom-style: hidden;
+    border-left-style: 4px solid black;
+    border-right-style: hidden;
+}
+
+td#leftdown{
+    border-top-style: hidden;
+    border-bottom-style: 4px solid black;
+    border-left-style: 4px solid black;
+    border-right-style: hidden;
+}
+
+td#rightup{
+    border-top-style: 4px solid black;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-right-style: 4px solid black;
+}
+
+td#rightdown{
+    border-top-style: hidden;
+    border-bottom-style: 4px solid black;
+    border-left-style: hidden;
+    border-right-style: 4px solid black;
+}
+
+td#updown{
+    border-top-style: 4px solid black;
+    border-bottom-style: 4px solid black;
+    border-left-style: hidden;
+    border-right-style: hidden;
+}
+
+td#leftrightup{
+    border-top-style: 4px solid black;
+    border-bottom-style: hidden;
+    border-left-style: 4px solid black;
+    border-right-style: 4px solid black;
+}
+
+td#leftrightdown{
+    border-top-style: hidden;
+    border-bottom-style: 4px solid black;
+    border-left-style: 4px solid black;
+    border-right-style: 4px solid black;
+}
+
+td#leftupdown{
+    border-top-style: 4px solid black;
+    border-bottom-style: 4px solid black;
+    border-left-style: 4px solid black;
+    border-right-style: hidden;
+}
+
+td#rightupdown{
+    border-top-style: 4px solid black;
+    border-bottom-style: 4px solid black;
+    border-left-style: hidden;
+    border-right-style: 4px solid black;
+}
+
+td#none{
+    border-top-style: hidden;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+}
+

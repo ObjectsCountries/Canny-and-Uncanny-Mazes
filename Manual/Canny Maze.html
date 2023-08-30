@@ -25,29 +25,27 @@
                 <p>On this module will be an image of Mr. Incredible becoming canny alongside four arrows. These images (tiles) are numbered 1-7 in order of the table below, and are randomly distributed across a square grid (maze) with dimensions ranging from 5 to 8.</p>
                 <p>Clicking on the center of the module reveals the entire maze, and clicking again returns to the view of the current position. In the view of the entire maze, the current position is surrounded by a blue border and the goal by a red border. The module will automatically solve upon reaching the goal. Whichever tile is on the module at first is the type of maze present. The type of maze on the module will never change.</p>
                 <p>The button on the bottom left turns all of the images into numbers when viewing the entire maze to make communication easier. The button on the bottom right completely resets all progress, but does not regenerate the maze.</p>
-                <table><thead>
-                    <tr>
-                        <th colspan=6>YOUR MAZE IS:</th>
-                    </tr>
+                <table class="mazeTypes"><thead>
+                    <tr><th colspan=6 id="yourMazeIs">YOUR MAZE IS:</th></tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td><img src="img/canny/canny1.png" width="75x"></td>
-                        <td>SUM MAZE</td>
-                        <td><img src="img/canny/canny2.png" width="75x"></td>
-                        <td>COMPARE MAZE</td>
-                        <td><img src="img/canny/canny3.png" width="75x"></td>
-                        <td>TILES MAZE</td>
+                        <td id="mazeType"><img src="img/canny/canny1.png" width="75x"></td>
+                        <td id="mazeType">SUM MAZE</td>
+                        <td id="mazeType"><img src="img/canny/canny2.png" width="75x"></td>
+                        <td id="mazeType">COMPARE MAZE</td>
+                        <td id="mazeType"><img src="img/canny/canny3.png" width="75x"></td>
+                        <td id="mazeType">TILES MAZE</td>
                     </tr>
                     <tr>
-                        <td><img src="img/canny/canny4.png" width="75x"></td>
-                        <td>BINARY MAZE</td>
-                        <td><img src="img/canny/canny5.png" width="75x"></td>
-                        <td>AVOID MAZE</td>
-                        <td><img src="img/canny/canny6.png" width="75x"></td>
-                        <td>STRICT MAZE</td>
+                        <td id="mazeType"><img src="img/canny/canny4.png" width="75x"></td>
+                        <td id="mazeType">BINARY MAZE</td>
+                        <td id="mazeType"><img src="img/canny/canny5.png" width="75x"></td>
+                        <td id="mazeType">AVOID MAZE</td>
+                        <td id="mazeType"><img src="img/canny/canny6.png" width="75x"></td>
+                        <td id="mazeType">STRICT MAZE</td>
                     </tr>
-                    <tr><td colspan=2 style="background-color:transparent"></td><td><img src="img/canny/canny7.png" width="75x"></td><td>WALLS MAZE</td><td colspan=2 style="background-color:transparent"></td></tr>
+                    <tr><td colspan=2 style="border-width:0px"></td><td id="mazeType"><img src="img/canny/canny7.png" width="75x"></td><td id="mazeType">WALLS MAZE</td><td colspan=2 style="background-color:transparent;border-width:0px"></td></tr>
                 </tbody></table>
             </div>
             <div class="page-footer relative-footer">Page 1 of 3</div>
@@ -67,8 +65,6 @@
                 <p>Strict Maze: Can only move up or down if going from an odd tile to an even tile or vice versa, can only move right if moving to a higher tile, can only move left if moving to a lower tile.</p>
                 <p>Walls Maze: Must avoid walls (see below page).</p>
                 <p>Backtracking is always allowed. In the case of more than one tile meeting the necessary conditions, any applicable tile can be navigated to. This also applies while backtracking.</p>
-                <h4>Binary Maze Guide</h4>
-                <p>1: 3, 5<br>2: 3, 6<br>3: 1, 2, 7<br>4: 5, 6<br>5: 1, 4, 7<br>6: 2, 4, 7<br>7: 3, 5, 6</p>
             </div>
             <div class="page-footer relative-footer">Page 2 of 3</div>
         </div>
@@ -80,6 +76,604 @@
             <div class="page-content">
                 <h3>Walls Maze Maps</h3>
                 <p>Note to self: Develop maps to fill in this part later.</p>
+                <table class="wallsMazeMaps"><tbody>
+                    <tr>
+                        <td style="border-right-style:hidden;border-bottom-style:hidden">
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td id="wallsMazeHeader" colspan=5>5x5</td></tr></thead><tbody style="height:250px">
+                                <tr>
+                                    <td id="leftup">
+                                        
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="rightup">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="leftdown">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="leftup">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+            
+                                    </td>
+                                    <td id="downright">
+            
+                                    </td>
+                                    <td id="leftup">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="leftdown">
+            
+                                    </td>
+                                    <td id="updown">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="rightdown">
+            
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                        <td>
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td id="wallsMazeHeader" colspan=6>6x6</td></tr></thead><tbody style="height:250px">
+                                <tr>
+                                    <td id="leftup">
+                                        
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="rightup">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="leftdown">
+                                        
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="rightdown">
+            
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td id="wallsMazeHeader" colspan=7>7x7</td></tr></thead><tbody style="height:250px">
+                                <tr>
+                                    <td id="leftup">
+                                        
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="rightup">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="leftdown">
+                                        
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="rightdown">
+            
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                        <td style="border-left-style:hidden;border-top-style:hidden">
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td id="wallsMazeHeader" colspan=8>8x8</td></tr></thead><tbody style="height:250px">
+                                <tr>
+                                    <td id="leftup">
+                                        
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="up">
+            
+                                    </td>
+                                    <td id="rightup">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="left">
+                                        
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="none">
+            
+                                    </td>
+                                    <td id="right">
+            
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="leftdown">
+                                        
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="down">
+            
+                                    </td>
+                                    <td id="rightdown">
+            
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+                <h3>Binary Maze Guide</h3>
+                <p>1: 3, 5<br>2: 3, 6<br>3: 1, 2, 7<br>4: 5, 6<br>5: 1, 4, 7<br>6: 2, 4, 7<br>7: 3, 5, 6</p>
             </div>
             <div class="page-footer relative-footer">Page 3 of 3</div>
         </div>
