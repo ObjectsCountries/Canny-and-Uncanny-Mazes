@@ -13,6 +13,10 @@ table.mazeTypes, th#yourMazeIs, td#mazeType{
     text-align: center;
 }
 
+td{
+    border: 4px solid black;
+}
+
 table.wallsMazeMaps{
     border-top-style: hidden;
     border-bottom-style: hidden;
@@ -33,7 +37,7 @@ td#wallsMazeHeader{
 td#left{
     border-top-style: hidden;
     border-bottom-style: hidden;
-    border-left-style: 4px solid black;
+    border-left-style: default;
     border-right-style: hidden;
 }
 
@@ -41,11 +45,11 @@ td#right{
     border-top-style: hidden;
     border-bottom-style: hidden;
     border-left-style: hidden;
-    border-right-style: 4px solid black;
+    border-right-style: default;
 }
 
 td#up{
-    border-top-style: 4px solid black;
+    border-top-style: default;
     border-bottom-style: hidden;
     border-left-style: hidden;
     border-right-style: hidden;
@@ -53,7 +57,7 @@ td#up{
 
 td#down{
     border-top-style: hidden;
-    border-bottom-style: 4px solid black;
+    border-bottom-style: default;
     border-left-style: hidden;
     border-right-style: hidden;
 }
@@ -61,71 +65,71 @@ td#down{
 td#leftright{
     border-top-style: hidden;
     border-bottom-style: hidden;
-    border-left-style: 4px solid black;
-    border-right-style: 4px solid black;
+    border-left-style: default;
+    border-right-style: default;
 }
 
 td#leftup{
-    border-top-style: 4px solid black;
+    border-top-style: default;
     border-bottom-style: hidden;
-    border-left-style: 4px solid black;
+    border-left-style: default;
     border-right-style: hidden;
 }
 
 td#leftdown{
     border-top-style: hidden;
-    border-bottom-style: 4px solid black;
-    border-left-style: 4px solid black;
+    border-bottom-style: default;
+    border-left-style: default;
     border-right-style: hidden;
 }
 
 td#rightup{
-    border-top-style: 4px solid black;
+    border-top-style: default;
     border-bottom-style: hidden;
     border-left-style: hidden;
-    border-right-style: 4px solid black;
+    border-right-style: default;
 }
 
 td#rightdown{
     border-top-style: hidden;
-    border-bottom-style: 4px solid black;
+    border-bottom-style: default;
     border-left-style: hidden;
-    border-right-style: 4px solid black;
+    border-right-style: default;
 }
 
 td#updown{
-    border-top-style: 4px solid black;
-    border-bottom-style: 4px solid black;
+    border-top-style: default;
+    border-bottom-style: default;
     border-left-style: hidden;
     border-right-style: hidden;
 }
 
 td#leftrightup{
-    border-top-style: 4px solid black;
+    border-top-style: default;
     border-bottom-style: hidden;
-    border-left-style: 4px solid black;
-    border-right-style: 4px solid black;
+    border-left-style: default;
+    border-right-style: default;
 }
 
 td#leftrightdown{
     border-top-style: hidden;
-    border-bottom-style: 4px solid black;
-    border-left-style: 4px solid black;
-    border-right-style: 4px solid black;
+    border-bottom-style: default;
+    border-left-style: default;
+    border-right-style: default;
 }
 
 td#leftupdown{
-    border-top-style: 4px solid black;
-    border-bottom-style: 4px solid black;
-    border-left-style: 4px solid black;
+    border-top-style: default;
+    border-bottom-style: default;
+    border-left-style: default;
     border-right-style: hidden;
 }
 
 td#rightupdown{
-    border-top-style: 4px solid black;
-    border-bottom-style: 4px solid black;
+    border-top-style: default;
+    border-bottom-style: default;
     border-left-style: hidden;
-    border-right-style: 4px solid black;
+    border-right-style: default;
 }
 
 td#none{
