@@ -2,11 +2,11 @@ th#yourMazeIs{
     background-color:black;
     color:red;
 }
-td#mazeType{
+td.mazeType{
     background-color:black;
     color:white;
 }
-table.mazeTypes, th#yourMazeIs, td#mazeType{
+table.mazeTypes, th#yourMazeIs, td.mazeType{
     border: 0px solid black;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: 800;
@@ -27,115 +27,128 @@ table.wallsMazeMaps{
     margin-right: auto;
 }
 
-td#wallsMazeHeader{
+td.wallsMazeHeader{
     border-top-style: hidden;
     border-left-style: hidden;
     border-right-style: hidden;
     text-align: center;
 }
 
-td#left{
+td.left{
     border-top-style: hidden;
     border-bottom-style: hidden;
     border-left-style: default;
     border-right-style: hidden;
 }
 
-td#right{
+td.right{
     border-top-style: hidden;
     border-bottom-style: hidden;
     border-left-style: hidden;
     border-right-style: default;
 }
 
-td#up{
+td.up{
     border-top-style: default;
     border-bottom-style: hidden;
     border-left-style: hidden;
     border-right-style: hidden;
 }
 
-td#down{
+td.down{
     border-top-style: hidden;
     border-bottom-style: default;
     border-left-style: hidden;
     border-right-style: hidden;
 }
 
-td#leftright{
+td.leftright{
     border-top-style: hidden;
     border-bottom-style: hidden;
     border-left-style: default;
     border-right-style: default;
 }
 
-td#leftup{
+td.leftup{
     border-top-style: default;
     border-bottom-style: hidden;
     border-left-style: default;
     border-right-style: hidden;
 }
 
-td#leftdown{
+td.leftdown{
     border-top-style: hidden;
     border-bottom-style: default;
     border-left-style: default;
     border-right-style: hidden;
 }
 
-td#rightup{
+td.rightup{
     border-top-style: default;
     border-bottom-style: hidden;
     border-left-style: hidden;
     border-right-style: default;
 }
 
-td#rightdown{
+td.rightdown{
     border-top-style: hidden;
     border-bottom-style: default;
     border-left-style: hidden;
     border-right-style: default;
 }
 
-td#updown{
+td.updown{
     border-top-style: default;
     border-bottom-style: default;
     border-left-style: hidden;
     border-right-style: hidden;
 }
 
-td#leftrightup{
+td.leftrightup{
     border-top-style: default;
     border-bottom-style: hidden;
     border-left-style: default;
     border-right-style: default;
 }
 
-td#leftrightdown{
+td.leftrightdown{
     border-top-style: hidden;
     border-bottom-style: default;
     border-left-style: default;
     border-right-style: default;
 }
 
-td#leftupdown{
+td.leftupdown{
     border-top-style: default;
     border-bottom-style: default;
     border-left-style: default;
     border-right-style: hidden;
 }
 
-td#rightupdown{
+td.rightupdown{
     border-top-style: default;
     border-bottom-style: default;
     border-left-style: hidden;
     border-right-style: default;
 }
 
-td#none{
+td.none{
     border-top-style: hidden;
     border-bottom-style: hidden;
     border-left-style: hidden;
     border-right-style: hidden;
 }
 
+tbody.checkerboard{
+    height:250px;
+    tr:nth-child(odd){
+        td:nth-child(odd){
+            background-color:lightgray;
+        }
+    }
+    tr:nth-child(even){
+        td:nth-child(even){
+            background-color:lightgray;
+        }
+    }
+}

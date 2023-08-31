@@ -54,6 +54,215 @@ public class _cannymaze:ModdedModule{
             new int[]{3,5},
             new int[]{1,2,4}
     };
+    ///<value>The ways <i>not</i> blocked off in the 5x5 maze.<br/>The letter-number coordinate system is used<br/>throughout the module.</value>
+    private Dictionary<string,List<string>> wallsMaze5x5=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){"down"}},
+        {"B1",new List<string>(){"right"}},
+        {"C1",new List<string>(){"left","right","down"}},
+        {"D1",new List<string>(){"left"}},
+        {"E1",new List<string>(){"down"}},
+
+        {"A2",new List<string>(){"right","up"}},
+        {"B2",new List<string>(){"left","right","down"}},
+        {"C2",new List<string>(){"left","right","up"}},
+        {"D2",new List<string>(){"left","right"}},
+        {"E2",new List<string>(){"left","up","down"}},
+
+        {"A3",new List<string>(){"right"}},
+        {"B3",new List<string>(){"left","up","down"}},
+        {"C3",new List<string>(){"right"}},
+        {"D3",new List<string>(){"left","right","down"}},
+        {"E3",new List<string>(){"left","up","down"}},
+
+        {"A4",new List<string>(){"right","down"}},
+        {"B4",new List<string>(){"left","up"}},
+        {"C4",new List<string>(){"down"}},
+        {"D4",new List<string>(){"up","down"}},
+        {"E4",new List<string>(){"up"}},
+
+        {"A5",new List<string>(){"right","up"}},
+        {"B5",new List<string>(){"left","right"}},
+        {"C5",new List<string>(){"left","up"}},
+        {"D5",new List<string>(){"right"}},
+        {"E5",new List<string>(){"left"}}
+    };
+
+    private Dictionary<string,List<string>> wallsMaze6x6=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){"left","right","up","down"}},
+        {"B1",new List<string>(){"left","right","up","down"}},
+        {"C1",new List<string>(){"left","right","up","down"}},
+        {"D1",new List<string>(){"left","right","up","down"}},
+        {"E1",new List<string>(){"left","right","up","down"}},
+        {"F1",new List<string>(){"left","right","up","down"}},
+
+        {"A2",new List<string>(){"left","right","up","down"}},
+        {"B2",new List<string>(){"left","right","up","down"}},
+        {"C2",new List<string>(){"left","right","up","down"}},
+        {"D2",new List<string>(){"left","right","up","down"}},
+        {"E2",new List<string>(){"left","right","up","down"}},
+        {"F2",new List<string>(){"left","right","up","down"}},
+
+        {"A3",new List<string>(){"left","right","up","down"}},
+        {"B3",new List<string>(){"left","right","up","down"}},
+        {"C3",new List<string>(){"left","right","up","down"}},
+        {"D3",new List<string>(){"left","right","up","down"}},
+        {"E3",new List<string>(){"left","right","up","down"}},
+        {"F3",new List<string>(){"left","right","up","down"}},
+
+        {"A4",new List<string>(){"left","right","up","down"}},
+        {"B4",new List<string>(){"left","right","up","down"}},
+        {"C4",new List<string>(){"left","right","up","down"}},
+        {"D4",new List<string>(){"left","right","up","down"}},
+        {"E4",new List<string>(){"left","right","up","down"}},
+        {"F4",new List<string>(){"left","right","up","down"}},
+
+        {"A5",new List<string>(){"left","right","up","down"}},
+        {"B5",new List<string>(){"left","right","up","down"}},
+        {"C5",new List<string>(){"left","right","up","down"}},
+        {"D5",new List<string>(){"left","right","up","down"}},
+        {"E5",new List<string>(){"left","right","up","down"}},
+        {"F5",new List<string>(){"left","right","up","down"}},
+
+        {"A6",new List<string>(){"left","right","up","down"}},
+        {"B6",new List<string>(){"left","right","up","down"}},
+        {"C6",new List<string>(){"left","right","up","down"}},
+        {"D6",new List<string>(){"left","right","up","down"}},
+        {"E6",new List<string>(){"left","right","up","down"}},
+        {"F6",new List<string>(){"left","right","up","down"}}
+    };
+
+    private Dictionary<string,List<string>> wallsMaze7x7=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){"left","right","up","down"}},
+        {"B1",new List<string>(){"left","right","up","down"}},
+        {"C1",new List<string>(){"left","right","up","down"}},
+        {"D1",new List<string>(){"left","right","up","down"}},
+        {"E1",new List<string>(){"left","right","up","down"}},
+        {"F1",new List<string>(){"left","right","up","down"}},
+        {"G1",new List<string>(){"left","right","up","down"}},
+
+        {"A2",new List<string>(){"left","right","up","down"}},
+        {"B2",new List<string>(){"left","right","up","down"}},
+        {"C2",new List<string>(){"left","right","up","down"}},
+        {"D2",new List<string>(){"left","right","up","down"}},
+        {"E2",new List<string>(){"left","right","up","down"}},
+        {"F2",new List<string>(){"left","right","up","down"}},
+        {"G2",new List<string>(){"left","right","up","down"}},
+
+        {"A3",new List<string>(){"left","right","up","down"}},
+        {"B3",new List<string>(){"left","right","up","down"}},
+        {"C3",new List<string>(){"left","right","up","down"}},
+        {"D3",new List<string>(){"left","right","up","down"}},
+        {"E3",new List<string>(){"left","right","up","down"}},
+        {"F3",new List<string>(){"left","right","up","down"}},
+        {"G3",new List<string>(){"left","right","up","down"}},
+
+        {"A4",new List<string>(){"left","right","up","down"}},
+        {"B4",new List<string>(){"left","right","up","down"}},
+        {"C4",new List<string>(){"left","right","up","down"}},
+        {"D4",new List<string>(){"left","right","up","down"}},
+        {"E4",new List<string>(){"left","right","up","down"}},
+        {"F4",new List<string>(){"left","right","up","down"}},
+        {"G4",new List<string>(){"left","right","up","down"}},
+
+        {"A5",new List<string>(){"left","right","up","down"}},
+        {"B5",new List<string>(){"left","right","up","down"}},
+        {"C5",new List<string>(){"left","right","up","down"}},
+        {"D5",new List<string>(){"left","right","up","down"}},
+        {"E5",new List<string>(){"left","right","up","down"}},
+        {"F5",new List<string>(){"left","right","up","down"}},
+        {"G5",new List<string>(){"left","right","up","down"}},
+
+        {"A6",new List<string>(){"left","right","up","down"}},
+        {"B6",new List<string>(){"left","right","up","down"}},
+        {"C6",new List<string>(){"left","right","up","down"}},
+        {"D6",new List<string>(){"left","right","up","down"}},
+        {"E6",new List<string>(){"left","right","up","down"}},
+        {"F6",new List<string>(){"left","right","up","down"}},
+        {"G6",new List<string>(){"left","right","up","down"}},
+
+        {"A7",new List<string>(){"left","right","up","down"}},
+        {"B7",new List<string>(){"left","right","up","down"}},
+        {"C7",new List<string>(){"left","right","up","down"}},
+        {"D7",new List<string>(){"left","right","up","down"}},
+        {"E7",new List<string>(){"left","right","up","down"}},
+        {"F7",new List<string>(){"left","right","up","down"}},
+        {"G7",new List<string>(){"left","right","up","down"}}
+    };
+
+    private Dictionary<string,List<string>> wallsMaze8x8=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){"left","right","up","down"}},
+        {"B1",new List<string>(){"left","right","up","down"}},
+        {"C1",new List<string>(){"left","right","up","down"}},
+        {"D1",new List<string>(){"left","right","up","down"}},
+        {"E1",new List<string>(){"left","right","up","down"}},
+        {"F1",new List<string>(){"left","right","up","down"}},
+        {"G1",new List<string>(){"left","right","up","down"}},
+        {"H1",new List<string>(){"left","right","up","down"}},
+
+        {"A2",new List<string>(){"left","right","up","down"}},
+        {"B2",new List<string>(){"left","right","up","down"}},
+        {"C2",new List<string>(){"left","right","up","down"}},
+        {"D2",new List<string>(){"left","right","up","down"}},
+        {"E2",new List<string>(){"left","right","up","down"}},
+        {"F2",new List<string>(){"left","right","up","down"}},
+        {"G2",new List<string>(){"left","right","up","down"}},
+        {"H2",new List<string>(){"left","right","up","down"}},
+
+        {"A3",new List<string>(){"left","right","up","down"}},
+        {"B3",new List<string>(){"left","right","up","down"}},
+        {"C3",new List<string>(){"left","right","up","down"}},
+        {"D3",new List<string>(){"left","right","up","down"}},
+        {"E3",new List<string>(){"left","right","up","down"}},
+        {"F3",new List<string>(){"left","right","up","down"}},
+        {"G3",new List<string>(){"left","right","up","down"}},
+        {"H3",new List<string>(){"left","right","up","down"}},
+
+        {"A4",new List<string>(){"left","right","up","down"}},
+        {"B4",new List<string>(){"left","right","up","down"}},
+        {"C4",new List<string>(){"left","right","up","down"}},
+        {"D4",new List<string>(){"left","right","up","down"}},
+        {"E4",new List<string>(){"left","right","up","down"}},
+        {"F4",new List<string>(){"left","right","up","down"}},
+        {"G4",new List<string>(){"left","right","up","down"}},
+        {"H4",new List<string>(){"left","right","up","down"}},
+
+        {"A5",new List<string>(){"left","right","up","down"}},
+        {"B5",new List<string>(){"left","right","up","down"}},
+        {"C5",new List<string>(){"left","right","up","down"}},
+        {"D5",new List<string>(){"left","right","up","down"}},
+        {"E5",new List<string>(){"left","right","up","down"}},
+        {"F5",new List<string>(){"left","right","up","down"}},
+        {"G5",new List<string>(){"left","right","up","down"}},
+        {"H5",new List<string>(){"left","right","up","down"}},
+
+        {"A6",new List<string>(){"left","right","up","down"}},
+        {"B6",new List<string>(){"left","right","up","down"}},
+        {"C6",new List<string>(){"left","right","up","down"}},
+        {"D6",new List<string>(){"left","right","up","down"}},
+        {"E6",new List<string>(){"left","right","up","down"}},
+        {"F6",new List<string>(){"left","right","up","down"}},
+        {"G6",new List<string>(){"left","right","up","down"}},
+        {"H6",new List<string>(){"left","right","up","down"}},
+
+        {"A7",new List<string>(){"left","right","up","down"}},
+        {"B7",new List<string>(){"left","right","up","down"}},
+        {"C7",new List<string>(){"left","right","up","down"}},
+        {"D7",new List<string>(){"left","right","up","down"}},
+        {"E7",new List<string>(){"left","right","up","down"}},
+        {"F7",new List<string>(){"left","right","up","down"}},
+        {"G7",new List<string>(){"left","right","up","down"}},
+        {"H7",new List<string>(){"left","right","up","down"}},
+
+        {"A8",new List<string>(){"left","right","up","down"}},
+        {"B8",new List<string>(){"left","right","up","down"}},
+        {"C8",new List<string>(){"left","right","up","down"}},
+        {"D8",new List<string>(){"left","right","up","down"}},
+        {"E8",new List<string>(){"left","right","up","down"}},
+        {"F8",new List<string>(){"left","right","up","down"}},
+        {"G8",new List<string>(){"left","right","up","down"}},
+        {"H8",new List<string>(){"left","right","up","down"}}
+    };
+
     [Serializable]
     public sealed class cannymazesettings{
         public int animationSpeed=30;
