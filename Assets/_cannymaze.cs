@@ -188,7 +188,14 @@ public class _cannymaze:ModdedModule{
                 break;
             index=UnityEngine.Random.Range(0,j.Count);
             correctPath.Add(j.ElementAt(index));
+            try{
             yield return StartCoroutine(Moving(j.ElementAt(index),2,false,false));
+            }catch(IndexOutOfRangeException e){
+                Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:\n"+e,LogType.Exception);//debug
+                t.Awake();
+                StartCoroutine(Initialization());
+                yield break;
+            }finally{}//needed for the yield return StartCoroutine in the try block to function properly
             if(mazeNames[startingTile]!="Movement"&&
               (correctPath.Count>2&&(
               (correctPath.ElementAt(correctPath.Count-1)=="left" &&correctPath.ElementAt(correctPath.Count-2)=="right")
