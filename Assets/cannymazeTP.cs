@@ -8,7 +8,7 @@ using Wawa.TwitchPlays.Domains;
 
 public sealed class cannymazeTP:Twitch<_cannymaze> {
     void Start(){
-        Module.GetComponent<KMBombModule>().Set(onActivate:()=>{
+        Module.GetComponent<KMBombModule>().Add(onActivate:()=>{
             if(IsTP)
                 Module.animSpeed=2;
         },
