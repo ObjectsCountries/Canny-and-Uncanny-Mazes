@@ -11,6 +11,7 @@ using KModkit;
 
 public class _cannymaze:ModdedModule{
     public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze,numbersButton,resetButton;
+    public KMRuleSeedable ruleseed;
     internal bool viewingWholeMaze=false;
     private Vector2 currentPosition,startingPosition;
     private string coordLetters="ABCDEFGH";
@@ -28,8 +29,6 @@ public class _cannymaze:ModdedModule{
     internal bool music;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers,gm,currentBox,goalBox,anchor;
-    ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
-    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
     private List<string> j;
     private int startingTile;
     internal int currentTile;
@@ -286,7 +285,56 @@ public class _cannymaze:ModdedModule{
         }
     };
 
+    private string[]swap(string[]array,int index1,int index2){
+        string[]arr=array;
+        string temp=arr[index1];
+        arr[index1]=arr[index2];
+        arr[index2]=temp;
+        return arr;
+    }
+
+    ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
+    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
+    private int sumAverageOrDigital=0;
+    private int binaryDoubleOrFours=3;    
+    private string[]mazeNamesRuleseed;
+    private enum compareMazeType{
+        LR_UD_G,
+        LR_UD_L,
+        LU_RD_G,
+        LU_RD_L,
+        LD_RU_G,
+        LD_RU_L
+    }
+    private compareMazeType compare=compareMazeType.LR_UD_G;
+    private enum strictMazeType{
+        Odd_and_Even,
+        Prime_and_Composite,
+        Less_to_Greater,
+        Greater_to_Less
+    }
+    private strictMazeType strict1=strictMazeType.Less_to_Greater,strict2=strictMazeType.Odd_and_Even;
+
 	void Start(){
+        var RND=ruleseed.GetRNG();
+        if(RND.Seed!=1){
+            mazeNamesRuleseed=mazeNames;
+            do{
+                sumAverageOrDigital=RND.Next(9);
+            }while(sumAverageOrDigital!=0&&sumAverageOrDigital!=7&&sumAverageOrDigital!=8);
+            swap(mazeNamesRuleseed,0,sumAverageOrDigital);
+            compare=(compareMazeType)RND.Next(6);
+            if(RND.Next(1)==0)
+                swap(mazeNamesRuleseed,2,9);
+            do{
+                binaryDoubleOrFours=RND.Next(12);
+            }while(binaryDoubleOrFours!=3&&binaryDoubleOrFours!=10&&binaryDoubleOrFours!=11);
+            swap(mazeNamesRuleseed,0,binaryDoubleOrFours);
+            strict1=(strictMazeType)RND.Next(4);
+            do{
+                strict2=(strictMazeType)RND.Next(4);
+            }while(strict1==strict2);
+        }
         j=new List<string>();
         tilesTraversed=new List<string>();
         allDirs=new List<string>(){"left","right","up","down"};
@@ -685,18 +733,18 @@ public class _cannymaze:ModdedModule{
         int modulo=0;
         int average=0;
         int digital=0;
-        if(mazeNames[startingTile-1]=="Sum"){
+        if(mazeNamesRuleseed[startingTile-1]=="Sum"){
             modulo=sum%7+1;
             if(logging)
                 Log("The sum of all orthogonally-adjacent tiles is "+sum+". Modulo 7 and adding 1, this is "+modulo+".");
         }
-        if(mazeNames[startingTile-1]=="Average"){
+        if(mazeNamesRuleseed[startingTile-1]=="Average"){
             average=(int)((sum/adjacentTiles.Count)+.5f);
             modulo=average%7+1;
             if(logging)
                 Log("The average of the sum of all orthogonally-adjacent tiles is "+average+". Modulo 7 and adding 1, this is "+modulo+".");
         }
-        if(mazeNames[startingTile-1]=="Digital"){
+        if(mazeNamesRuleseed[startingTile-1]=="Digital"){
             digital=(sum/10)+(sum%10);
             while(digital>9)
                 digital=(digital/10)+(digital%10);
@@ -723,39 +771,56 @@ public class _cannymaze:ModdedModule{
     }
 
     private List<string> compareMaze(){
-        int horizSum=0;
-        int vertSum=0;
-        List<string>horizDirs=new List<string>();
-        List<string>vertDirs=new List<string>();
+        int sum1=0;
+        int sum2=0;
+        List<string>dirs1=new List<string>();
+        List<string>dirs2=new List<string>();
         if(xcoords!=0){
-            horizSum+=textures[(dims-ycoords-1),xcoords-1];
-            horizDirs.Add("left");
+            sum1+=textures[(dims-ycoords-1),xcoords-1];
+            dirs1.Add("left");
         }
         if(xcoords!=dims-1){
-            horizSum+=textures[(dims-ycoords-1),xcoords+1];
-            horizDirs.Add("right");
+            if(compare==compareMazeType.LR_UD_G||compare==compareMazeType.LR_UD_L){
+                sum1+=textures[(dims-ycoords-1),xcoords+1];
+                dirs1.Add("right");
+            }else{
+                sum2+=textures[(dims-ycoords-1),xcoords+1];
+                dirs2.Add("right")
+            }
         }
         if(ycoords!=dims-1){
-            vertSum+=textures[(dims-ycoords-2),xcoords];
-            vertDirs.Add("up");
+            if(compare==compareMazeType.LU_RD_G||compare==compareMazeType.LU_RD_L){
+                sum1+=textures[(dims-ycoords-2),xcoords];
+                dirs1.Add("up");
+            }else{
+                sum2+=textures[(dims-ycoords-2),xcoords];
+                dirs2.Add("up");
+            }
         }
         if(ycoords!=0){
-            vertSum+=textures[(dims-ycoords),xcoords];
-            vertDirs.Add("down");
+            if(compare==compareMazeType.LD_RU_G||compare==compareMazeType.LD_RU_L){
+                sum1+=textures[(dims-ycoords),xcoords];
+                dirs1.Add("down");
+            }else{
+                sum2+=textures[(dims-ycoords),xcoords];
+                dirs2.Add("down");
+            }
         }
-        if(horizSum>vertSum)
-            return horizDirs;
-        if(horizSum<vertSum)
-            return vertDirs;
-        horizDirs.AddRange(vertDirs);
-        return horizDirs;
+        if(dirs1==dirs2){
+            dirs1.AddRange(dirs2);
+            return dirs1;
+        }else{
+            if(compare%2==0)
+                return dirs1>dirs2?dirs1:dirs2;
+            else return dirs1<dirs2?dirs1:dirs2;
+        }
     }
 
     private List<string> tilesMovementMaze(bool logging){
         string distinct="";
         int modulo;
         int total=movementsMade;
-        if(mazeNames[startingTile-1]=="Tiles"){
+        if(mazeNamesRuleseed[startingTile-1]=="Tiles"){
             distinct="distinct ";
             total=tilesTraversed.Count;
         }
@@ -792,7 +857,7 @@ public class _cannymaze:ModdedModule{
     private List<string> binaryMaze(){
         List<string> dirs=new List<string>();
         int[][]bit;
-        switch(mazeNames[startingTile-1]){
+        switch(mazeNamesRuleseed[startingTile-1]){
             case "Fours":
                 return foursMaze();
             case "Double Binary":
