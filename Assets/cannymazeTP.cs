@@ -13,7 +13,7 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                 Module.animSpeed=2;
         },
         onPass:()=>{
-            if(!IsTP)
+            if(!IsTP&&Module.music)
                 Module.Play(new Sound("song"+Module.currentTile));
         });
     }

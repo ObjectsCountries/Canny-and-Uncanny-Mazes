@@ -23,7 +23,15 @@ MonoBehaviour:
 
     Credits: me because i am awesome and cool and stuff, and chatgpt for the texture
     generation script (but i was the one who told it what to do so [i]basically[/i]
-    i''m the one who wrote it) aloso shoutouts to emik and riverbui for helping out
+    i''m the one who wrote it) also shoutouts to emik and riverbui for helping out
+
+
+    [b]NOTE:[/b] There are two settings that control the speed of moving from one
+    tile to another and whether music plays upon solving. Please turn off the "Play
+    Music on Solve" setting if streaming KTaNE on YouTube/Twitch/etc., as 5 of the
+    7 songs are copyrighted (the songs associated with images 1 and 6 are not). [b]When
+    in Twitch Plays, neither of these settings have any effect;[/b] the module moves
+    instantaneously from one tile to the next, and it never plays music upon solving.
 
 
     [url=https://ktane.timwi.de/HTML/Canny%20Maze.html]HTML Manual[/url]
@@ -38,6 +46,6 @@ MonoBehaviour:
     /home/objectscountries/.local/share/Steam/steamapps/common/Keep Talking and Nobody
     Explodes/mods'
   version: 1
-  outputFolder: /home/objectscountries/.local/share/Steam/steamapps/common/Keep Talking
-    and Nobody Explodes/mods
-  previewImage: {fileID: 0}
+  outputFolder: C:\Program Files (x86)\Steam\steamapps\common\Keep Talking and Nobody
+    Explodes\mods
+  previewImage: {fileID: 2800000, guid: f3e4bf479c9f9f149a6361201674a3c0, type: 3}
