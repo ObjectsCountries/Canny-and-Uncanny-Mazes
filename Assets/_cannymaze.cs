@@ -28,8 +28,8 @@ public class _cannymaze:ModdedModule{
     internal bool music;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers,gm,currentBox,goalBox,anchor;
-    ///<value>The different types of mazes that the module can have. The last five are exclusive to ruleseeds other than 1.</value>
-    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Fours","Movement","Double Binary"};
+    ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
+    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
     private List<string> j;
     private int startingTile;
     internal int currentTile;
