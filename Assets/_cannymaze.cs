@@ -785,7 +785,7 @@ public class _cannymaze:ModdedModule{
                 dirs1.Add("right");
             }else{
                 sum2+=textures[(dims-ycoords-1),xcoords+1];
-                dirs2.Add("right")
+                dirs2.Add("right");
             }
         }
         if(ycoords!=dims-1){
@@ -810,9 +810,9 @@ public class _cannymaze:ModdedModule{
             dirs1.AddRange(dirs2);
             return dirs1;
         }else{
-            if(compare%2==0)
-                return dirs1>dirs2?dirs1:dirs2;
-            else return dirs1<dirs2?dirs1:dirs2;
+            if((int)compare%2==0)
+                return sum1>sum2?dirs1:dirs2;
+            else return sum1<sum2?dirs1:dirs2;
         }
     }
 
