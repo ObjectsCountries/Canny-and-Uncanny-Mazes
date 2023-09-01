@@ -30,7 +30,8 @@ public class _cannymaze:ModdedModule{
     ///<value>The different types of mazes that the module can have. The last five are exclusive to ruleseeds other than 1.</value>
     private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Fours","Movement","Double Binary"};
     private List<string> j;
-    private int startingTile,currentTile;
+    private int startingTile;
+    internal int currentTile;
     private int movementsMade=0;
     private List<string> tilesTraversed;
     private List<string> allDirs;
@@ -54,7 +55,7 @@ public class _cannymaze:ModdedModule{
             new int[]{3,5},
             new int[]{1,2,4}
     };
-    ///<value>The ways <i>not</i> blocked off in the 5x5 maze.<br/>The letter-number coordinate system is used<br/>throughout the module.</value>
+
     private Dictionary<string,List<string>> wallsMaze5x5=new Dictionary<string,List<string>>(){
         {"A1",new List<string>(){"down"}},
         {"B1",new List<string>(){"right"}},
@@ -74,8 +75,8 @@ public class _cannymaze:ModdedModule{
         {"D3",new List<string>(){"left","right","down"}},
         {"E3",new List<string>(){"left","up","down"}},
 
-        {"A4",new List<string>(){"right","down"}},
-        {"B4",new List<string>(){"left","up"}},
+        {"A4",new List<string>(){"down"}},
+        {"B4",new List<string>(){"right","up"}},
         {"C4",new List<string>(){"down"}},
         {"D4",new List<string>(){"up","down"}},
         {"E4",new List<string>(){"up"}},
@@ -83,186 +84,182 @@ public class _cannymaze:ModdedModule{
         {"A5",new List<string>(){"right","up"}},
         {"B5",new List<string>(){"left","right"}},
         {"C5",new List<string>(){"left","up"}},
-        {"D5",new List<string>(){"right"}},
+        {"D5",new List<string>(){"right","up"}},
         {"E5",new List<string>(){"left"}}
     };
-
     private Dictionary<string,List<string>> wallsMaze6x6=new Dictionary<string,List<string>>(){
-        {"A1",new List<string>(){"left","right","up","down"}},
-        {"B1",new List<string>(){"left","right","up","down"}},
-        {"C1",new List<string>(){"left","right","up","down"}},
-        {"D1",new List<string>(){"left","right","up","down"}},
-        {"E1",new List<string>(){"left","right","up","down"}},
-        {"F1",new List<string>(){"left","right","up","down"}},
+        {"A1",new List<string>(){"down"}},
+        {"B1",new List<string>(){"down"}},
+        {"C1",new List<string>(){"right"}},
+        {"D1",new List<string>(){"left","right"}},
+        {"E1",new List<string>(){"left","down"}},
+        {"F1",new List<string>(){"down"}},
 
-        {"A2",new List<string>(){"left","right","up","down"}},
-        {"B2",new List<string>(){"left","right","up","down"}},
-        {"C2",new List<string>(){"left","right","up","down"}},
-        {"D2",new List<string>(){"left","right","up","down"}},
-        {"E2",new List<string>(){"left","right","up","down"}},
-        {"F2",new List<string>(){"left","right","up","down"}},
+        {"A2",new List<string>(){"up","down"}},
+        {"B2",new List<string>(){"right","up"}},
+        {"C2",new List<string>(){"left","right","down"}},
+        {"D2",new List<string>(){"left","down"}},
+        {"E2",new List<string>(){"up","down"}},
+        {"F2",new List<string>(){"up","down"}},
 
-        {"A3",new List<string>(){"left","right","up","down"}},
-        {"B3",new List<string>(){"left","right","up","down"}},
-        {"C3",new List<string>(){"left","right","up","down"}},
-        {"D3",new List<string>(){"left","right","up","down"}},
-        {"E3",new List<string>(){"left","right","up","down"}},
-        {"F3",new List<string>(){"left","right","up","down"}},
+        {"A3",new List<string>(){"up","down"}},
+        {"B3",new List<string>(){"right","down"}},
+        {"C3",new List<string>(){"left","up","down"}},
+        {"D3",new List<string>(){"up"}},
+        {"E3",new List<string>(){"right","up","down"}},
+        {"F3",new List<string>(){"left","up"}},
 
-        {"A4",new List<string>(){"left","right","up","down"}},
-        {"B4",new List<string>(){"left","right","up","down"}},
-        {"C4",new List<string>(){"left","right","up","down"}},
-        {"D4",new List<string>(){"left","right","up","down"}},
-        {"E4",new List<string>(){"left","right","up","down"}},
-        {"F4",new List<string>(){"left","right","up","down"}},
+        {"A4",new List<string>(){"right","up"}},
+        {"B4",new List<string>(){"left","up","down"}},
+        {"C4",new List<string>(){"right","up"}},
+        {"D4",new List<string>(){"left","right"}},
+        {"E4",new List<string>(){"left","right","up"}},
+        {"F4",new List<string>(){"left","down"}},
 
-        {"A5",new List<string>(){"left","right","up","down"}},
-        {"B5",new List<string>(){"left","right","up","down"}},
-        {"C5",new List<string>(){"left","right","up","down"}},
-        {"D5",new List<string>(){"left","right","up","down"}},
-        {"E5",new List<string>(){"left","right","up","down"}},
-        {"F5",new List<string>(){"left","right","up","down"}},
+        {"A5",new List<string>(){"right"}},
+        {"B5",new List<string>(){"left","up"}},
+        {"C5",new List<string>(){"right","down"}},
+        {"D5",new List<string>(){"left","right","down"}},
+        {"E5",new List<string>(){"left","right"}},
+        {"F5",new List<string>(){"left","up","down"}},
 
-        {"A6",new List<string>(){"left","right","up","down"}},
-        {"B6",new List<string>(){"left","right","up","down"}},
-        {"C6",new List<string>(){"left","right","up","down"}},
-        {"D6",new List<string>(){"left","right","up","down"}},
-        {"E6",new List<string>(){"left","right","up","down"}},
-        {"F6",new List<string>(){"left","right","up","down"}}
+        {"A6",new List<string>(){"right"}},
+        {"B6",new List<string>(){"left","right"}},
+        {"C6",new List<string>(){"left","up"}},
+        {"D6",new List<string>(){"right","up"}},
+        {"E6",new List<string>(){"left"}},
+        {"F6",new List<string>(){"up"}}
     };
-
     private Dictionary<string,List<string>> wallsMaze7x7=new Dictionary<string,List<string>>(){
-        {"A1",new List<string>(){"left","right","up","down"}},
-        {"B1",new List<string>(){"left","right","up","down"}},
-        {"C1",new List<string>(){"left","right","up","down"}},
-        {"D1",new List<string>(){"left","right","up","down"}},
-        {"E1",new List<string>(){"left","right","up","down"}},
-        {"F1",new List<string>(){"left","right","up","down"}},
-        {"G1",new List<string>(){"left","right","up","down"}},
+        {"A1",new List<string>(){"down"}},
+        {"B1",new List<string>(){"right","down"}},
+        {"C1",new List<string>(){"left","right"}},
+        {"D1",new List<string>(){"left","right"}},
+        {"E1",new List<string>(){"left","down"}},
+        {"F1",new List<string>(){"right"}},
+        {"G1",new List<string>(){"left","down"}},
 
-        {"A2",new List<string>(){"left","right","up","down"}},
-        {"B2",new List<string>(){"left","right","up","down"}},
-        {"C2",new List<string>(){"left","right","up","down"}},
-        {"D2",new List<string>(){"left","right","up","down"}},
-        {"E2",new List<string>(){"left","right","up","down"}},
-        {"F2",new List<string>(){"left","right","up","down"}},
-        {"G2",new List<string>(){"left","right","up","down"}},
+        {"A2",new List<string>(){"right","up","down"}},
+        {"B2",new List<string>(){"left","up"}},
+        {"C2",new List<string>(){"right","down"}},
+        {"D2",new List<string>(){"left"}},
+        {"E2",new List<string>(){"right","up"}},
+        {"F2",new List<string>(){"left","right"}},
+        {"G2",new List<string>(){"left","up"}},
 
-        {"A3",new List<string>(){"left","right","up","down"}},
-        {"B3",new List<string>(){"left","right","up","down"}},
-        {"C3",new List<string>(){"left","right","up","down"}},
-        {"D3",new List<string>(){"left","right","up","down"}},
-        {"E3",new List<string>(){"left","right","up","down"}},
-        {"F3",new List<string>(){"left","right","up","down"}},
-        {"G3",new List<string>(){"left","right","up","down"}},
+        {"A3",new List<string>(){"right","up","down"}},
+        {"B3",new List<string>(){"left"}},
+        {"C3",new List<string>(){"right","up"}},
+        {"D3",new List<string>(){"left","right"}},
+        {"E3",new List<string>(){"left","right","down"}},
+        {"F3",new List<string>(){"left","right"}},
+        {"G3",new List<string>(){"left","down"}},
 
-        {"A4",new List<string>(){"left","right","up","down"}},
-        {"B4",new List<string>(){"left","right","up","down"}},
-        {"C4",new List<string>(){"left","right","up","down"}},
-        {"D4",new List<string>(){"left","right","up","down"}},
-        {"E4",new List<string>(){"left","right","up","down"}},
-        {"F4",new List<string>(){"left","right","up","down"}},
-        {"G4",new List<string>(){"left","right","up","down"}},
+        {"A4",new List<string>(){"up","down"}},
+        {"B4",new List<string>(){"right","down"}},
+        {"C4",new List<string>(){"left","down"}},
+        {"D4",new List<string>(){"right","down"}},
+        {"E4",new List<string>(){"left","right","up"}},
+        {"F4",new List<string>(){"left","down"}},
+        {"G4",new List<string>(){"up","down"}},
 
-        {"A5",new List<string>(){"left","right","up","down"}},
-        {"B5",new List<string>(){"left","right","up","down"}},
-        {"C5",new List<string>(){"left","right","up","down"}},
-        {"D5",new List<string>(){"left","right","up","down"}},
-        {"E5",new List<string>(){"left","right","up","down"}},
-        {"F5",new List<string>(){"left","right","up","down"}},
-        {"G5",new List<string>(){"left","right","up","down"}},
+        {"A5",new List<string>(){"right","up"}},
+        {"B5",new List<string>(){"left","up","down"}},
+        {"C5",new List<string>(){"right","up"}},
+        {"D5",new List<string>(){"left","up"}},
+        {"E5",new List<string>(){"down"}},
+        {"F5",new List<string>(){"up","down"}},
+        {"G5",new List<string>(){"up","down"}},
 
-        {"A6",new List<string>(){"left","right","up","down"}},
-        {"B6",new List<string>(){"left","right","up","down"}},
-        {"C6",new List<string>(){"left","right","up","down"}},
-        {"D6",new List<string>(){"left","right","up","down"}},
-        {"E6",new List<string>(){"left","right","up","down"}},
-        {"F6",new List<string>(){"left","right","up","down"}},
-        {"G6",new List<string>(){"left","right","up","down"}},
+        {"A6",new List<string>(){"right","down"}},
+        {"B6",new List<string>(){"left","up"}},
+        {"C6",new List<string>(){"right","down"}},
+        {"D6",new List<string>(){"left","right"}},
+        {"E6",new List<string>(){"left","right","up"}},
+        {"F6",new List<string>(){"left","up"}},
+        {"G6",new List<string>(){"up","down"}},
 
-        {"A7",new List<string>(){"left","right","up","down"}},
-        {"B7",new List<string>(){"left","right","up","down"}},
-        {"C7",new List<string>(){"left","right","up","down"}},
-        {"D7",new List<string>(){"left","right","up","down"}},
-        {"E7",new List<string>(){"left","right","up","down"}},
-        {"F7",new List<string>(){"left","right","up","down"}},
-        {"G7",new List<string>(){"left","right","up","down"}}
+        {"A7",new List<string>(){"right","up"}},
+        {"B7",new List<string>(){"left"}},
+        {"C7",new List<string>(){"right","up"}},
+        {"D7",new List<string>(){"left","right"}},
+        {"E7",new List<string>(){"left","right"}},
+        {"F7",new List<string>(){"left"}},
+        {"G7",new List<string>(){"up"}}
     };
-
     private Dictionary<string,List<string>> wallsMaze8x8=new Dictionary<string,List<string>>(){
-        {"A1",new List<string>(){"left","right","up","down"}},
-        {"B1",new List<string>(){"left","right","up","down"}},
-        {"C1",new List<string>(){"left","right","up","down"}},
-        {"D1",new List<string>(){"left","right","up","down"}},
-        {"E1",new List<string>(){"left","right","up","down"}},
-        {"F1",new List<string>(){"left","right","up","down"}},
-        {"G1",new List<string>(){"left","right","up","down"}},
-        {"H1",new List<string>(){"left","right","up","down"}},
+        {"A1",new List<string>(){"right","down"}},
+        {"B1",new List<string>(){"left"}},
+        {"C1",new List<string>(){"down"}},
+        {"D1",new List<string>(){"right","down"}},
+        {"E1",new List<string>(){"left","right"}},
+        {"F1",new List<string>(){"left"}},
+        {"G1",new List<string>(){"right","down"}},
+        {"H1",new List<string>(){"left","down"}},
 
-        {"A2",new List<string>(){"left","right","up","down"}},
-        {"B2",new List<string>(){"left","right","up","down"}},
-        {"C2",new List<string>(){"left","right","up","down"}},
+        {"A2",new List<string>(){"up","down"}},
+        {"B2",new List<string>(){"right"}},
+        {"C2",new List<string>(){"left","right","up"}},
         {"D2",new List<string>(){"left","right","up","down"}},
-        {"E2",new List<string>(){"left","right","up","down"}},
-        {"F2",new List<string>(){"left","right","up","down"}},
-        {"G2",new List<string>(){"left","right","up","down"}},
-        {"H2",new List<string>(){"left","right","up","down"}},
+        {"E2",new List<string>(){"left","right"}},
+        {"F2",new List<string>(){"left","right"}},
+        {"G2",new List<string>(){"left","up","down"}},
+        {"H2",new List<string>(){"up"}},
 
-        {"A3",new List<string>(){"left","right","up","down"}},
-        {"B3",new List<string>(){"left","right","up","down"}},
-        {"C3",new List<string>(){"left","right","up","down"}},
-        {"D3",new List<string>(){"left","right","up","down"}},
-        {"E3",new List<string>(){"left","right","up","down"}},
-        {"F3",new List<string>(){"left","right","up","down"}},
-        {"G3",new List<string>(){"left","right","up","down"}},
-        {"H3",new List<string>(){"left","right","up","down"}},
+        {"A3",new List<string>(){"up","down"}},
+        {"B3",new List<string>(){"right"}},
+        {"C3",new List<string>(){"left","down"}},
+        {"D3",new List<string>(){"right","up"}},
+        {"E3",new List<string>(){"left","down"}},
+        {"F3",new List<string>(){"right"}},
+        {"G3",new List<string>(){"left","up","down"}},
+        {"H3",new List<string>(){"down"}},
 
-        {"A4",new List<string>(){"left","right","up","down"}},
-        {"B4",new List<string>(){"left","right","up","down"}},
-        {"C4",new List<string>(){"left","right","up","down"}},
-        {"D4",new List<string>(){"left","right","up","down"}},
-        {"E4",new List<string>(){"left","right","up","down"}},
-        {"F4",new List<string>(){"left","right","up","down"}},
-        {"G4",new List<string>(){"left","right","up","down"}},
-        {"H4",new List<string>(){"left","right","up","down"}},
+        {"A4",new List<string>(){"up","down"}},
+        {"B4",new List<string>(){"right","down"}},
+        {"C4",new List<string>(){"left","right","up"}},
+        {"D4",new List<string>(){"left","right","down"}},
+        {"E4",new List<string>(){"left","up"}},
+        {"F4",new List<string>(){"right"}},
+        {"G4",new List<string>(){"left","right","up"}},
+        {"H4",new List<string>(){"left","up","down"}},
 
-        {"A5",new List<string>(){"left","right","up","down"}},
-        {"B5",new List<string>(){"left","right","up","down"}},
-        {"C5",new List<string>(){"left","right","up","down"}},
-        {"D5",new List<string>(){"left","right","up","down"}},
-        {"E5",new List<string>(){"left","right","up","down"}},
-        {"F5",new List<string>(){"left","right","up","down"}},
-        {"G5",new List<string>(){"left","right","up","down"}},
-        {"H5",new List<string>(){"left","right","up","down"}},
+        {"A5",new List<string>(){"up","down"}},
+        {"B5",new List<string>(){"up","down"}},
+        {"C5",new List<string>(){"right","down"}},
+        {"D5",new List<string>(){"left","right","up"}},
+        {"E5",new List<string>(){"left","right"}},
+        {"F5",new List<string>(){"left","right","down"}},
+        {"G5",new List<string>(){"left","right"}},
+        {"H5",new List<string>(){"left","up","down"}},
 
-        {"A6",new List<string>(){"left","right","up","down"}},
-        {"B6",new List<string>(){"left","right","up","down"}},
-        {"C6",new List<string>(){"left","right","up","down"}},
-        {"D6",new List<string>(){"left","right","up","down"}},
-        {"E6",new List<string>(){"left","right","up","down"}},
-        {"F6",new List<string>(){"left","right","up","down"}},
-        {"G6",new List<string>(){"left","right","up","down"}},
-        {"H6",new List<string>(){"left","right","up","down"}},
+        {"A6",new List<string>(){"right","up"}},
+        {"B6",new List<string>(){"left","up","down"}},
+        {"C6",new List<string>(){"up","down"}},
+        {"D6",new List<string>(){"right","down"}},
+        {"E6",new List<string>(){"left","right","down"}},
+        {"F6",new List<string>(){"left","up"}},
+        {"G6",new List<string>(){"down"}},
+        {"H6",new List<string>(){"up","down"}},
 
-        {"A7",new List<string>(){"left","right","up","down"}},
-        {"B7",new List<string>(){"left","right","up","down"}},
-        {"C7",new List<string>(){"left","right","up","down"}},
-        {"D7",new List<string>(){"left","right","up","down"}},
-        {"E7",new List<string>(){"left","right","up","down"}},
-        {"F7",new List<string>(){"left","right","up","down"}},
-        {"G7",new List<string>(){"left","right","up","down"}},
-        {"H7",new List<string>(){"left","right","up","down"}},
+        {"A7",new List<string>(){"down"}},
+        {"B7",new List<string>(){"right","up"}},
+        {"C7",new List<string>(){"left","up","down"}},
+        {"D7",new List<string>(){"up","down"}},
+        {"E7",new List<string>(){"right","up"}},
+        {"F7",new List<string>(){"left"}},
+        {"G7",new List<string>(){"up","down"}},
+        {"H7",new List<string>(){"up","down"}},
 
-        {"A8",new List<string>(){"left","right","up","down"}},
-        {"B8",new List<string>(){"left","right","up","down"}},
-        {"C8",new List<string>(){"left","right","up","down"}},
-        {"D8",new List<string>(){"left","right","up","down"}},
-        {"E8",new List<string>(){"left","right","up","down"}},
-        {"F8",new List<string>(){"left","right","up","down"}},
-        {"G8",new List<string>(){"left","right","up","down"}},
-        {"H8",new List<string>(){"left","right","up","down"}}
+        {"A8",new List<string>(){"right","up"}},
+        {"B8",new List<string>(){"left","right"}},
+        {"C8",new List<string>(){"left","up"}},
+        {"D8",new List<string>(){"right","up"}},
+        {"E8",new List<string>(){"left","right"}},
+        {"F8",new List<string>(){"left","right"}},
+        {"G8",new List<string>(){"left","up"}},
+        {"H8",new List<string>(){"up"}}
     };
-
     [Serializable]
     public sealed class cannymazesettings{
         public int animationSpeed=30;
@@ -610,7 +607,6 @@ public class _cannymaze:ModdedModule{
 
     ///<summary>A method to determine which type of maze is to be used.</summary>
     ///<returns>A <c>List&lt;string&gt;</c> containing the directions in which the<br/>defuser is allowed to move. This will contain at least one of<br/>any of the following: left, right, up, down.</returns>
-    ///<remarks>Note: Incomplete, <c>switch</c> will be inaccurate until all maze<br/>types have been implemented.</remarks>
     private List<string> mazeType(bool logging=true,bool includeBacktracking=true){
         List<string> temp=new List<string>();
         switch(startingTile){
@@ -630,8 +626,10 @@ public class _cannymaze:ModdedModule{
                 temp=avoidMaze();
                 break;
             case 6:
-            case 7:
                 temp=strictMaze();
+                break;
+            case 7:
+                temp=wallsMaze();
                 break;
         }
         if(includeBacktracking){
@@ -823,8 +821,7 @@ public class _cannymaze:ModdedModule{
     private List<string> avoidMaze(){
         List<string> dirs=new List<string>();
         if(xcoords!=0
-           &&textures[(dims-ycoords-1),xcoords-1]!=1
-           &&textures[(dims-ycoords-1),xcoords-1]!=2)
+           &&textures[(dims-ycoords-1),xcoords-1]!=7)
             dirs.Add("left");
 
         if(xcoords!=dims-1
@@ -833,12 +830,13 @@ public class _cannymaze:ModdedModule{
             dirs.Add("right");
 
         if(ycoords!=dims-1
-           &&textures[(dims-ycoords-2),xcoords]!=5
-           &&textures[(dims-ycoords-2),xcoords]!=6)
+           &&textures[(dims-ycoords-2),xcoords]!=1
+           &&textures[(dims-ycoords-2),xcoords]!=2)
             dirs.Add("up");
 
         if(ycoords!=0
-           &&textures[(dims-ycoords),xcoords]!=7)
+           &&textures[(dims-ycoords),xcoords]!=5
+           &&textures[(dims-ycoords),xcoords]!=6)
             dirs.Add("down");
 
         return dirs;
@@ -890,8 +888,18 @@ public class _cannymaze:ModdedModule{
         return dirs;
     }
 
-    private List<string>wallsMaze(){
-        return allDirs;//placeholder until i learn to make the Walls Maze
+    private List<string> wallsMaze(){
+        switch(dims){
+            case 5:
+                return wallsMaze5x5[currentCoords];
+            case 6:
+                return wallsMaze6x6[currentCoords];
+            case 7:
+                return wallsMaze7x7[currentCoords];
+            case 8:
+            default:
+                return wallsMaze8x8[currentCoords];
+        }
     }
 
     private IEnumerator generatingMazeIdle(){

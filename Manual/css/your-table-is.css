@@ -35,120 +35,31 @@ td.wallsMazeHeader{
 }
 
 td.left{
-    border-top-style: hidden;
-    border-bottom-style: hidden;
-    border-left-style: default;
-    border-right-style: hidden;
+    border-left-style: hidden;
 }
 
 td.right{
-    border-top-style: hidden;
-    border-bottom-style: hidden;
-    border-left-style: hidden;
-    border-right-style: default;
+    border-right-style: hidden;
 }
 
 td.up{
-    border-top-style: default;
-    border-bottom-style: hidden;
-    border-left-style: hidden;
-    border-right-style: hidden;
+    border-top-style: hidden;
 }
 
 td.down{
-    border-top-style: hidden;
-    border-bottom-style: default;
-    border-left-style: hidden;
-    border-right-style: hidden;
-}
-
-td.leftright{
-    border-top-style: hidden;
     border-bottom-style: hidden;
-    border-left-style: default;
-    border-right-style: default;
-}
-
-td.leftup{
-    border-top-style: default;
-    border-bottom-style: hidden;
-    border-left-style: default;
-    border-right-style: hidden;
-}
-
-td.leftdown{
-    border-top-style: hidden;
-    border-bottom-style: default;
-    border-left-style: default;
-    border-right-style: hidden;
-}
-
-td.rightup{
-    border-top-style: default;
-    border-bottom-style: hidden;
-    border-left-style: hidden;
-    border-right-style: default;
-}
-
-td.rightdown{
-    border-top-style: hidden;
-    border-bottom-style: default;
-    border-left-style: hidden;
-    border-right-style: default;
-}
-
-td.updown{
-    border-top-style: default;
-    border-bottom-style: default;
-    border-left-style: hidden;
-    border-right-style: hidden;
-}
-
-td.leftrightup{
-    border-top-style: default;
-    border-bottom-style: hidden;
-    border-left-style: default;
-    border-right-style: default;
-}
-
-td.leftrightdown{
-    border-top-style: hidden;
-    border-bottom-style: default;
-    border-left-style: default;
-    border-right-style: default;
-}
-
-td.leftupdown{
-    border-top-style: default;
-    border-bottom-style: default;
-    border-left-style: default;
-    border-right-style: hidden;
-}
-
-td.rightupdown{
-    border-top-style: default;
-    border-bottom-style: default;
-    border-left-style: hidden;
-    border-right-style: default;
-}
-
-td.none{
-    border-top-style: hidden;
-    border-bottom-style: hidden;
-    border-left-style: hidden;
-    border-right-style: hidden;
 }
 
 tbody.checkerboard{
     height:250px;
     tr:nth-child(odd){
         td:nth-child(odd){
-            background-color:lightgray;
+            background-color: lightgray;
         }
     }
     tr:nth-child(even){
         td:nth-child(even){
-            background-color:lightgray;
+            background-color: lightgray;
         }
     }
 }

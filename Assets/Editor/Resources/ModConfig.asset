@@ -22,7 +22,8 @@ MonoBehaviour:
     ID: cannymaze
 
     Credits: me because i am awesome and cool and stuff, and chatgpt for the texture
-    generation
+    generation script (but i was the one who told it what to do so [i]basically[/i]
+    i''m the one who wrote it) aloso shoutouts to emik and riverbui for helping out
 
 
     [url=https://ktane.timwi.de/HTML/Canny%20Maze.html]HTML Manual[/url]
@@ -37,6 +38,6 @@ MonoBehaviour:
     /home/objectscountries/.local/share/Steam/steamapps/common/Keep Talking and Nobody
     Explodes/mods'
   version: 1
-  outputFolder: C:\Program Files (x86)\Steam\steamapps\common\Keep Talking and Nobody
-    Explodes\mods
+  outputFolder: /home/objectscountries/.local/share/Steam/steamapps/common/Keep Talking
+    and Nobody Explodes/mods
   previewImage: {fileID: 0}

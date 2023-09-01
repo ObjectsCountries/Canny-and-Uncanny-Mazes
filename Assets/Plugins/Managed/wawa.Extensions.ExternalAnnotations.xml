@@ -437,7 +437,7 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.Extensions.KMExtensions.ToBiAction``1(System.Action)">
+  <member name="M:Wawa.Extensions.KMExtensions.ToBiAction(System.Action)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="action">
