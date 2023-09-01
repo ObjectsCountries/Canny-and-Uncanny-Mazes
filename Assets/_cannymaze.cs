@@ -294,10 +294,9 @@ public class _cannymaze:ModdedModule{
     }
 
     ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
-    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
     private int sumAverageOrDigital=0;
     private int binaryDoubleOrFours=3;    
-    private string[]mazeNamesRuleseed;
+    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
     private enum compareMazeType{
         LR_UD_G,
         LR_UD_L,
@@ -313,27 +312,32 @@ public class _cannymaze:ModdedModule{
         Less_to_Greater,
         Greater_to_Less
     }
-    private strictMazeType strict1=strictMazeType.Less_to_Greater,strict2=strictMazeType.Odd_and_Even;
-
+    private strictMazeType strictH=strictMazeType.Less_to_Greater,strictV=strictMazeType.Odd_and_Even;
+    private int[]avoidMazeOrder=new int[]{0,1,2,3,4,5,6,7};
 	void Start(){
         var RND=ruleseed.GetRNG();
         if(RND.Seed!=1){
-            mazeNamesRuleseed=mazeNames;
             do{
                 sumAverageOrDigital=RND.Next(9);
             }while(sumAverageOrDigital!=0&&sumAverageOrDigital!=7&&sumAverageOrDigital!=8);
-            swap(mazeNamesRuleseed,0,sumAverageOrDigital);
+            swap(mazeNames,0,sumAverageOrDigital);
             compare=(compareMazeType)RND.Next(6);
             if(RND.Next(1)==0)
-                swap(mazeNamesRuleseed,2,9);
+                swap(mazeNames,2,9);
             do{
                 binaryDoubleOrFours=RND.Next(12);
             }while(binaryDoubleOrFours!=3&&binaryDoubleOrFours!=10&&binaryDoubleOrFours!=11);
-            swap(mazeNamesRuleseed,0,binaryDoubleOrFours);
-            strict1=(strictMazeType)RND.Next(4);
+            swap(mazeNames,0,binaryDoubleOrFours);
+            strictH=(strictMazeType)RND.Next(4);
             do{
-                strict2=(strictMazeType)RND.Next(4);
-            }while(strict1==strict2);
+                strictV=(strictMazeType)RND.Next(4);
+            }while(strictH==strictV);
+            avoidMazeOrder=new int[8];
+            for(int i=0;i<8;i++){
+                do{
+                    avoidMazeOrder[i]=RND.Next(8);
+                }while(avoidMazeOrder.Length!=avoidMazeOrder.Distinct().Count());
+            }
         }
         j=new List<string>();
         tilesTraversed=new List<string>();
@@ -458,7 +462,7 @@ public class _cannymaze:ModdedModule{
                 StartCoroutine(Initialization());
                 yield break;
             }finally{}//needed for the yield return StartCoroutine in the try block to function properly
-            if(mazeNames[startingTile]!="Movement"&&
+            if(mazeNames[startingTile-1]!="Movement"&&mazeNames[startingTile-1]!="Tiles"&&
               (correctPath.Count>2&&(
               (correctPath.ElementAt(correctPath.Count-1)=="left" &&correctPath.ElementAt(correctPath.Count-2)=="right")
             ||(correctPath.ElementAt(correctPath.Count-1)=="right"&&correctPath.ElementAt(correctPath.Count-2)=="left")
@@ -665,26 +669,31 @@ public class _cannymaze:ModdedModule{
     ///<returns>A <c>List&lt;string&gt;</c> containing the directions in which the<br/>defuser is allowed to move. This will contain at least one of<br/>any of the following: left, right, up, down.</returns>
     private List<string> mazeType(bool logging=true,bool includeBacktracking=true){
         List<string> temp=new List<string>();
-        switch(startingTile){
-            case 1:
+        switch(mazeNames[startingTile-1]){
+            case "Sum":
+            case "Average":
+            case "Digital":
                 temp=sumDigitalAverageMaze(logging);
                 break;
-            case 2:
+            case "Compare":
                 temp=compareMaze();
                 break;
-            case 3:
+            case "Tiles":
+            case "Movement":
                 temp=tilesMovementMaze(logging);
                 break;
-            case 4:
+            case "Binary":
+            case "Double Binary":
+            case "Fours":
                 temp=binaryMaze();
                 break;
-            case 5:
+            case "Avoid":
                 temp=avoidMaze();
                 break;
-            case 6:
+            case "Strict":
                 temp=strictMaze();
                 break;
-            case 7:
+            case "Walls":
                 temp=wallsMaze();
                 break;
         }
@@ -733,18 +742,18 @@ public class _cannymaze:ModdedModule{
         int modulo=0;
         int average=0;
         int digital=0;
-        if(mazeNamesRuleseed[startingTile-1]=="Sum"){
+        if(mazeNames[startingTile-1]=="Sum"){
             modulo=sum%7+1;
             if(logging)
                 Log("The sum of all orthogonally-adjacent tiles is "+sum+". Modulo 7 and adding 1, this is "+modulo+".");
         }
-        if(mazeNamesRuleseed[startingTile-1]=="Average"){
+        if(mazeNames[startingTile-1]=="Average"){
             average=(int)((sum/adjacentTiles.Count)+.5f);
             modulo=average%7+1;
             if(logging)
                 Log("The average of the sum of all orthogonally-adjacent tiles is "+average+". Modulo 7 and adding 1, this is "+modulo+".");
         }
-        if(mazeNamesRuleseed[startingTile-1]=="Digital"){
+        if(mazeNames[startingTile-1]=="Digital"){
             digital=(sum/10)+(sum%10);
             while(digital>9)
                 digital=(digital/10)+(digital%10);
@@ -820,7 +829,7 @@ public class _cannymaze:ModdedModule{
         string distinct="";
         int modulo;
         int total=movementsMade;
-        if(mazeNamesRuleseed[startingTile-1]=="Tiles"){
+        if(mazeNames[startingTile-1]=="Tiles"){
             distinct="distinct ";
             total=tilesTraversed.Count;
         }
@@ -857,7 +866,7 @@ public class _cannymaze:ModdedModule{
     private List<string> binaryMaze(){
         List<string> dirs=new List<string>();
         int[][]bit;
-        switch(mazeNamesRuleseed[startingTile-1]){
+        switch(mazeNames[startingTile-1]){
             case "Fours":
                 return foursMaze();
             case "Double Binary":
@@ -894,22 +903,23 @@ public class _cannymaze:ModdedModule{
     private List<string> avoidMaze(){
         List<string> dirs=new List<string>();
         if(xcoords!=0
-           &&textures[(dims-ycoords-1),xcoords-1]!=7)
+           &&textures[(dims-ycoords-1),xcoords-1]!=avoidMazeOrder[0]
+           &&textures[(dims-ycoords-1),xcoords-1]!=avoidMazeOrder[7])
             dirs.Add("left");
 
         if(xcoords!=dims-1
-           &&textures[(dims-ycoords-1),xcoords+1]!=3
-           &&textures[(dims-ycoords-1),xcoords+1]!=4)
+           &&textures[(dims-ycoords-1),xcoords+1]!=avoidMazeOrder[3]
+           &&textures[(dims-ycoords-1),xcoords+1]!=avoidMazeOrder[4])
             dirs.Add("right");
 
         if(ycoords!=dims-1
-           &&textures[(dims-ycoords-2),xcoords]!=1
-           &&textures[(dims-ycoords-2),xcoords]!=2)
+           &&textures[(dims-ycoords-2),xcoords]!=avoidMazeOrder[1]
+           &&textures[(dims-ycoords-2),xcoords]!=avoidMazeOrder[2])
             dirs.Add("up");
 
         if(ycoords!=0
-           &&textures[(dims-ycoords),xcoords]!=5
-           &&textures[(dims-ycoords),xcoords]!=6)
+           &&textures[(dims-ycoords),xcoords]!=avoidMazeOrder[5]
+           &&textures[(dims-ycoords),xcoords]!=avoidMazeOrder[6])
             dirs.Add("down");
 
         return dirs;
@@ -933,30 +943,91 @@ public class _cannymaze:ModdedModule{
                              .Key;
         foreach(KeyValuePair<string,int> tile in adjacentTiles){
             if(!tilesTraversed.Contains(tileinDirection(tile.Key))&&tile.Value==mostCommon)
-                possibleDirections.Add(tile.Key);//get all tile directions that are this distance or the nearest away from modulo
+                possibleDirections.Add(tile.Key);//get all tile directions that provide the most common modulo 4 value
         }
         return possibleDirections;
     }
 
     private List<string> strictMaze(){
         List<string> dirs=new List<string>();
-        if(xcoords!=0
-           &&textures[(dims-ycoords-1),xcoords-1]<currentTile)
-            dirs.Add("left");
-
-        if(xcoords!=dims-1
-           &&textures[(dims-ycoords-1),xcoords+1]>currentTile)
-            dirs.Add("right");
-
-        if(ycoords!=dims-1
-           &&((textures[(dims-ycoords-2),xcoords]%2!=0&&currentTile%2==0)
-           || (textures[(dims-ycoords-2),xcoords]%2==0&&currentTile%2!=0)))
-            dirs.Add("up");
-
-        if(ycoords!=0
-           &&((textures[(dims-ycoords),xcoords]%2!=0&&currentTile%2==0)
-           || (textures[(dims-ycoords),xcoords]%2==0&&currentTile%2!=0)))
-            dirs.Add("down");
+        int[]primes=new int[]{2,3,5,7};
+        int[]composites=new int[]{1,4,6};
+        switch(strictH){
+            case strictMazeType.Odd_and_Even:
+                if(xcoords!=0
+                &&((textures[(dims-ycoords-1),xcoords-1]%2!=0&&currentTile%2==0)
+                || (textures[(dims-ycoords-1),xcoords-1]%2==0&&currentTile%2!=0)))
+                    dirs.Add("left");
+                if(xcoords!=dims-1
+                &&((textures[(dims-ycoords-1),xcoords+1]%2!=0&&currentTile%2==0)
+                || (textures[(dims-ycoords-1),xcoords+1]%2==0&&currentTile%2!=0)))
+                    dirs.Add("right");
+                break;
+            case strictMazeType.Prime_and_Composite:
+                if(xcoords!=0
+                &&((primes.Contains(textures[(dims-ycoords-1),xcoords-1])&&composites.Contains(currentTile))
+                || (composites.Contains(textures[(dims-ycoords-1),xcoords-1])&&primes.Contains(currentTile))))
+                    dirs.Add("left");
+                if(xcoords!=dims-1
+                &&((primes.Contains(textures[(dims-ycoords-1),xcoords+1])&&composites.Contains(currentTile))
+                || (composites.Contains(textures[(dims-ycoords-1),xcoords+1])&&primes.Contains(currentTile))))
+                    dirs.Add("right");
+                break;
+            case strictMazeType.Greater_to_Less:
+                if(xcoords!=0
+                &&textures[(dims-ycoords-1),xcoords-1]>currentTile)
+                    dirs.Add("left");
+                if(xcoords!=dims-1
+                &&textures[(dims-ycoords-1),xcoords+1]<currentTile)
+                    dirs.Add("right");
+                break;
+            case strictMazeType.Less_to_Greater:
+                if(xcoords!=0
+                &&textures[(dims-ycoords-1),xcoords-1]<currentTile)
+                    dirs.Add("left");
+                if(xcoords!=dims-1
+                &&textures[(dims-ycoords-1),xcoords+1]>currentTile)
+                    dirs.Add("right");
+                break;
+        }
+        switch(strictV){
+            case strictMazeType.Odd_and_Even:
+                if(ycoords!=dims-1
+                &&((textures[(dims-ycoords-2),xcoords]%2!=0&&currentTile%2==0)
+                || (textures[(dims-ycoords-2),xcoords]%2==0&&currentTile%2!=0)))
+                    dirs.Add("up");
+                if(ycoords!=0
+                &&((textures[(dims-ycoords),xcoords]%2!=0&&currentTile%2==0)
+                || (textures[(dims-ycoords),xcoords]%2==0&&currentTile%2!=0)))
+                    dirs.Add("down");
+                break;
+            case strictMazeType.Prime_and_Composite:
+                if(ycoords!=dims-1
+                &&((primes.Contains(textures[(dims-ycoords-2),xcoords])&&composites.Contains(currentTile))
+                || (composites.Contains(textures[(dims-ycoords-2),xcoords])&&primes.Contains(currentTile))))
+                    dirs.Add("up");
+                if(ycoords!=0
+                &&((primes.Contains(textures[(dims-ycoords),xcoords])&&composites.Contains(currentTile))
+                || (composites.Contains(textures[(dims-ycoords),xcoords])&&primes.Contains(currentTile))))
+                    dirs.Add("down");
+                break;
+            case strictMazeType.Greater_to_Less:
+                if(ycoords!=dims-1
+                &&textures[(dims-ycoords-2),xcoords]<currentTile)
+                    dirs.Add("up");
+                if(ycoords!=0
+                &&textures[(dims-ycoords),xcoords]>currentTile)
+                    dirs.Add("down");
+                break;
+            case strictMazeType.Less_to_Greater:
+                if(ycoords!=dims-1
+                &&textures[(dims-ycoords-2),xcoords]>currentTile)
+                    dirs.Add("up");
+                if(ycoords!=0
+                &&textures[(dims-ycoords),xcoords]<currentTile)
+                    dirs.Add("down");
+                break;
+        }
 
         return dirs;
     }
