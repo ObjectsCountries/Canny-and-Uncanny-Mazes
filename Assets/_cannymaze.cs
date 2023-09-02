@@ -296,7 +296,7 @@ public class _cannymaze:ModdedModule{
     ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
     private int sumAverageOrDigital=0;
     private int binaryDoubleOrFours=3;    
-    private string[]mazeNames=new string[]{"Sum","Compare","Tiles","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
+    private string[]mazeNames=new string[]{"Tiles","Sum","Compare","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
     private enum compareMazeType{
         LR_UD_G,
         LR_UD_L,
@@ -313,31 +313,33 @@ public class _cannymaze:ModdedModule{
         Greater_to_Less
     }
     private strictMazeType strictH=strictMazeType.Less_to_Greater,strictV=strictMazeType.Odd_and_Even;
-    private int[]avoidMazeOrder=new int[]{0,1,2,3,4,5,6,7};
+    private List<int>avoidMazeOrder;
 	void Start(){
         var RND=ruleseed.GetRNG();
+        avoidMazeOrder=new List<int>(){0,1,2,3,4,5,6,7};
         if(RND.Seed!=1){
+            if(RND.Next(2)==0)
+                mazeNames=swap(mazeNames,0,9);//tiles & movement mazes
             do{
                 sumAverageOrDigital=RND.Next(9);
-            }while(sumAverageOrDigital!=0&&sumAverageOrDigital!=7&&sumAverageOrDigital!=8);
-            swap(mazeNames,0,sumAverageOrDigital);
+            }while(sumAverageOrDigital!=1&&sumAverageOrDigital!=7&&sumAverageOrDigital!=8);
+            mazeNames=swap(mazeNames,1,sumAverageOrDigital);
             compare=(compareMazeType)RND.Next(6);
-            if(RND.Next(1)==0)
-                swap(mazeNames,2,9);
             do{
                 binaryDoubleOrFours=RND.Next(12);
             }while(binaryDoubleOrFours!=3&&binaryDoubleOrFours!=10&&binaryDoubleOrFours!=11);
-            swap(mazeNames,0,binaryDoubleOrFours);
+            mazeNames=swap(mazeNames,3,binaryDoubleOrFours);
+            avoidMazeOrder.Clear();
+            for(int i=0;i<8;i++){
+                avoidMazeOrder.Add(RND.Next(8));
+                while(avoidMazeOrder.Count!=avoidMazeOrder.Distinct().Count()){
+                    avoidMazeOrder[i]=RND.Next(8);
+                }
+            }
             strictH=(strictMazeType)RND.Next(4);
             do{
                 strictV=(strictMazeType)RND.Next(4);
             }while(strictH==strictV);
-            avoidMazeOrder=new int[8];
-            for(int i=0;i<8;i++){
-                do{
-                    avoidMazeOrder[i]=RND.Next(8);
-                }while(avoidMazeOrder.Length!=avoidMazeOrder.Distinct().Count());
-            }
         }
         j=new List<string>();
         tilesTraversed=new List<string>();
@@ -826,16 +828,16 @@ public class _cannymaze:ModdedModule{
     }
 
     private List<string> tilesMovementMaze(bool logging){
-        string distinct="";
+        string tilesOrMovement="movements made";
         int modulo;
         int total=movementsMade;
         if(mazeNames[startingTile-1]=="Tiles"){
-            distinct="distinct ";
+            tilesOrMovement="tiles traversed";
             total=tilesTraversed.Count;
         }
         modulo=((currentTile*total)%7)+1;
         if(logging)
-            Log("The total number of "+distinct+"tiles traversed so far is "+total+", and multiplying by the current tile yields "+(currentTile*total)+". Modulo 7 and adding 1, this is "+modulo+".");
+            Log("The total number of "+tilesOrMovement+" so far is "+total+", and multiplying by the current tile yields "+(currentTile*total)+". Modulo 7 and adding 1, this is "+modulo+".");
         Dictionary<string,int> adjacentTiles=new Dictionary<string,int>();
         if(xcoords!=0)
             adjacentTiles.Add("left",textures[(dims-ycoords-1),xcoords-1]);
