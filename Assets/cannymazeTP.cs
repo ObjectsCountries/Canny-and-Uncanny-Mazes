@@ -17,44 +17,83 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                 Module.Play(new Sound("song"+Module.currentTile));
         });
     }
-	//new public string Help=@"!{0} u/d/l/r to move up, down, left, or right respectively; multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole maze. !{0} reset to reset. If an invalid character is entered, the module will move up until the invalid character is reached. NOTE: Do not use !{0} r to reset; this will register as a command to move right.";
     [Command("")]
 	IEnumerable<Instruction> Press(string movement){
+        List<KMSelectable> buttons=new List<KMSelectable>();
+        if(!Module.mazeGenerated)
+            yield break;
 		movement=movement.ToLowerInvariant();
 		switch(movement){
             case "m":
             case "maze":
-                yield return Module.maze;
+                yield return new KMSelectable[]{Module.maze};
 				yield break;
             case "n":
             case "numbers":
                 if(!Module.viewingWholeMaze)
-					yield return Module.maze;
-                yield return Module.numbersButton;
+                    buttons.Add(Module.maze);
+                buttons.Add(Module.numbersButton);
+                yield return buttons.ToArray();
 				yield break;
             case "reset":
                 if(Module.viewingWholeMaze)
-					yield return Module.maze;
-                yield return Module.resetButton;
+                    buttons.Add(Module.maze);
+                buttons.Add(Module.resetButton);
+                yield return buttons.ToArray();
 				yield break;
             default:
                 break;
 		}
+        buttons.Clear();
 		if(Module.viewingWholeMaze)
-			yield return Module.maze;
+            buttons.Add(Module.maze);
         foreach(char c in movement){
             switch(c){
                 case 'u':
-                    yield return Module.arrowup;
+                    buttons.Add(Module.arrowup);
                     break;
                 case 'd':
-                    yield return Module.arrowdown;
+                    buttons.Add(Module.arrowdown);
                     break;
                 case 'l':
-                    yield return Module.arrowleft;
+                    buttons.Add(Module.arrowleft);
                     break;
                 case 'r':
-                    yield return Module.arrowright;
+                    buttons.Add(Module.arrowright);
+                    break;
+                case ' ':
+                    break;
+                default:
+                    yield return buttons.ToArray();
+                    yield break;
+            }
+            yield return buttons.ToArray();
+        }
+	}
+
+	public override IEnumerator TwitchHandleForcedSolve(){
+        if(!Module.mazeGenerated)
+            yield break;
+        if(Module.tookTooLong){
+            Module.numbersButton.OnInteract();
+            yield break;
+        }
+        if(Module.viewingWholeMaze)
+			Module.maze.OnInteract();
+        Module.resetButton.OnInteract();
+        foreach(string dir in Module.correctPath){
+            switch(dir){
+                case "up":
+                    Module.arrowup.OnInteract();
+                    break;
+                case "down":
+                    Module.arrowdown.OnInteract();
+                    break;
+                case "left":
+                    Module.arrowleft.OnInteract();
+                    break;
+                case "right":
+                    Module.arrowright.OnInteract();
                     break;
                 default:
                     yield break;
@@ -62,27 +101,8 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
         }
 	}
 
-	public override IEnumerable<Instruction> ForceSolve(){
-        if(Module.viewingWholeMaze)
-			yield return Module.maze;
-        yield return Module.resetButton;
-        foreach(string dir in Module.correctPath){
-            switch(dir){
-                case "up":
-                    yield return Module.arrowup;
-                    break;
-                case "down":
-                    yield return Module.arrowdown;
-                    break;
-                case "left":
-                    yield return Module.arrowleft;
-                    break;
-                case "right":
-                    yield return Module.arrowright;
-                    break;
-                default:
-                    yield break;
-            }
-        }
-	}
+    public override IEnumerable<Instruction> ForceSolve(){
+        TwitchHandleForcedSolve();
+        yield return null;
+    }
 }

@@ -22,9 +22,9 @@ public class _cannymaze:ModdedModule{
     private bool currentlyMoving=false;
     private bool canMoveInThatDirection=true;
     public TextureGenerator t;
-    private bool mazeGenerated=false;
+    internal bool mazeGenerated=false;
     private bool generatingMazeIdleCurrentlyRunning=false;
-    private bool tookTooLong=false;
+    internal bool tookTooLong=false;
     internal int animSpeed;
     internal bool music;
     private string output;
@@ -708,7 +708,6 @@ public class _cannymaze:ModdedModule{
             }
         }
         if(attempts!=3&&j.Count!=0){
-            Log("Your layout is:\n"+output);
             switch(dims){
                 case 5:
                     numbers.GetComponent<TextMesh>().fontSize=30;
@@ -741,6 +740,10 @@ public class _cannymaze:ModdedModule{
             goalBox.transform.localScale=new Vector3(7f/dims,1,7f/dims);
             goalBox.transform.localPosition=new Vector3(m*xGoal-b,-.01f,-m*yGoal+b);
             yield return StartCoroutine(Moving("reset",2,false));
+            Log("Your layout is:");
+            string[]outputLines=output.Split('\n');
+            foreach(string line in outputLines)
+                Log(line);
             Log("Your maze is: "+(mazeNames[(textures[(dims-ycoords-1),xcoords])-1])+" Maze");
             Log("Your current coordinates are: "+currentCoords);
             Log("Your goal is: "+goalCoords);
