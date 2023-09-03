@@ -497,9 +497,9 @@ public class _cannymaze:ModdedModule{
         return arr;
     }
 
-    ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
     private int sumAverageOrDigital=0;
     private int binaryDoubleOrFours=3;    
+    ///<value>The different types of mazes that the module can have. Everything after the first seven are exclusive to ruleseeds other than 1.</value>
     private string[]mazeNames=new string[]{"Tiles","Sum","Compare","Binary","Avoid","Strict","Walls","Average","Digital","Movement","Double Binary","Fours"};
     private enum compareMazeType{
         LR_UD_G,
@@ -765,7 +765,7 @@ public class _cannymaze:ModdedModule{
         ||(ycoords==0     &&direction=="down"))
             yield break;
         if(direction!="reset"){
-            canMoveInThatDirection = j.Contains(direction) || tilesTraversed.Contains(tileinDirection(direction));
+            canMoveInThatDirection=j.Contains(direction);
             if(!canMoveInThatDirection){
                 Strike("Tried to move "+direction+", not allowed.");
                 yield break;
