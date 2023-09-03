@@ -67,11 +67,12 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                     yield return buttons.ToArray();
                     yield break;
             }
-            yield return buttons.ToArray();
         }
+        yield return buttons.ToArray();
 	}
 
 	public override IEnumerator TwitchHandleForcedSolve(){
+        Module.Log("Force solved by Twitch mod.");
         if(!Module.mazeGenerated)
             yield break;
         if(Module.tookTooLong){
@@ -95,8 +96,6 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                 case "right":
                     Module.arrowright.OnInteract();
                     break;
-                default:
-                    yield break;
             }
         }
 	}
