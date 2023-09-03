@@ -56,7 +56,7 @@ public class _cannymaze:ModdedModule{
             new int[]{1,2,4}
     };
 
-    private Dictionary<string,List<string>> wallsMaze5x5=new Dictionary<string,List<string>>(){
+    private Dictionary<string,List<string>> defaultWallsMaze5x5=new Dictionary<string,List<string>>(){
         {"A1",new List<string>(){"down"}},
         {"B1",new List<string>(){"right"}},
         {"C1",new List<string>(){"left","right","down"}},
@@ -87,7 +87,7 @@ public class _cannymaze:ModdedModule{
         {"D5",new List<string>(){"right","up"}},
         {"E5",new List<string>(){"left"}}
     };
-    private Dictionary<string,List<string>> wallsMaze6x6=new Dictionary<string,List<string>>(){
+    private Dictionary<string,List<string>> defaultWallsMaze6x6=new Dictionary<string,List<string>>(){
         {"A1",new List<string>(){"down"}},
         {"B1",new List<string>(){"down"}},
         {"C1",new List<string>(){"right"}},
@@ -130,7 +130,7 @@ public class _cannymaze:ModdedModule{
         {"E6",new List<string>(){"left"}},
         {"F6",new List<string>(){"up"}}
     };
-    private Dictionary<string,List<string>> wallsMaze7x7=new Dictionary<string,List<string>>(){
+    private Dictionary<string,List<string>> defaultWallsMaze7x7=new Dictionary<string,List<string>>(){
         {"A1",new List<string>(){"down"}},
         {"B1",new List<string>(){"right","down"}},
         {"C1",new List<string>(){"left","right"}},
@@ -187,7 +187,7 @@ public class _cannymaze:ModdedModule{
         {"F7",new List<string>(){"left"}},
         {"G7",new List<string>(){"up"}}
     };
-    private Dictionary<string,List<string>> wallsMaze8x8=new Dictionary<string,List<string>>(){
+    private Dictionary<string,List<string>> defaultWallsMaze8x8=new Dictionary<string,List<string>>(){
         {"A1",new List<string>(){"right","down"}},
         {"B1",new List<string>(){"left"}},
         {"C1",new List<string>(){"down"}},
@@ -259,6 +259,210 @@ public class _cannymaze:ModdedModule{
         {"F8",new List<string>(){"left","right"}},
         {"G8",new List<string>(){"left","up"}},
         {"H8",new List<string>(){"up"}}
+    };
+    private Dictionary<string,List<string>> wallsMaze5x5=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){}},
+        {"B1",new List<string>(){}},
+        {"C1",new List<string>(){}},
+        {"D1",new List<string>(){}},
+        {"E1",new List<string>(){}},
+
+        {"A2",new List<string>(){}},
+        {"B2",new List<string>(){}},
+        {"C2",new List<string>(){}},
+        {"D2",new List<string>(){}},
+        {"E2",new List<string>(){}},
+
+        {"A3",new List<string>(){}},
+        {"B3",new List<string>(){}},
+        {"C3",new List<string>(){}},
+        {"D3",new List<string>(){}},
+        {"E3",new List<string>(){}},
+
+        {"A4",new List<string>(){}},
+        {"B4",new List<string>(){}},
+        {"C4",new List<string>(){}},
+        {"D4",new List<string>(){}},
+        {"E4",new List<string>(){}},
+
+        {"A5",new List<string>(){}},
+        {"B5",new List<string>(){}},
+        {"C5",new List<string>(){}},
+        {"D5",new List<string>(){}},
+        {"E5",new List<string>(){}}
+    };
+    private Dictionary<string,List<string>> wallsMaze6x6=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){}},
+        {"B1",new List<string>(){}},
+        {"C1",new List<string>(){}},
+        {"D1",new List<string>(){}},
+        {"E1",new List<string>(){}},
+        {"F1",new List<string>(){}},
+
+        {"A2",new List<string>(){}},
+        {"B2",new List<string>(){}},
+        {"C2",new List<string>(){}},
+        {"D2",new List<string>(){}},
+        {"E2",new List<string>(){}},
+        {"F2",new List<string>(){}},
+
+        {"A3",new List<string>(){}},
+        {"B3",new List<string>(){}},
+        {"C3",new List<string>(){}},
+        {"D3",new List<string>(){}},
+        {"E3",new List<string>(){}},
+        {"F3",new List<string>(){}},
+
+        {"A4",new List<string>(){}},
+        {"B4",new List<string>(){}},
+        {"C4",new List<string>(){}},
+        {"D4",new List<string>(){}},
+        {"E4",new List<string>(){}},
+        {"F4",new List<string>(){}},
+
+        {"A5",new List<string>(){}},
+        {"B5",new List<string>(){}},
+        {"C5",new List<string>(){}},
+        {"D5",new List<string>(){}},
+        {"E5",new List<string>(){}},
+        {"F5",new List<string>(){}},
+
+        {"A6",new List<string>(){}},
+        {"B6",new List<string>(){}},
+        {"C6",new List<string>(){}},
+        {"D6",new List<string>(){}},
+        {"E6",new List<string>(){}},
+        {"F6",new List<string>(){}}
+    };
+    private Dictionary<string,List<string>> wallsMaze7x7=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){}},
+        {"B1",new List<string>(){}},
+        {"C1",new List<string>(){}},
+        {"D1",new List<string>(){}},
+        {"E1",new List<string>(){}},
+        {"F1",new List<string>(){}},
+        {"G1",new List<string>(){}},
+
+        {"A2",new List<string>(){}},
+        {"B2",new List<string>(){}},
+        {"C2",new List<string>(){}},
+        {"D2",new List<string>(){}},
+        {"E2",new List<string>(){}},
+        {"F2",new List<string>(){}},
+        {"G2",new List<string>(){}},
+
+        {"A3",new List<string>(){}},
+        {"B3",new List<string>(){}},
+        {"C3",new List<string>(){}},
+        {"D3",new List<string>(){}},
+        {"E3",new List<string>(){}},
+        {"F3",new List<string>(){}},
+        {"G3",new List<string>(){}},
+
+        {"A4",new List<string>(){}},
+        {"B4",new List<string>(){}},
+        {"C4",new List<string>(){}},
+        {"D4",new List<string>(){}},
+        {"E4",new List<string>(){}},
+        {"F4",new List<string>(){}},
+        {"G4",new List<string>(){}},
+
+        {"A5",new List<string>(){}},
+        {"B5",new List<string>(){}},
+        {"C5",new List<string>(){}},
+        {"D5",new List<string>(){}},
+        {"E5",new List<string>(){}},
+        {"F5",new List<string>(){}},
+        {"G5",new List<string>(){}},
+
+        {"A6",new List<string>(){}},
+        {"B6",new List<string>(){}},
+        {"C6",new List<string>(){}},
+        {"D6",new List<string>(){}},
+        {"E6",new List<string>(){}},
+        {"F6",new List<string>(){}},
+        {"G6",new List<string>(){}},
+
+        {"A7",new List<string>(){}},
+        {"B7",new List<string>(){}},
+        {"C7",new List<string>(){}},
+        {"D7",new List<string>(){}},
+        {"E7",new List<string>(){}},
+        {"F7",new List<string>(){}},
+        {"G7",new List<string>(){}}
+    };
+    private Dictionary<string,List<string>> wallsMaze8x8=new Dictionary<string,List<string>>(){
+        {"A1",new List<string>(){}},
+        {"B1",new List<string>(){}},
+        {"C1",new List<string>(){}},
+        {"D1",new List<string>(){}},
+        {"E1",new List<string>(){}},
+        {"F1",new List<string>(){}},
+        {"G1",new List<string>(){}},
+        {"H1",new List<string>(){}},
+
+        {"A2",new List<string>(){}},
+        {"B2",new List<string>(){}},
+        {"C2",new List<string>(){}},
+        {"D2",new List<string>(){}},
+        {"E2",new List<string>(){}},
+        {"F2",new List<string>(){}},
+        {"G2",new List<string>(){}},
+        {"H2",new List<string>(){}},
+
+        {"A3",new List<string>(){}},
+        {"B3",new List<string>(){}},
+        {"C3",new List<string>(){}},
+        {"D3",new List<string>(){}},
+        {"E3",new List<string>(){}},
+        {"F3",new List<string>(){}},
+        {"G3",new List<string>(){}},
+        {"H3",new List<string>(){}},
+
+        {"A4",new List<string>(){}},
+        {"B4",new List<string>(){}},
+        {"C4",new List<string>(){}},
+        {"D4",new List<string>(){}},
+        {"E4",new List<string>(){}},
+        {"F4",new List<string>(){}},
+        {"G4",new List<string>(){}},
+        {"H4",new List<string>(){}},
+
+        {"A5",new List<string>(){}},
+        {"B5",new List<string>(){}},
+        {"C5",new List<string>(){}},
+        {"D5",new List<string>(){}},
+        {"E5",new List<string>(){}},
+        {"F5",new List<string>(){}},
+        {"G5",new List<string>(){}},
+        {"H5",new List<string>(){}},
+
+        {"A6",new List<string>(){}},
+        {"B6",new List<string>(){}},
+        {"C6",new List<string>(){}},
+        {"D6",new List<string>(){}},
+        {"E6",new List<string>(){}},
+        {"F6",new List<string>(){}},
+        {"G6",new List<string>(){}},
+        {"H6",new List<string>(){}},
+
+        {"A7",new List<string>(){}},
+        {"B7",new List<string>(){}},
+        {"C7",new List<string>(){}},
+        {"D7",new List<string>(){}},
+        {"E7",new List<string>(){}},
+        {"F7",new List<string>(){}},
+        {"G7",new List<string>(){}},
+        {"H7",new List<string>(){}},
+
+        {"A8",new List<string>(){}},
+        {"B8",new List<string>(){}},
+        {"C8",new List<string>(){}},
+        {"D8",new List<string>(){}},
+        {"E8",new List<string>(){}},
+        {"F8",new List<string>(){}},
+        {"G8",new List<string>(){}},
+        {"H8",new List<string>(){}}
     };
     [Serializable]
     public sealed class cannymazesettings{
@@ -340,6 +544,15 @@ public class _cannymaze:ModdedModule{
             do{
                 strictV=(strictMazeType)RND.Next(4);
             }while(strictH==strictV);
+            wallsMaze5x5=wallsMazeGeneration(RND,5);
+            wallsMaze6x6=wallsMazeGeneration(RND,6);
+            wallsMaze7x7=wallsMazeGeneration(RND,7);
+            wallsMaze8x8=wallsMazeGeneration(RND,8);
+        }else{
+            wallsMaze5x5=defaultWallsMaze5x5;
+            wallsMaze6x6=defaultWallsMaze6x6;
+            wallsMaze7x7=defaultWallsMaze7x7;
+            wallsMaze8x8=defaultWallsMaze8x8;
         }
         j=new List<string>();
         tilesTraversed=new List<string>();
@@ -1069,5 +1282,105 @@ public class _cannymaze:ModdedModule{
             totaltime++;
         }
         generatingMazeIdleCurrentlyRunning=false;
+    }
+
+    private Dictionary<string,List<string>> wallsMazeGeneration(MonoRandom r,int d){
+        Dictionary<string,List<string>> tempMaze;
+        switch(d){
+            case 5:
+                tempMaze=wallsMaze5x5;
+                break;
+            case 6:
+                tempMaze=wallsMaze6x6;
+                break;
+            case 7:
+                tempMaze=wallsMaze7x7;
+                break;
+            case 8:
+            default:
+                tempMaze=wallsMaze8x8;
+                break;
+        }
+        int letterNum=r.Next(d);
+        string letter,letterLeft,letterRight;
+        int number=r.Next(1,d+1);
+        int numberUp,numberDown;
+        string primCurrent,primLeft,primRight,primUp,primDown;
+        List<string>primDirs=new List<string>();
+        List<string>primTraversed=new List<string>();
+        string primDir;
+        string primRandomTile="";
+        do{
+            letter=coordLetters.Substring(letterNum,1);
+            letterLeft="";
+            letterRight="";
+            if(letter!="A")
+                letterLeft=coordLetters.Substring(letterNum-1,1);
+            if(letter!=coordLetters.Substring(d-1,1))
+                letterRight=coordLetters.Substring(letterNum+1,1);
+            numberUp=0;
+            numberDown=0;
+            if(number!=1)
+                numberUp=number-1;
+            if(number!=d)
+                numberDown=number+1;
+            primCurrent=letter+number.ToString();
+            primLeft="";
+            primRight="";
+            primUp="";
+            primDown="";
+            if(letterLeft!=""){
+                primLeft=letterLeft+number.ToString();
+                if(!primTraversed.Contains(primLeft))
+                    primDirs.Add(primLeft);
+            }
+            if(letterRight!=""){
+                primRight=letterRight+number.ToString();
+                if(!primTraversed.Contains(primRight))
+                    primDirs.Add(primRight);
+            }
+            if(numberUp!=0){
+                primUp=letter+numberUp.ToString();
+                if(!primTraversed.Contains(primUp))
+                    primDirs.Add(primUp);
+            }
+            if(numberDown!=0){
+                primDown=letter+numberDown.ToString();
+                if(!primTraversed.Contains(primDown))
+                    primDirs.Add(primDown);
+            }
+            if(primDirs.Count==0){
+                primRandomTile=primTraversed[r.Next(primTraversed.Count)];
+                letterNum=coordLetters.IndexOf(char.Parse(primRandomTile.Substring(0,1)));
+                number=Convert.ToInt32(primRandomTile.Substring(1,1));
+                continue;
+            }
+            primDir=primDirs[r.Next(primDirs.Count)];
+            if(primDir==primLeft){
+                tempMaze[primDir].Add("right");
+                tempMaze[primCurrent].Add("left");
+            }
+            if(primDir==primRight){
+                tempMaze[primDir].Add("left");
+                tempMaze[primCurrent].Add("right");
+            }
+            if(primDir==primUp){
+                tempMaze[primDir].Add("down");
+                tempMaze[primCurrent].Add("up");
+            }
+            if(primDir==primDown){
+                tempMaze[primDir].Add("up");
+                tempMaze[primCurrent].Add("down");
+            }
+            primDirs.Clear();
+            if(!primTraversed.Contains(primCurrent))
+                primTraversed.Add(primCurrent);
+            if(!primTraversed.Contains(primDir))
+                primTraversed.Add(primDir);
+            primRandomTile=primTraversed[r.Next(primTraversed.Count)];
+            letterNum=coordLetters.IndexOf(char.Parse(primRandomTile.Substring(0,1)));
+            number=Convert.ToInt32(primRandomTile.Substring(1,1));
+        }while(primTraversed.Count<d*d);
+        return tempMaze;
     }
 }

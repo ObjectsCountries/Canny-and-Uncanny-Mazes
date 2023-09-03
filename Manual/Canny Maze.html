@@ -30,6 +30,36 @@
         var defaultAvoidLeft="tile 7";
         var defaultStrictVertical="Can only move up or down if moving from an odd tile to an even tile or vice versa,";
         var defaultStrictHorizontal="can only move right if moving to a higher tile, can only move left if moving to a lower tile.";
+        var defaultWallsMazeLayouts=
+        [[["down","right","left right down","left","down"],
+        ["right up","left right down","left right up","left right","left up down"],
+        ["right","left up down","right","left right down","left up down"],
+        ["down","right up","down","up down","up"],
+        ["right up","left right","left up","right up","left"]],
+
+        [["down","down","right","left right","left down","down"],
+        ["up down","right up","left right down","left down","up down","up down"],
+        ["up down","right down","left up down","up","right up down","left up"],
+        ["right up","left up down","right up","left right","left right up","left down"],
+        ["right","left up","right down","left right down","left right","left up down"],
+        ["right","left right","left up","right up","left","up"]],
+
+        [["down","right down","left right","left right","left down","right","left down"],
+        ["right up down","left up","right down","left","right up","left right","left up"],
+        ["right up down","left","right up","left right","left right down","left right","left down"],
+        ["up down","right down","left down","right down","left right up","left down","up down"],
+        ["right up","left up down","right up","left up","down","up down","up down"],
+        ["right down","left up","right down","left right","left right up","left up","up down"],
+        ["right up","left","right up","left right","left right","left","up"]],
+
+        [["right down","left","down","right down","left right","left","right down","left down"],
+        ["up down","right","left right up","left right up down","left right","left right","left up down","up"],
+        ["up down","right","left down","right up","left down","right","left up down","down"],
+        ["up down","right down","left right up","left right down","left up","right","left right up","left up down"],
+        ["up down","up down","right down","left right up","left right","left right down","left right","left up down"],
+        ["right up","left up down","up down","right down","left right down","left up","down","up down"],
+        ["down","right up","left up down","up down","right up","left","up down","up down"],
+        ["right up","left right","left up","right up","left right","left right","left up","up"]]]
         function getDefaultRules(){
             if(defaultMazeOrder!=null)
                 return;
@@ -52,11 +82,18 @@
             document.getElementById("avoidLeft").innerText=defaultAvoidLeft;
             document.getElementById("strictHorizontal").innerText=defaultStrictHorizontal;
             document.getElementById("strictVertical").innerText=defaultStrictVertical;
+            for(var i=5;i<9;i++){
+                for(var j=0;j<i;j++){
+                    for(var k=0;k<i;k++){
+                        document.getElementsByClassName(`checkerboard${i}x${i}`)[0].children[j].children[k].className=defaultWallsMazeLayouts[i-5][j][k];
+                    }
+                }
+            }
         }
         function setDefaultRules(){
             getDefaultRules();
             for(var i=0;i<7;i++)
-                defaultMazeOrder[i]=document.getElementById(`maze${i+1}`).substring(0,document.getElementById(`maze${i+1}`).indexOf(" "));
+                defaultMazeOrder[i]=document.getElementById(`maze${i+1}`).innerText.substring(0,document.getElementById(`maze${i+1}`).innerText.indexOf(" "));
             defaultTilesMovement=document.getElementById("tilesMovement").innerText;
             defaultTilesTraversedOrMovementsMade=document.getElementById("tilesTraversedOrMovementsMade").innerText;
             defaultTilesNote=document.getElementById("tilesNote").innerHTML;
@@ -73,6 +110,13 @@
             defaultAvoidLeft=document.getElementById("avoidLeft").innerText;
             defaultStrictHorizontal=document.getElementById("strictHorizontal").innerText;
             defaultStrictVertical=document.getElementById("strictVertical").innerText;
+            for(var i=5;i<9;i++){
+                for(var j=0;j<i;j++){
+                    for(var k=0;k<i;k++){
+                        defaultWallsMazeLayouts[i-5][j][k]=document.getElementsByClassName(`checkerboard${i}x${i}`)[0].children[j].children[k].className;
+                    }
+                }
+            }
         }
         function setRules(rnd){
             getDefaultRules();
@@ -172,7 +216,6 @@
             var av=[`tiles ${avoidMazeOrder[1]} or ${avoidMazeOrder[2]}`,`tiles ${avoidMazeOrder[3]} or ${avoidMazeOrder[4]}`,`tiles ${avoidMazeOrder[5]} or ${avoidMazeOrder[6]}`,`tiles ${avoidMazeOrder[7]} or ${avoidMazeOrder[0]}`];
             for(var i=0;i<8;i++){
                 if(avoidMazeOrder[i]==0){
-                    console.log((((i-1)%8)/2)-.5);
                     if((i%2)==0)
                         av[Math.floor(((i-1)%8)/2)]=`tile ${avoidMazeOrder[(i-1)%8]}`;
                     else av[Math.floor(((i-1)%8)/2)]=`tile ${avoidMazeOrder[(i+1)%8]}`;//not a typo (hopefully)
@@ -218,7 +261,101 @@
                     document.getElementById("strictVertical").innerText="Can only move up if moving to a lower tile, can only move down if moving to a higher tile,";
                     break;
             }
+            for(var i=5;i<9;i++){
+                for(var j=0;j<i;j++){
+                    for(var k=0;k<i;k++){
+                        document.getElementsByClassName(`checkerboard${i}x${i}`)[0].children[j].children[k].className="";
+                    }
+                }
+            }
+            generateWallsMaze(rnd,5);
+            generateWallsMaze(rnd,6);
+            generateWallsMaze(rnd,7);
+            generateWallsMaze(rnd,8);
         }
+        function generateWallsMaze(r,d){
+                var coordLetters="ABCDEFGH";
+                var letterNum=r.nextMax(d);
+                var letter,letterLeft,letterRight;
+                var number=r.next(1,d+1);
+                var numberUp,numberDown;
+                var primCurrent,primLeft,primRight,primUp,primDown;
+                var primDirs=[];
+                var primTraversed=[];
+                var primDir;
+                var primRandomTile="";
+                do{
+                    letter=coordLetters.substring(letterNum,letterNum+1);
+                    letterLeft="";
+                    letterRight="";
+                    if(letter!="A")
+                        letterLeft=coordLetters.substring(letterNum-1,letterNum);
+                    if(letter!=coordLetters.substring(d-1,d))
+                        letterRight=coordLetters.substring(letterNum+1,letterNum+2);
+                    numberUp=0;
+                    numberDown=0;
+                    if(number!=1)
+                        numberUp=number-1;
+                    if(number!=d)
+                        numberDown=number+1;
+                    primCurrent=letter+number.toString();
+                    primLeft="";
+                    primRight="";
+                    primUp="";
+                    primDown="";
+                    if(letterLeft!=""){
+                        primLeft=letterLeft+number.toString();
+                        if(!primTraversed.includes(primLeft))
+                            primDirs.push(primLeft);
+                    }
+                    if(letterRight!=""){
+                        primRight=letterRight+number.toString();
+                        if(!primTraversed.includes(primRight))
+                            primDirs.push(primRight);
+                    }
+                    if(numberUp!=0){
+                        primUp=letter+numberUp.toString();
+                        if(!primTraversed.includes(primUp))
+                            primDirs.push(primUp);
+                    }
+                    if(numberDown!=0){
+                        primDown=letter+numberDown.toString();
+                        if(!primTraversed.includes(primDown))
+                            primDirs.push(primDown);
+                    }
+                    if(primDirs.length==0){
+                        primRandomTile=primTraversed[r.nextMax(primTraversed.length)];
+                        letterNum=coordLetters.indexOf(primRandomTile.substring(0,1));
+                        number=parseInt(primRandomTile.substring(1,2));
+                        continue;
+                    }
+                    primDir=primDirs[r.nextMax(primDirs.length)];
+                    if(primDir==primLeft){
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-1].children[letterNum-1].classList.add("right");
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-1].children[letterNum].classList.add("left");
+                    }
+                    if(primDir==primRight){
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-1].children[letterNum+1].classList.add("left");
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-1].children[letterNum].classList.add("right");
+                    }
+                    if(primDir==primUp){
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-2].children[letterNum].classList.add("down");
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-1].children[letterNum].classList.add("up");
+                    }
+                    if(primDir==primDown){
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number].children[letterNum].classList.add("up");
+                        document.getElementsByClassName(`checkerboard${d}x${d}`)[0].children[number-1].children[letterNum].classList.add("down");
+                    }
+                    primDirs=[];
+                    if(!primTraversed.includes(primCurrent))
+                        primTraversed.push(primCurrent);
+                    if(!primTraversed.includes(primDir))
+                        primTraversed.push(primDir);
+                    primRandomTile=primTraversed[r.nextMax(primTraversed.length)];
+                    letterNum=coordLetters.indexOf(primRandomTile.substring(0,1));
+                    number=parseInt(primRandomTile.substring(1,2));
+                }while(primTraversed.length<d*d);
+            }
     </script>
 </head>
 <body>
@@ -288,7 +425,7 @@
                 <table class="wallsMazeMaps"><tbody>
                     <tr>
                         <td style="border-right-style:hidden;border-bottom-style:hidden">
-                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=5>5x5</td></tr></thead><tbody class="checkerboard" style="height:250px">
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=5>5x5</td></tr></thead><tbody class="checkerboard5x5">
                                 <tr>
                                     <td class="down"></td><td class="right"></td><td class="left right down"></td><td class="left"></td><td class="down"></td>
                                 </tr>
@@ -307,7 +444,7 @@
                             </tbody></table>
                         </td>
                         <td>
-                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=6>6x6</td></tr></thead><tbody class="checkerboard">
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=6>6x6</td></tr></thead><tbody class="checkerboard6x6">
                                 <tr>
                                     <td class="down"></td><td class="down"></td><td class="right"></td><td class="left right"></td><td class="left down"></td><td class="down"></td>
                                 </tr>
@@ -331,7 +468,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=7>7x7</td></tr></thead><tbody class="checkerboard">
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=7>7x7</td></tr></thead><tbody class="checkerboard7x7">
                                 <tr>
                                     <td class="down"></td><td class="right down"></td><td class="left right"></td><td class="left right"></td><td class="left down"></td><td class="right"></td><td class="left down"></td>
                                 </tr>
@@ -356,7 +493,7 @@
                             </tbody></table>
                         </td>
                         <td style="border-left-style:hidden;border-top-style:hidden">
-                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=8>8x8</td></tr></thead><tbody class="checkerboard">
+                            <table style="margin-left:auto;margin-right:auto;width:250px"><thead><tr><td class="wallsMazeHeader" colspan=8>8x8</td></tr></thead><tbody class="checkerboard8x8">
                                 <tr>
                                     <td class="right down"></td><td class="left"></td><td class="down"></td><td class="right down"></td><td class="left right"></td><td class="left"></td><td class="right down"></td><td class="left down"></td>
                                 </tr>

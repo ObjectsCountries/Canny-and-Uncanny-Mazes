@@ -50,7 +50,7 @@ td.down{
     border-bottom-style: hidden;
 }
 
-tbody.checkerboard{
+tbody.checkerboard5x5,tbody.checkerboard6x6,tbody.checkerboard7x7,tbody.checkerboard8x8{
     height:250px;
     tr:nth-child(odd){
         td:nth-child(odd){
