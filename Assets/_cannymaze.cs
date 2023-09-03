@@ -913,7 +913,7 @@ public class _cannymaze:ModdedModule{
                 temp=wallsMaze();
                 break;
         }
-        if(includeBacktracking){
+        if(includeBacktracking&&mazeNames[startingTile-1]!="Walls"){
             foreach(string s in allDirs){
                 if(tilesTraversed.Contains(tileinDirection(s))&&!temp.Contains(s))
                     temp.Add(s);
