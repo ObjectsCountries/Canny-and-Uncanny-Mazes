@@ -478,7 +478,7 @@ public class _cannymaze:ModdedModule{
                 new Dictionary<string,object>{
                     {"Key","animationSpeed"},
                     {"Text","Animation Speed"},
-                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. NOTE: In Twitch Plays, the module\nwill not play the moving animation but rather move immediately, making this setting irrelevant."}
+                    {"Description","Set the speed of the module's moving animation in frames. Should be\nfrom 10 to 60. NOTE: In Twitch Plays, the module will not play the\nmoving animation but rather move immediately, making this setting irrelevant."}
                 },
                 new Dictionary<string, object>{
                     {"Key","playMusicOnSolve"},
@@ -591,27 +591,28 @@ public class _cannymaze:ModdedModule{
                 Log("Reset the maze.");
                 StartCoroutine(Moving("reset",2));
             }
-            Shake(resetButton,1,Sound.BigButtonPress);
+            Shake(resetButton,.75f,Sound.BigButtonPress);
         });
         maze.Set(onInteract:()=>{
-        if(mazeGenerated&&!currentlyMoving&&!Status.IsSolved){
-            if(viewingWholeMaze){
-                if(numbers.activeInHierarchy){
-                    numbers.SetActive(false);
-                    t.changeTexture(t.finalTexture);
+            if(mazeGenerated&&!currentlyMoving&&!Status.IsSolved){
+                if(viewingWholeMaze){
+                    if(numbers.activeInHierarchy){
+                        numbers.SetActive(false);
+                        t.changeTexture(t.finalTexture);
+                    }
+                    currentBox.SetActive(false);
+                    goalBox.SetActive(false);
+                    maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
+                }else{
+                    currentBox.SetActive(true);
+                    goalBox.SetActive(true);
+                    maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
                 }
-                currentBox.SetActive(false);
-                goalBox.SetActive(false);
-                maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
-            }else{
-                currentBox.SetActive(true);
-                goalBox.SetActive(true);
-                maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
-                maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
+                viewingWholeMaze=!viewingWholeMaze;
             }
-            viewingWholeMaze=!viewingWholeMaze;
-        }
+            Shake(maze,.75f,Sound.BigButtonPress);
         });
         numbersButton.Set(onInteract:()=>{
             if(tookTooLong)
@@ -629,7 +630,7 @@ public class _cannymaze:ModdedModule{
                     goalBox.SetActive(true);
                 }
             }
-            Shake(numbersButton,1,Sound.BigButtonPress);
+            Shake(numbersButton,.75f,Sound.BigButtonPress);
         });
     }
 

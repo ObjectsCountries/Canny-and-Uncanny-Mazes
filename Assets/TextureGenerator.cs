@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+//shoutouts to chatGPT for all this (you can tell it wasn't me by the fact that the opening curly braces are on separate lines)
 public class TextureGenerator : MonoBehaviour
 {
     public Texture2D[] textures;
@@ -63,7 +63,7 @@ public class TextureGenerator : MonoBehaviour
         RenderTexture.active = null;
 
         renderer = GetComponent<MeshRenderer>();
-        mat = new Material(Shader.Find("KT/Mobile/DiffuseTint"));
+        mat = new Material(Shader.Find("KT/Blend Unlit"));
         mat.mainTexture = finalTexture;
         renderer.material = mat;
     }
