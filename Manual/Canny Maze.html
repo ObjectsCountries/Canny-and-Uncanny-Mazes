@@ -422,7 +422,8 @@
                 <p>Avoid Maze: Cannot move up to <span id="avoidUp">tiles 1 or 2</span>, cannot move right to <span id="avoidRight">tiles 3 or 4</span>, cannot move down to <span id="avoidDown">tiles 5 or 6</span>, cannot move left to <span id="avoidLeft">tile 7</span>.</p>
                 <p>Strict Maze: <span id="strictVertical">Can only move up or down if moving from an odd tile to an even tile or vice versa,</span> <span id="strictHorizontal">can only move right if moving to a higher tile, can only move left if moving to a lower tile.</span></p>
                 <p>Walls Maze: Must avoid walls (see below page).</p>
-                <p>Backtracking is always allowed. In the case of more than one tile meeting the necessary conditions, any applicable tile can be navigated to. This also applies while backtracking.</p>
+                <p>Backtracking is almost always allowed: In all mazes except Walls Maze, it's guaranteed that the defuser can go back to a tile on which they've already traversed. This is not allowed in Walls Maze, since it would sometimes allow for passing through walls.</p>
+                <p>In the case of more than one tile meeting the necessary conditions, any applicable tile can be navigated to. This also applies while backtracking.</p>
                 <p><b>Not a bug, but a feature:</b> In <span id="tilesMazeAnd">Tiles Maze and </span><span id="sumAverageDigitalTitle2">Sum</span> Maze, it's possible to unlock new paths by going in one direction and going back, thus allowing for a different direction to be traversed. Try this if stuck.</p>
             </div>
             <div class="page-footer relative-footer">Page 2 of 3</div>
