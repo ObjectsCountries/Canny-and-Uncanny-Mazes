@@ -27,6 +27,7 @@ public class _cannymaze:ModdedModule{
     private bool tookTooLong=false;
     internal int animSpeed;
     internal bool music;
+    private string output;
     private Config<cannymazesettings> cmSettings;
     public GameObject numbers,gm,currentBox,goalBox,anchor;
     private List<string> j;
@@ -35,7 +36,7 @@ public class _cannymaze:ModdedModule{
     private int movementsMade=0;
     private List<string> tilesTraversed;
     private List<string> allDirs;
-    private List<string> correctPath;
+    internal List<string> correctPath;
     private float m,b;
     private int[][]anyOneBit=new int[][]{
             new int[]{3,5},
@@ -478,12 +479,12 @@ public class _cannymaze:ModdedModule{
                 new Dictionary<string,object>{
                     {"Key","animationSpeed"},
                     {"Text","Animation Speed"},
-                    {"Description","Set the speed of the module's moving animation in frames. Should be\nfrom 10 to 60. NOTE: In Twitch Plays, the module will not play the\nmoving animation but rather move immediately, making this setting irrelevant."}
+                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
                 },
                 new Dictionary<string, object>{
                     {"Key","playMusicOnSolve"},
                     {"Text","Play Music On Solve"},
-                    {"Description","If streaming, disable this to avoid copyright claims.\nNOTE: In Twitch Plays, the module will not play music at all, making this setting irrelevant."}
+                    {"Description","If streaming, disable this to avoid copyright claims."}
                 }
             }}
         }
@@ -559,7 +560,9 @@ public class _cannymaze:ModdedModule{
         allDirs=new List<string>(){"left","right","up","down"};
         correctPath=new List<string>();
         cmSettings=new Config<cannymazesettings>();
-        animSpeed=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
+        animSpeed=cmSettings.Read().animationSpeed;
+        if(cmSettings.Read().animationSpeed!=2)
+            animSpeed=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
         music=cmSettings.Read().playMusicOnSolve;
         cmSettings.Write("{\"animationSpeed\":"+animSpeed+",\"playMusicOnSolve\":"+music.ToString().ToLowerInvariant()+"}");
         numbers.SetActive(false);
@@ -642,6 +645,14 @@ public class _cannymaze:ModdedModule{
         t.changeTexture(t.whiteBG);
         dims=t.gridDimensions;
         textures=t.textureIndices;
+        output="";
+        for(int r=0;r<dims;r++){
+            for(int c=0;c<dims;c++){
+                output+=textures[r,c];
+                if(c!=dims-1)output+=" ";
+            }
+            if(r!=dims-1)output+="\n";
+        }
         currentPosition=new Vector2((float)UnityEngine.Random.Range(0,dims)/dims,(float)UnityEngine.Random.Range(0,dims)/dims);
         startingPosition=currentPosition;
         maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
@@ -697,14 +708,6 @@ public class _cannymaze:ModdedModule{
             }
         }
         if(attempts!=3&&j.Count!=0){
-            string output="";
-            for(int r=0;r<dims;r++){
-                for(int c=0;c<dims;c++){
-                    output+=textures[r,c];
-                    if(c!=dims-1)output+=" ";
-                }
-                if(r!=dims-1)output+="\n";
-            }
             Log("Your layout is:\n"+output);
             switch(dims){
                 case 5:
@@ -841,7 +844,18 @@ public class _cannymaze:ModdedModule{
         if(!tilesTraversed.Contains(currentCoords))
             tilesTraversed.Add(currentCoords);
         currentBox.transform.localPosition=new Vector3(m*xcoords-b,-.01f,-m*ycoords+b);
-        
+        numbers.GetComponent<TextMesh>().text=output;
+        if((dims-ycoords-1)*2*dims+(xcoords*2)+1>(dims-yGoal-1)*2*dims+(xGoal*2)+1){
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-ycoords-1)*2*dims+(xcoords*2)+1,"</color>");
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-ycoords-1)*2*dims+(xcoords*2),"<color=\"blue\">");
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-yGoal-1)*2*dims+(xGoal*2)+1,"</color>");
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-yGoal-1)*2*dims+(xGoal*2),"<color=\"red\">");
+        }else{
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-yGoal-1)*2*dims+(xGoal*2)+1,"</color>");
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-yGoal-1)*2*dims+(xGoal*2),"<color=\"red\">");
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-ycoords-1)*2*dims+(xcoords*2)+1,"</color>");
+            numbers.GetComponent<TextMesh>().text=numbers.GetComponent<TextMesh>().text.Insert((dims-ycoords-1)*2*dims+(xcoords*2),"<color=\"blue\">");
+        }
         if(xcoords!=0)
             leftTile=coordLetters[xcoords-1].ToString()+(dims-ycoords);
         else leftTile="";

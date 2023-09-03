@@ -21,10 +21,6 @@ MonoBehaviour:
 
     ID: cannymaze
 
-    Credits: me because i am awesome and cool and stuff, and chatgpt for the texture
-    generation script (but i was the one who told it what to do so [i]basically[/i]
-    i''m the one who wrote it) also shoutouts to emik and riverbui for helping out
-
 
     [b]NOTE:[/b] There are two settings that control the speed of moving from one
     tile to another and whether music plays upon solving. Please turn off the "Play
@@ -38,13 +34,7 @@ MonoBehaviour:
 
     [url=https://ktane.timwi.de/PDF/Canny%20Maze.pdf]PDF Manual[/url]
 
-
-    putting these here for convenience (note to self: remove before publishing)
-
-    C:\Program Files (x86)\Steam\steamapps\common\Keep Talking and Nobody Explodes\mods
-
-    /home/objectscountries/.local/share/Steam/steamapps/common/Keep Talking and Nobody
-    Explodes/mods'
+    YouTube Tutorial'
   version: 1
   outputFolder: C:\Program Files (x86)\Steam\steamapps\common\Keep Talking and Nobody
     Explodes\mods

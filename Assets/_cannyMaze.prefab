@@ -1764,7 +1764,7 @@ TextMesh:
   m_TabSize: 4
   m_FontSize: 19
   m_FontStyle: 0
-  m_RichText: 0
+  m_RichText: 1
   m_Font: {fileID: 12800000, guid: dfc1ee0269eea8c4784d302969780663, type: 3}
   m_Color:
     serializedVersion: 2
@@ -2057,10 +2057,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TwitchHelpMessage: '!{0} u/d/l/r to move up, down, left, or right respectively;
     multiple can be strung together (i.e. !{0} rrulludr). !{0} m/maze to toggle view
-    of the whole maze, !{0} n/numbers to toggle view of numbers when showing whole
-    maze. !{0} reset to reset. If an invalid character is entered, the module will
-    move up until the invalid character is reached. NOTE: Do not use !{0} r to reset;
-    this will register as a command to move right.'
+    of the whole maze, !{0} n/numbers to toggle view of numbers, !{0} reset to reset.
+    If an invalid character is entered in a moving sequence, the module will move
+    until it reaches the invalid character. NOTE: Do not use !{0} r to reset; this
+    will register as a command to move right.'
   TwitchManualCode: 
   TwitchAbandonModule: []
 --- !u!114 &114387591450626792
@@ -2251,15 +2251,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 0}
   Children:
-  - {fileID: 114765517492165816}
-  - {fileID: 114736127475556728}
-  - {fileID: 114633818822382260}
+  - {fileID: 0}
   - {fileID: 114810491174339644}
-  - {fileID: 114626215802621434}
+  - {fileID: 0}
+  - {fileID: 114736127475556728}
+  - {fileID: 114765517492165816}
+  - {fileID: 114633818822382260}
   - {fileID: 114447124130224568}
+  - {fileID: 114626215802621434}
   - {fileID: 114304677613502688}
   IsPassThrough: 0
-  ChildRowLength: 0
+  ChildRowLength: 3
   Highlight: {fileID: 114257333238570930}
   SelectableColliders: []
   DefaultSelectableIndex: 0
