@@ -15,9 +15,11 @@
         var mazeNames=["TILES","SUM","COMPARE","BINARY","AVOID","STRICT","WALLS","AVERAGE","DIGITAL","MOVEMENT","DOUBLE BINARY","FOURS"];
         var defaultMazeOrder=null;
         var defaultTilesMovement="Tiles";
+        var defaultTilesMazeAnd="Tiles Maze and ";
         var defaultTilesTraversedOrMovementsMade="tiles traversed";
         var defaultTilesNote="<b>Note that the total number of tiles traversed includes the starting tile, and begins at 1.</b>";
         var defaultSumAverageDigitalTitle="Sum";
+        var defaultSumAverageDigitalTitle2="Sum";
         var defaultSumAverageDigital="";
         var defaultCompare1="to the left and right";
         var defaultCompare2="above and below";
@@ -67,9 +69,11 @@
             for(var i=0;i<7;i++)
                 document.getElementById(`maze${i+1}`).innerText=`${defaultMazeOrder[i]} MAZE`;
             document.getElementById("tilesMovement").innerText=defaultTilesMovement;
+            document.getElementById("tilesMazeAnd").innerText=defaultTilesMazeAnd;
             document.getElementById("tilesTraversedOrMovementsMade").innerText=defaultTilesTraversedOrMovementsMade;
             document.getElementById("tilesNote").innerHTML=defaultTilesNote;
             document.getElementById("sumAverageDigitalTitle").innerText=defaultSumAverageDigitalTitle;
+            document.getElementById("sumAverageDigitalTitle2").innerText=defaultSumAverageDigitalTitle2;
             document.getElementById("sumAverageDigital").innerText=defaultSumAverageDigital;
             document.getElementById("compare1").innerText=defaultCompare1;
             document.getElementById("compare2").innerText=defaultCompare2;
@@ -95,9 +99,11 @@
             for(var i=0;i<7;i++)
                 defaultMazeOrder[i]=document.getElementById(`maze${i+1}`).innerText.substring(0,document.getElementById(`maze${i+1}`).innerText.indexOf(" "));
             defaultTilesMovement=document.getElementById("tilesMovement").innerText;
+            defaultTilesMazeAnd=document.getElementById("tilesMazeAnd").innerText;
             defaultTilesTraversedOrMovementsMade=document.getElementById("tilesTraversedOrMovementsMade").innerText;
             defaultTilesNote=document.getElementById("tilesNote").innerHTML;
             defaultsumAverageDigitalTitle=document.getElementById("sumAverageDigitalTitle").innerText;
+            defaultsumAverageDigitalTitle2=document.getElementById("sumAverageDigitalTitle2").innerText;
             defaultsumAverageDigital=document.getElementById("sumAverageDigital").innerText;
             defaultCompare1=document.getElementById("compare1").innerText;
             defaultCompare2=document.getElementById("compare2").innerText;
@@ -125,11 +131,13 @@
                 document.getElementById("tilesMovement").innerText="Tiles";
                 document.getElementById("tilesTraversedOrMovementsMade").innerText="tiles traversed";
                 document.getElementById("tilesNote").innerHTML="<b>Note that the total number of tiles traversed includes the starting tile, and begins at 1.</b>";
+                document.getElementById("tilesMazeAnd").innerText="Tiles Maze and ";
             }else{
                 document.getElementById("maze1").innerText="MOVEMENT MAZE";
                 document.getElementById("tilesMovement").innerText="Movement";
                 document.getElementById("tilesTraversedOrMovementsMade").innerText="movements made";
                 document.getElementById("tilesNote").innerHTML="";
+                document.getElementById("tilesMazeAnd").innerText="";
             }
             var sumAverageDigital;
             do{
@@ -140,15 +148,18 @@
                 case 1:
                     document.getElementById("sumAverageDigitalTitle").innerText="Sum";
                     document.getElementById("sumAverageDigital").innerText="";
+                    document.getElementById("sumAverageDigitalTitle2").innerText="Sum";
                 break;
                 case 7:
                     document.getElementById("sumAverageDigitalTitle").innerText="Average";
                     document.getElementById("sumAverageDigital").innerText="take the average, and round to the nearest whole number, ";
+                    document.getElementById("sumAverageDigitalTitle2").innerText="Average";
                 break;
                 case 8:
                 default:
                     document.getElementById("sumAverageDigitalTitle").innerText="Digital";
                     document.getElementById("sumAverageDigital").innerText="and take the digital root, ";
+                    document.getElementById("sumAverageDigitalTitle2").innerText="Digital";
                 break;
             }
             var compare=rnd.nextMax(6);
@@ -412,6 +423,7 @@
                 <p>Strict Maze: <span id="strictVertical">Can only move up or down if moving from an odd tile to an even tile or vice versa,</span> <span id="strictHorizontal">can only move right if moving to a higher tile, can only move left if moving to a lower tile.</span></p>
                 <p>Walls Maze: Must avoid walls (see below page).</p>
                 <p>Backtracking is always allowed. In the case of more than one tile meeting the necessary conditions, any applicable tile can be navigated to. This also applies while backtracking.</p>
+                <p><b>Not a bug, but a feature:</b> In <span id="tilesMazeAnd">Tiles Maze and </span><span id="sumAverageDigitalTitle2">Sum</span> Maze, it's possible to unlock new paths by going in one direction and going back, thus allowing for a different direction to be traversed. Try this if stuck.</p>
             </div>
             <div class="page-footer relative-footer">Page 2 of 3</div>
         </div>
