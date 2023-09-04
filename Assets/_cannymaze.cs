@@ -29,7 +29,7 @@ public class _cannymaze:ModdedModule{
     internal bool music;
     private string output;
     private Config<cannymazesettings> cmSettings;
-    public GameObject numbers,gm,currentBox,goalBox,anchor;
+    public GameObject numbers,gm,currentBox,goalBox,anchor,coordsText;
     private List<string> j;
     private int startingTile;
     internal int currentTile;
@@ -605,11 +605,13 @@ public class _cannymaze:ModdedModule{
                     }
                     currentBox.SetActive(false);
                     goalBox.SetActive(false);
+                    coordsText.SetActive(false);
                     maze.GetComponent<MeshRenderer>().material.mainTextureScale=new Vector2(1f/dims,1f/dims);
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                 }else{
                     currentBox.SetActive(true);
                     goalBox.SetActive(true);
+                    coordsText.SetActive(true);
                     maze.GetComponent<MeshRenderer>().material.mainTextureScale=Vector2.one;
                     maze.GetComponent<MeshRenderer>().material.mainTextureOffset=Vector2.zero;
                 }
@@ -886,6 +888,7 @@ public class _cannymaze:ModdedModule{
             if(logging)
                 Log("Pressed "+direction+", going to "+currentCoords+".");
         }
+        coordsText.GetComponent<TextMesh>().text="CURRENT: "+currentCoords+"\nGOAL: "+goalCoords;
         if(currentCoords==goalCoords&&logging&&includeBacktracking){
             Solve("Your module is: solved module");
             yield break;
@@ -1291,6 +1294,7 @@ public class _cannymaze:ModdedModule{
                 gm.GetComponent<TextMesh>().fontSize=27;
                 gm.GetComponent<TextMesh>().text="SORRY THE MODULE\nTOOK SO LONG TO\nLOAD. PRESS EITHER\nOF THE TWO RED\nBUTTONS BELOW TO\nSOLVE IMMEDIATELY.";
                 tookTooLong=true;
+                music=false;
                 yield break;
             }
             gm.GetComponent<TextMesh>().text=gen+".";

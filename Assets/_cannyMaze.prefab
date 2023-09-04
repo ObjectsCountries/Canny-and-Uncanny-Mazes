@@ -23,12 +23,12 @@ GameObject:
   - component: {fileID: 102725843511248602}
   - component: {fileID: 114387591450626792}
   m_Layer: 0
-  m_Name: generatingMaze
+  m_Name: coordsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1087856594028124
 GameObject:
   m_ObjectHideFlags: 1
@@ -304,6 +304,24 @@ GameObject:
   - component: {fileID: 114181527970840694}
   m_Layer: 0
   m_Name: numbersButtonHL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1685963942524582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4927895935993042}
+  - component: {fileID: 23154284602688750}
+  - component: {fileID: 102804826317742536}
+  - component: {fileID: 114970686699667962}
+  m_Layer: 0
+  m_Name: generatingMaze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -808,6 +826,7 @@ Transform:
   - {fileID: 4205406474216626}
   - {fileID: 4545985663580232}
   - {fileID: 4736881164873410}
+  - {fileID: 4927895935993042}
   - {fileID: 4748774695240252}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -831,13 +850,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1048003055984678}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.016666668, z: 0}
+  m_LocalRotation: {x: 0.6830127, y: -0.18301274, z: 0.18301272, w: 0.68301266}
+  m_LocalPosition: {x: -0.05555556, y: 0.016666668, z: 0.0625}
   m_LocalScale: {x: 0.01, y: 0.0100000035, z: 0.0100000035}
   m_Children: []
   m_Father: {fileID: 4725211321335754}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 30}
 --- !u!4 &4764696797246444
 Transform:
   m_ObjectHideFlags: 1
@@ -892,6 +911,19 @@ Transform:
   m_Father: {fileID: 4725211321335754}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!4 &4927895935993042
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1685963942524582}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.016666668, z: 0}
+  m_LocalScale: {x: 0.01, y: 0.0100000035, z: 0.0100000035}
+  m_Children: []
+  m_Father: {fileID: 4725211321335754}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!4 &4975504525643082
 Transform:
   m_ObjectHideFlags: 1
@@ -921,6 +953,40 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!23 &23154284602688750
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1685963942524582}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 99c91db4375864640a0fbb7a905eecef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1776,6 +1842,29 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1048003055984678}
+  m_Text: 'CURRENT: X#
+
+    GOAL: X#'
+  m_OffsetZ: 0
+  m_CharacterSize: 0.5
+  m_LineSpacing: 1.1
+  m_Anchor: 4
+  m_Alignment: 1
+  m_TabSize: 4
+  m_FontSize: 18
+  m_FontStyle: 0
+  m_RichText: 0
+  m_Font: {fileID: 12800000, guid: 1ebe1d96973a920409b439b3a0e2bb63, type: 3}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4278190080
+--- !u!102 &102804826317742536
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1685963942524582}
   m_Text: 'GENERATING
 
     MAZE...'
@@ -2040,10 +2129,11 @@ MonoBehaviour:
   ruleseed: {fileID: 114301679806363052}
   t: {fileID: 114540756534390706}
   numbers: {fileID: 1529790551898124}
-  gm: {fileID: 1048003055984678}
+  gm: {fileID: 1685963942524582}
   currentBox: {fileID: 1199323084023510}
   goalBox: {fileID: 1087856594028124}
   anchor: {fileID: 1376379550522880}
+  coordsText: {fileID: 1048003055984678}
 --- !u!114 &114376254827896796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2398,6 +2488,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - Standard
+--- !u!114 &114970686699667962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1685963942524582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text Diffuse
 --- !u!114 &114978636571607376
 MonoBehaviour:
   m_ObjectHideFlags: 1
