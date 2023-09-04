@@ -26,6 +26,7 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
 		switch(movement){
             case "m":
             case "maze":
+                yield return null;
                 yield return new KMSelectable[]{Module.maze};
 				yield break;
             case "n":
@@ -33,12 +34,14 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                 if(!Module.viewingWholeMaze)
                     buttons.Add(Module.maze);
                 buttons.Add(Module.numbersButton);
+                yield return null;
                 yield return buttons.ToArray();
 				yield break;
             case "reset":
                 if(Module.viewingWholeMaze)
                     buttons.Add(Module.maze);
                 buttons.Add(Module.resetButton);
+                yield return null;
                 yield return buttons.ToArray();
 				yield break;
             default:
@@ -64,10 +67,12 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                 case ' ':
                     break;
                 default:
+                    yield return null;
                     yield return buttons.ToArray();
                     yield break;
             }
         }
+        yield return null;
         yield return buttons.ToArray();
 	}
 
