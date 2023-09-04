@@ -71,37 +71,40 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
         yield return buttons.ToArray();
 	}
 
-	public override IEnumerator TwitchHandleForcedSolve(){
-        Module.Log("Force solved by Twitch mod.");
+	public override IEnumerable<Instruction> ForceSolve(){
         if(!Module.mazeGenerated)
             yield break;
+        Module.Log("Force solved by Twitch mod.");
         if(Module.tookTooLong){
             Module.numbersButton.OnInteract();
+            yield return Instruction.Pause;
             yield break;
         }
-        if(Module.viewingWholeMaze)
+        if(Module.viewingWholeMaze){
 			Module.maze.OnInteract();
+            yield return Instruction.Pause;
+        }
         Module.resetButton.OnInteract();
+        yield return Instruction.Pause;
         foreach(string dir in Module.correctPath){
             switch(dir){
                 case "up":
                     Module.arrowup.OnInteract();
+                    yield return Instruction.Pause;
                     break;
                 case "down":
                     Module.arrowdown.OnInteract();
+                    yield return Instruction.Pause;
                     break;
                 case "left":
                     Module.arrowleft.OnInteract();
+                    yield return Instruction.Pause;
                     break;
                 case "right":
                     Module.arrowright.OnInteract();
+                    yield return Instruction.Pause;
                     break;
             }
         }
 	}
-
-    public override IEnumerable<Instruction> ForceSolve(){
-        TwitchHandleForcedSolve();
-        yield return null;
-    }
 }
