@@ -691,16 +691,6 @@ public class _cannymaze:ModdedModule{
                 StartCoroutine(Initialization());
                 yield break;
             }finally{}//needed for the yield return StartCoroutine in the try block to function properly
-            if(mazeNames[startingTile-1]!="Movement"&&mazeNames[startingTile-1]!="Tiles"&&
-              (correctPath.Count>2&&(
-              (correctPath.ElementAt(correctPath.Count-1)=="left" &&correctPath.ElementAt(correctPath.Count-2)=="right")
-            ||(correctPath.ElementAt(correctPath.Count-1)=="right"&&correctPath.ElementAt(correctPath.Count-2)=="left")
-            ||(correctPath.ElementAt(correctPath.Count-1)=="up"   &&correctPath.ElementAt(correctPath.Count-2)=="down")
-            ||(correctPath.ElementAt(correctPath.Count-1)=="down" &&correctPath.ElementAt(correctPath.Count-2)=="up")
-            ))){
-                correctPath.RemoveAt(correctPath.Count-1);
-                correctPath.RemoveAt(correctPath.Count-1);
-            }
             movements++;
             if(movements>=20){
                 yield return StartCoroutine(Moving("reset",2,false));

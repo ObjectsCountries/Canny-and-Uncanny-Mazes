@@ -21,7 +21,7 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
 	IEnumerable<Instruction> Press(string movement){
         List<KMSelectable> buttons=new List<KMSelectable>();
         if(!Module.mazeGenerated){
-            yield return TwitchString.SendToChatError("{0}, Please wait for the maze to generate.");
+            yield return TwitchString.SendToChatError("{0}, please wait for the maze to generate.");
             yield break;
         }
         yield return null;
