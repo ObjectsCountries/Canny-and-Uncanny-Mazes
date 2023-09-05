@@ -20,8 +20,10 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
     [Command("")]
 	IEnumerable<Instruction> Press(string movement){
         List<KMSelectable> buttons=new List<KMSelectable>();
-        if(!Module.mazeGenerated)
+        if(!Module.mazeGenerated){
+            yield return TwitchString.SendToChatError("{0}, Please wait for the maze to generate.");
             yield break;
+        }
         yield return null;
 		movement=movement.ToLowerInvariant();
 		switch(movement){
@@ -65,6 +67,7 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
                 case ' ':
                     break;
                 default:
+                    yield return TwitchString.SendToChatError("{0}, "+c.ToString()+" is an invalid character.");
                     yield break;
             }
         }
