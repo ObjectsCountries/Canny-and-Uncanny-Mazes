@@ -20,7 +20,7 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
     [Command("")]
 	IEnumerable<Instruction> Press(string movement){
         List<KMSelectable> buttons=new List<KMSelectable>();
-        if(!Module.mazeGenerated){
+        if(!Module.mazeGenerated&&!Module.tookTooLong){
             yield return TwitchString.SendToChatError("{0}, please wait for the maze to generate.");
             yield break;
         }
@@ -75,7 +75,7 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
 	}
 
 	public override IEnumerable<Instruction> ForceSolve(){
-        if(!Module.mazeGenerated)
+        if(!Module.mazeGenerated&&!Module.tookTooLong)
             yield break;
         Module.Log("Force solved by Twitch mod.");
         if(Module.tookTooLong){

@@ -686,7 +686,10 @@ public class _cannymaze:ModdedModule{
             try{
             yield return StartCoroutine(Moving(j.ElementAt(index),2,false,false));
             }catch(IndexOutOfRangeException e){
-                Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:\n"+e,LogType.Exception);//debug
+                string[]exceptionLines=e.ToString().Split('\n');
+                Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:",LogType.Exception);
+                foreach(string line in exceptionLines)
+                    Log(line,LogType.Exception);
                 t.Awake();
                 StartCoroutine(Initialization());
                 yield break;
