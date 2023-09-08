@@ -6,7 +6,7 @@ using Wawa.Extensions;
 using Wawa.TwitchPlays;
 using Wawa.TwitchPlays.Domains;
 
-public sealed class cannymazeTP:Twitch<_cannyMaze> {
+public sealed class cannymazeTP:Twitch<_cannymaze> {
     void Start(){
         Module.GetComponent<KMBombModule>().Add(onActivate:()=>{
             if(IsTP)
