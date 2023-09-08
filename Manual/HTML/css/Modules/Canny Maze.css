@@ -1,0 +1,38 @@
+th#yourMazeIs {
+    background-color:black;
+    color:red;
+}
+td.mazeType {
+    background-color:black;
+    color:white;
+}
+td.mazeType img { width: 75px; }
+table.mazeTypes, th#yourMazeIs, td.mazeType {
+    border: 0px solid;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 800;
+    text-align: center;
+}
+
+.dark table, table { border: none; }
+
+table.wallsMazeMaps {
+    text-align: center;
+}
+
+td.left { border-left-style: hidden; }
+td.right { border-right-style: hidden; }
+td.up { border-top-style: hidden; }
+td.down { border-bottom-style: hidden; }
+
+td.corner > table {
+    width:250px;
+    height:250px;
+}
+td.corner > table td { border-width: 4px; }
+p.caption { margin-top: 5px; }
+
+td.corner > table tr:nth-child(odd) td:nth-child(odd),
+td.corner > table tr:nth-child(even) td:nth-child(even) {
+    background-color: #88888844;
+}

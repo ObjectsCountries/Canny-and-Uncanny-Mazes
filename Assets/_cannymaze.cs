@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using KModkit;
 
-public class _cannymaze:ModdedModule{
+public class _cannyMaze:ModdedModule{
     public KMSelectable arrowleft,arrowright,arrowup,arrowdown,maze,numbersButton,resetButton;
     public KMRuleSeedable ruleseed;
     internal bool viewingWholeMaze=false;
