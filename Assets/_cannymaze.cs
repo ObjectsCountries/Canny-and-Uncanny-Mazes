@@ -590,7 +590,7 @@ public class _cannymaze:ModdedModule{
         resetButton.Set(onInteract:()=>{
             if(tookTooLong)
                 Solve("Solved by pressing the Reset button after generation took too long.");
-            else if(mazeGenerated&&!Status.IsSolved){
+            else if(mazeGenerated&&!Status.IsSolved&&!viewingWholeMaze){
                 Log("Reset the maze.");
                 StartCoroutine(Moving("reset",2));
             }
@@ -1044,7 +1044,7 @@ public class _cannymaze:ModdedModule{
                 dirs2.Add("down");
             }
         }
-        if(dirs1==dirs2){
+        if(sum1==sum2){
             dirs1.AddRange(dirs2);
             return dirs1;
         }else{
