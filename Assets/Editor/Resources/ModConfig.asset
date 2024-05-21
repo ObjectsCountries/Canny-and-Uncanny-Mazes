@@ -11,31 +11,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: cannymaze
-  title: Canny Maze
+  id: cannyanduncannymazes
+  title: Canny and Uncanny Mazes
   author: ObjectsCountries
-  description: 'The thing that gets me about these modules is that the instructions
-    are actually well-written, even though we only see images and text. We create
-    the whole solution in our text-editing software, and it turns out correct.
+  description: 'IDs: cannymaze, uncannymaze
 
 
-    ID: cannymaze
+    [b]NOTE FOR CANNY MAZE:[/b] There are two settings that control the speed of moving
+    from one tile to another and whether music plays upon solving. Please turn off
+    the "Play Music on Solve" setting if streaming KTaNE on YouTube/Twitch/etc., as
+    5 of the 7 songs are copyrighted (the songs associated with images 1 and 6 are
+    not). [b]When in Twitch Plays, neither of these settings have any effect;[/b]
+    the module moves instantaneously from one tile to the next, and it never plays
+    music upon solving.
 
 
-    [b]NOTE:[/b] There are two settings that control the speed of moving from one
-    tile to another and whether music plays upon solving. Please turn off the "Play
-    Music on Solve" setting if streaming KTaNE on YouTube/Twitch/etc., as 5 of the
-    7 songs are copyrighted (the songs associated with images 1 and 6 are not). [b]When
-    in Twitch Plays, neither of these settings have any effect;[/b] the module moves
-    instantaneously from one tile to the next, and it never plays music upon solving.
+    [b]NOTE FOR UNCANNY MAZE:[/b] Because the images are disturbing, there is a setting
+    in the module to blur all of the images past a given number (0 in order to blur
+    all). Any number outside the ranges of 0-9 will leave all images unblurred.
 
 
-    [url=https://ktane.timwi.de/HTML/Canny%20Maze.html]HTML Manual[/url]
+    Canny Maze:
 
-    [url=https://ktane.timwi.de/PDF/Canny%20Maze.pdf]PDF Manual[/url]
+    [list]
 
-    [url=https://www.youtube.com/watch?v=HltWnaIZ308]YouTube Tutorial[/url]'
-  version: 1.11
+    [*] [url=https://ktane.timwi.de/HTML/Canny%20Maze.html]HTML Manual[/url]
+
+    [*] [url=https://ktane.timwi.de/PDF/Canny%20Maze.pdf]PDF Manual[/url]
+
+    [*] [url=https://www.youtube.com/watch?v=HltWnaIZ308]YouTube Tutorial[/url]
+
+    [/list]
+
+
+    Uncanny Maze:
+
+    [list]
+
+    [*] [url=https://ktane.timwi.de/HTML/Uncanny%20Maze.html]HTML Manual[/url]
+
+    [*] [url=https://ktane.timwi.de/PDF/Uncanny%20Maze.pdf]PDF Manual[/url]
+
+    [*] YouTube Tutorial (coming soon)
+
+    [/list]
+
+'
+  version: 1.2
   outputFolder: /home/objectscountries/.steam/steam/steamapps/common/Keep Talking
     and Nobody Explodes/mods
   previewImage: {fileID: 2800000, guid: f3e4bf479c9f9f149a6361201674a3c0, type: 3}

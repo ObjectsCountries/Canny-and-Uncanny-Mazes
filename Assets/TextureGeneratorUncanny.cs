@@ -1,6 +1,8 @@
-﻿using UnityEngine;
-//shoutouts to chatGPT for all this (you can tell it wasn't me by the fact that the opening curly braces are on separate lines)
-public class TextureGenerator : MonoBehaviour
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+//shoutouts to chatGPT for all this (i made a few tweaks though)
+public class TextureGeneratorUncanny : MonoBehaviour
 {
     public Texture2D[] textures;
     public int minWidthHeight;
@@ -12,22 +14,35 @@ public class TextureGenerator : MonoBehaviour
     internal RenderTexture renderTexture;
     private Material mat;
     new private MeshRenderer renderer;
+    public UncannyMazeTile[,] layout;
 
     public void Awake()
     {
         gridDimensions = Random.Range(minWidthHeight, maxWidthHeight + 1);
+        List<int> usedNumbers = new List<int>();
         int cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
-
+        layout = new UncannyMazeTile[gridDimensions, gridDimensions];
         Texture2D gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
-
         textureIndices = new int[gridDimensions, gridDimensions];
-
+        int randomIndex;
         for (int y = 0; y < gridDimensions; y++)
         {
             for (int x = 0; x < gridDimensions; x++)
             {
-                int randomIndex = Random.Range(0, textures.Length);
+                if (gridDimensions == 4)
+                {
+                    do
+                    {
+                        randomIndex = Random.Range(0, textures.Length);
+                    } while (usedNumbers.Contains(randomIndex) && usedNumbers.Distinct().Count() != 10);
+                    usedNumbers.Add(randomIndex);
+                }
+                else
+                {
+                    randomIndex = Random.Range(0, textures.Length);
+                }
                 textureIndices[y, x] = randomIndex + 1;
+                layout[y, x] = new UncannyMazeTile(x, y, randomIndex, gridDimensions);
                 Texture2D texture = textures[randomIndex];
                 Color[] pixels = texture.GetPixels();
 
