@@ -15,11 +15,23 @@ public class TextureGeneratorUncanny : MonoBehaviour
     private Material mat;
     new private MeshRenderer renderer;
     public UncannyMazeTile[,] layout;
+    public Dictionary<int, int> amountOfEachNumber;
 
     public void Awake()
     {
         gridDimensions = Random.Range(minWidthHeight, maxWidthHeight + 1);
         List<int> usedNumbers = new List<int>();
+        amountOfEachNumber = new Dictionary<int, int>();
+        amountOfEachNumber.Add(0, 0);
+        amountOfEachNumber.Add(1, 0);
+        amountOfEachNumber.Add(2, 0);
+        amountOfEachNumber.Add(3, 0);
+        amountOfEachNumber.Add(4, 0);
+        amountOfEachNumber.Add(5, 0);
+        amountOfEachNumber.Add(6, 0);
+        amountOfEachNumber.Add(7, 0);
+        amountOfEachNumber.Add(8, 0);
+        amountOfEachNumber.Add(9, 0);
         int cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
         layout = new UncannyMazeTile[gridDimensions, gridDimensions];
         Texture2D gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
@@ -41,6 +53,7 @@ public class TextureGeneratorUncanny : MonoBehaviour
                 {
                     randomIndex = Random.Range(0, textures.Length);
                 }
+                amountOfEachNumber[randomIndex] += 1;
                 textureIndices[y, x] = randomIndex + 1;
                 layout[y, x] = new UncannyMazeTile(x, y, randomIndex, gridDimensions);
                 Texture2D texture = textures[randomIndex];

@@ -2195,6 +2195,12 @@ MonoBehaviour:
   numbersButton: {fileID: 114234330779308098}
   resetButton: {fileID: 114674458667244534}
   appendButton: {fileID: 114239982744604328}
+  numbers: {fileID: 1763468268425316}
+  gm: {fileID: 1154019255207304}
+  currentBox: {fileID: 1545531537698046}
+  goalBox: {fileID: 1209800757346048}
+  anchor: {fileID: 1075445269142632}
+  coordsText: {fileID: 1467582297570528}
   t: {fileID: 114963800502271584}
 --- !u!114 &114234184918473690
 MonoBehaviour:
@@ -2278,7 +2284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShaderNames:
-  - GUI/KT 3D Text
+  - GUI/KT 3D Text Diffuse
 --- !u!114 &114281001520857568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2326,7 +2332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShaderNames:
-  - KT/Mobile/Diffuse
+  - KT/Mobile/DiffuseTint
 --- !u!114 &114346657449383088
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2409,7 +2415,7 @@ MonoBehaviour:
   - {fileID: 114773721958691286}
   - {fileID: 0}
   - {fileID: 114291801970877944}
-  - {fileID: 0}
+  - {fileID: 114009798488444428}
   - {fileID: 114165146214733456}
   - {fileID: 114234330779308098}
   - {fileID: 114785706073988796}
@@ -2500,7 +2506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShaderNames:
-  - GUI/KT 3D Text
+  - GUI/KT 3D Text Diffuse
 --- !u!114 &114674458667244534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2719,7 +2725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShaderNames:
-  - GUI/KT 3D Text
+  - GUI/KT 3D Text Diffuse
 --- !u!114 &114963800502271584
 MonoBehaviour:
   m_ObjectHideFlags: 1

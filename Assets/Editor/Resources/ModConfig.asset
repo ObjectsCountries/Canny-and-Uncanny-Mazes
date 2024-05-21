@@ -57,7 +57,7 @@ MonoBehaviour:
     [/list]
 
 '
-  version: 1.2
-  outputFolder: /home/objectscountries/.steam/steam/steamapps/common/Keep Talking
-    and Nobody Explodes/mods
+  version: 2
+  outputFolder: /home/kasra/.steam/steam/steamapps/common/Keep Talking and Nobody
+    Explodes/mods
   previewImage: {fileID: 2800000, guid: f3e4bf479c9f9f149a6361201674a3c0, type: 3}

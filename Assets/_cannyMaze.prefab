@@ -1928,7 +1928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShaderNames:
-  - GUI/KT 3D Text
+  - GUI/KT 3D Text Diffuse
 --- !u!114 &114094563196240136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2149,7 +2149,7 @@ MonoBehaviour:
   numbersButton: {fileID: 114447124130224568}
   resetButton: {fileID: 114304677613502688}
   ruleseed: {fileID: 114301679806363052}
-  t: {fileID: 0}
+  t: {fileID: 114072967547567874}
   numbers: {fileID: 1529790551898124}
   gm: {fileID: 1685963942524582}
   currentBox: {fileID: 1199323084023510}
@@ -2515,7 +2515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShaderNames:
-  - GUI/KT 3D Text
+  - GUI/KT 3D Text Diffuse
 --- !u!136 &136499881609982320
 CapsuleCollider:
   m_ObjectHideFlags: 1

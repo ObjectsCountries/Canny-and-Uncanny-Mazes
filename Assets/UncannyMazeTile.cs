@@ -105,9 +105,11 @@ public class UncannyMazeTile
     };
 
     ///<value>The starting tile.</value>
-    public static UncannyMazeTile start { get; set; }
+    public static UncannyMazeTile start { get; private set; }
+    ///<value>The current tile.</value>
+    public static UncannyMazeTile current { get; set; }
     ///<value>The goal tile.</value>
-    public static UncannyMazeTile goal { get; set; }
+    public static UncannyMazeTile goal { get; private set; }
     ///<value>The maze type associated with this tile.</value>
     public mazeTypes mazeType { get; }
     ///<value>The value of this tile, from 0 to 9.</value>
@@ -159,5 +161,31 @@ public class UncannyMazeTile
     public override string ToString()
     {
         return "" + letterCoord + numberCoord + ": " + uncannyValue;
+    }
+
+    public static void setStartAndGoal(UncannyMazeTile startPosition, UncannyMazeTile goalPosition)
+    {
+        start = startPosition;
+        goal = goalPosition;
+    }
+    public static bool operator ==(UncannyMazeTile first, UncannyMazeTile second)
+    {
+        if (Object.ReferenceEquals(first, null) && Object.ReferenceEquals(second, null))
+        {
+            return true;
+        }
+        if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
+        {
+            return true;
+        }
+        return first.x == second.x && first.y == second.y;
+    }
+    public static bool operator !=(UncannyMazeTile first, UncannyMazeTile second)
+    {
+        if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
+        {
+            return false;
+        }
+        return first.x != second.x || first.y != second.y;
     }
 }
