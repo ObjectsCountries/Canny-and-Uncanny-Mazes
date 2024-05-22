@@ -105,6 +105,12 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
+  <member name="M:Wawa.Modules.ModdedModule.Log(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    <parameter name="format">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    </parameter>
+  </member>
   <member name="M:Wawa.Modules.ModdedModule.Log``1(``0,UnityEngine.LogType)">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     <parameter name="format">
@@ -119,6 +125,12 @@
     <parameter name="args">
       <attribute ctor="M:JetBrains.Annotations.ItemCanBeNullAttribute.#ctor" />
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.Modules.ModdedModule.LogLower(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    <parameter name="format">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     </parameter>
   </member>
   <member name="M:Wawa.Modules.ModdedModule.LogLower``1(``0,UnityEngine.LogType)">
@@ -178,6 +190,7 @@
   </member>
   <member name="M:Wawa.Modules.ModdedModule.WaitForSolve">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="P:Wawa.Modules.ModdedModule.Status">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -718,8 +731,17 @@
   </member>
   <member name="M:Wawa.Modules.Stringifier.Conjoin``1(System.Collections.Generic.IEnumerable{``0},System.Char)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+    <parameter name="values">
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor" />
+    </parameter>
   </member>
   <member name="M:Wawa.Modules.Stringifier.Conjoin``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+    <parameter name="values">
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.Modules.Stringifier.ToHexString(System.Reflection.Pointer)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.Modules.Stringifier.ToShortString(System.Version)">
@@ -737,8 +759,21 @@
   <member name="M:Wawa.Modules.Stringifier.Stringify``1(``0,System.Int32,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
   </member>
+  <member name="M:Wawa.Modules.Stringifier.ToHexString``1(``0)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+  </member>
   <member name="M:Wawa.Modules.Stringifier.UseStringifier``1(``0,System.Int32)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
+  </member>
+  <member name="M:Wawa.Modules.Stringifier.AppendMany``1(System.Text.StringBuilder,System.Collections.Generic.IEnumerable{``0},System.Char)">
+    <parameter name="values">
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.Modules.Stringifier.AppendMany``1(System.Text.StringBuilder,System.Collections.Generic.IEnumerable{``0},System.String)">
+    <parameter name="values">
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor" />
+    </parameter>
   </member>
   <member name="M:Wawa.Modules.Stringifier.Push(System.Int32,System.Span{System.Char}@)">
     <parameter name="next">
@@ -756,19 +791,10 @@
   <member name="M:Wawa.Modules.Stringifier.IsEqualityContract(System.Reflection.PropertyInfo)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
-  <member name="M:Wawa.Modules.Stringifier.IsFlagsDefined(System.Enum)">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-  </member>
-  <member name="M:Wawa.Modules.Stringifier.IsOneBitSet(System.Enum,System.Enum)">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-  </member>
   <member name="M:Wawa.Modules.Stringifier.IsRecord``1">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.Modules.Stringifier.Length(System.Int32,System.Int32,System.Int32,System.Int32)">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-  </member>
-  <member name="M:Wawa.Modules.Stringifier.Mod(System.Int32@)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.Modules.Stringifier.Count(System.Collections.IEnumerable,System.Int32,System.Boolean,System.Int32)">
@@ -777,17 +803,20 @@
   <member name="M:Wawa.Modules.Stringifier.Escape(System.Char)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
-  <member name="M:Wawa.Modules.Stringifier.EnumStringifier(System.Enum)">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-  </member>
   <member name="M:Wawa.Modules.Stringifier.Etcetera(System.Nullable{System.Int32})">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.Modules.Stringifier.ToOrdinal(System.Int32)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
+  <member name="M:Wawa.Modules.Stringifier.Into(System.Type,System.Int32)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+  </member>
   <member name="M:Wawa.Modules.Stringifier.EnumeratorStringifier(System.Collections.IEnumerator,System.Int32,System.Boolean,System.Nullable{System.Int32})">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
+    <parameter name="iterator">
+      <attribute ctor="M:JetBrains.Annotations.HandlesResourceDisposalAttribute.#ctor" />
+    </parameter>
     <parameter name="depth">
       <attribute ctor="M:JetBrains.Annotations.NonNegativeValueAttribute.#ctor" />
     </parameter>
@@ -819,9 +848,6 @@
   <member name="M:System.Span`1..Enumerator.get_Current">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
-  <member name="M:System.Span`1..Enumerator.op_Implicit(System.Span{`0})~System.Span`1.System.Span{`0}">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-  </member>
   <member name="F:System.Span`1..Enumerator._index">
     <attribute ctor="M:JetBrains.Annotations.ValueRangeAttribute.#ctor(System.Int64,System.Int64)">
       <argument>-1</argument>
@@ -829,9 +855,6 @@
     </attribute>
   </member>
   <member name="M:System.ReadOnlySpan`1..Enumerator.get_Current">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-  </member>
-  <member name="M:System.ReadOnlySpan`1..Enumerator.op_Implicit(System.ReadOnlySpan{`0})~System.ReadOnlySpan`1.System.ReadOnlySpan{`0}">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="F:System.ReadOnlySpan`1..Enumerator._index">

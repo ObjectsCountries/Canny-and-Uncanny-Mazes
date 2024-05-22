@@ -21,7 +21,7 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.Unity.CachedBehaviour.Create``2(``0[]@,System.Boolean@)">
+  <member name="M:Wawa.Unity.CachedBehaviour.Create``2(``0[]@,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="input">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />

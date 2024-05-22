@@ -76,8 +76,14 @@
   <member name="M:Wawa.TwitchPlays.Twitch`1.get_Abandons">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
+  <member name="M:Wawa.TwitchPlays.Twitch`1.Wawa#TwitchPlays#ITwitchDeclarable#get_Inner">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+  </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.ProcessTwitchCommand(System.String)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+    <parameter name="command">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    </parameter>
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.TwitchHandleForcedSolve">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
@@ -93,13 +99,16 @@
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.UntilSolve">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.UntilStrike">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.Sequence(System.Collections.Generic.IEnumerable{.KMSelectable},System.Single)">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="selectables">
       <attribute ctor="M:JetBrains.Annotations.ItemCanBeNullAttribute.#ctor" />
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -108,6 +117,7 @@
   <member name="M:Wawa.TwitchPlays.Twitch`1.IndexedSequence(System.Collections.Generic.IList{.KMSelectable},System.Single,System.Int32[])">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="selectables">
       <attribute ctor="M:JetBrains.Annotations.ItemCanBeNullAttribute.#ctor" />
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -119,6 +129,7 @@
   <member name="M:Wawa.TwitchPlays.Twitch`1.IndexedSequence(System.Collections.Generic.IList{.KMSelectable},System.Single,System.Collections.Generic.IEnumerable{System.Int32})">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="selectables">
       <attribute ctor="M:JetBrains.Annotations.ItemCanBeNullAttribute.#ctor" />
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -127,9 +138,19 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
+  <member name="M:Wawa.TwitchPlays.Twitch`1.Equal(System.String,System.String)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+    <parameter name="left">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    </parameter>
+    <parameter name="right">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    </parameter>
+  </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.YieldWhile``1(``0,System.Func{System.Boolean})">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="item">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -141,6 +162,7 @@
   <member name="M:Wawa.TwitchPlays.Twitch`1.YieldUntil``1(``0,System.Func{System.Boolean})">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="item">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -151,6 +173,7 @@
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.Split(System.String,System.String)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="instance">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -160,16 +183,11 @@
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.Parse(System.String,System.Type)">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <parameter name="value">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
     <parameter name="type">
-      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
-    </parameter>
-  </member>
-  <member name="M:Wawa.TwitchPlays.Twitch`1.Flatten(System.Collections.Generic.IEnumerator{Wawa.TwitchPlays.Domains.Instruction})">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
-    <parameter name="source">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
@@ -180,8 +198,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.TwitchPlays.Twitch`1.FromFail(System.Int32@,System.Collections.Generic.IList{System.Object}@,System.Collections.Generic.IList{System.Reflection.ParameterInfo}@)">
+  <member name="M:Wawa.TwitchPlays.Twitch`1.FromFail(System.Int32,System.Object[]@,System.Reflection.ParameterInfo[]@)">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="args">
       <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
@@ -202,10 +221,12 @@
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.GenerateHelp">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Twitch`1.Match(System.String,System.Boolean@)">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <parameter name="command">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -213,6 +234,7 @@
   <member name="M:Wawa.TwitchPlays.Twitch`1.ProcessCommand(Wawa.TwitchPlays.Domains.CommandInfo,System.String)">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <parameter name="query">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -220,7 +242,7 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.TwitchPlays.Twitch`1.{GenerateHelp}g__Selector|61_0(Wawa.TwitchPlays.Domains.CommandInfo)">
+  <member name="M:Wawa.TwitchPlays.Twitch`1.{GenerateHelp}g__Selector|63_0(Wawa.TwitchPlays.Domains.CommandInfo)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="x">
@@ -237,10 +259,16 @@
   <member name="P:Wawa.TwitchPlays.Twitch`1.Manual">
     <attribute ctor="M:JetBrains.Annotations.UriStringAttribute.#ctor" />
   </member>
+  <member name="F:Wawa.TwitchPlays.Twitch`1.MessageThenCancel">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
   <member name="F:Wawa.TwitchPlays.Twitch`1.None">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
   </member>
   <member name="F:Wawa.TwitchPlays.Twitch`1.Separator">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Wawa.TwitchPlays.Twitch`1.WrongType">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
   </member>
   <member name="F:Wawa.TwitchPlays.Twitch`1.s_autoImplementedHelp">
@@ -249,7 +277,6 @@
   <member name="F:Wawa.TwitchPlays.Twitch`1.s_commands">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
-    <attribute ctor="M:JetBrains.Annotations.ProvidesContextAttribute.#ctor" />
   </member>
   <member name="F:Wawa.TwitchPlays.Twitch`1.TwitchHelpMessage">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -291,6 +318,7 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.AliasAttribute.ToString(System.String,System.IFormatProvider)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="format">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -317,6 +345,7 @@
     </parameter>
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.AliasAttribute.ToString(System.Reflection.FieldInfo)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="x">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -332,6 +361,7 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.AliasAttribute.ToString(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="x">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -339,6 +369,9 @@
   </member>
   <member name="P:Wawa.TwitchPlays.Domains.AliasAttribute.Aliases">
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Wawa.TwitchPlays.Domains.AliasAttribute.Whitespace">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.CommandAttribute.#ctor(System.String,System.Int32)">
@@ -394,6 +427,9 @@
   <member name="M:Wawa.TwitchPlays.Domains.CommandAttribute.ToString">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
+  <member name="F:Wawa.TwitchPlays.Domains.CommandAttribute.Null">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
   <member name="M:Wawa.TwitchPlays.Domains.Instruction.#ctor(System.String,System.String)">
     <parameter name="reason">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
@@ -422,6 +458,9 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.Instruction.get_Pause">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+  </member>
+  <member name="M:Wawa.TwitchPlays.Domains.Instruction.get_UsableInForcedSolve">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.Instruction.get_Value">
@@ -535,7 +574,7 @@
   <member name="M:Wawa.TwitchPlays.Domains.Instruction.FromKMSelectableArray(.KMSelectable[])">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
-    <parameter name="selectable">
+    <parameter name="selectables">
       <attribute ctor="M:JetBrains.Annotations.ItemCanBeNullAttribute.#ctor" />
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -577,11 +616,19 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.InstructionCore.Flatten(System.Collections.Generic.IEnumerable{Wawa.TwitchPlays.Domains.Instruction})">
+    <attribute ctor="M:JetBrains.Annotations.MustDisposeResourceAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="that">
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor" />
       <attribute ctor="M:JetBrains.Annotations.ItemCanBeNullAttribute.#ctor" />
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.TwitchPlays.Domains.InstructionCore.Flatten(System.Collections.Generic.IEnumerator{Wawa.TwitchPlays.Domains.Instruction})">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+    <parameter name="that">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
@@ -647,6 +694,9 @@
   <member name="M:Wawa.TwitchPlays.Domains.TwitchString.get_WaitingMusic">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
+  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.get_IsSendMessage">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+  </member>
   <member name="M:Wawa.TwitchPlays.Domains.TwitchString.get_Message">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
@@ -672,7 +722,7 @@
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.StrikeMessage(System.String)">
+  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.StrikeMessage(System.String,System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="message">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -690,19 +740,19 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.SendToChat(System.String)">
+  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.SendToChat(System.String,System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="message">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.SendToChatError(System.String)">
+  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.SendToChatError(System.String,System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="message">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.SendDelayedMessage(System.Single,System.String)">
+  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.SendDelayedMessage(System.Single,System.String,System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
     <parameter name="message">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -742,6 +792,9 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="M:Wawa.TwitchPlays.Domains.TwitchString.Clone">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
+  </member>
+  <member name="M:Wawa.TwitchPlays.Domains.TwitchString.Flags(System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="P:Wawa.TwitchPlays.Domains.TwitchString.Message">

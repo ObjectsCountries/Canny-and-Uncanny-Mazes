@@ -387,9 +387,6 @@
   <member name="F:Wawa.Recall.Generator.s_remove">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
   </member>
-  <member name="F:Wawa.Recall.Generator.s_parameterless">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
-  </member>
   <member name="M:Wawa.Recall.HookDef`1.#ctor(System.Object,System.String,System.Func{System.Object,`0},System.Func{System.Action,`0},System.Func{`0,`0})">
     <parameter name="instance">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -746,6 +743,18 @@
   <member name="M:Wawa.Recall.Entity.ToString">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
+  <member name="M:Wawa.Recall.Entity.ChangeInner(Wawa.Recall.Entity,Wawa.Recall.StatusLights)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
+    <parameter name="entity">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.Recall.Entity.FakeStrikeInner(Wawa.Recall.Entity)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
+    <parameter name="entity">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
   <member name="M:Wawa.Recall.Entity.Vanillas(UnityEngine.GameObject@)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -926,6 +935,9 @@
     <parameter name="_">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
+  </member>
+  <member name="M:Wawa.Recall.Entity.{ChangeInner}g__HasFlag|27_0(Wawa.Recall.StatusLights,Wawa.Recall.StatusLights)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor" />
   </member>
   <member name="P:Wawa.Recall.Entity.VanillaTimer">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />

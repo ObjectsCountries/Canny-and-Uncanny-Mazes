@@ -18,12 +18,28 @@
     </parameter>
   </member>
   <member name="M:Wawa.DDL.KMBombStrikeExtensions.GetStrikes(.KMBomb)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.NonNegativeValueAttribute.#ctor" />
+    <parameter name="that">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.DDL.KMBombStrikeExtensions.GetMaxStrikes(.KMBomb)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NonNegativeValueAttribute.#ctor" />
     <parameter name="that">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
   <member name="M:Wawa.DDL.KMBombStrikeExtensions.GetRate(.KMBomb,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor" />
+    <parameter name="that">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.DDL.KMBombStrikeExtensions.Detonate(.KMBomb)">
+    <attribute ctor="M:JetBrains.Annotations.NonNegativeValueAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="that">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
@@ -34,7 +50,14 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Wawa.DDL.KMBombStrikeExtensions.SetStrikes(.KMBomb,System.Int32)">
+  <member name="M:Wawa.DDL.KMBombStrikeExtensions.SetStrikes(.KMBomb,System.Int32,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.NonNegativeValueAttribute.#ctor" />
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <parameter name="that">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Wawa.DDL.KMBombStrikeExtensions.SetMaxStrikes(.KMBomb,System.Int32,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.NonNegativeValueAttribute.#ctor" />
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="that">
