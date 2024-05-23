@@ -588,7 +588,7 @@ public class _cannymaze:ModdedModule{
             Shake(arrowdown,1,Sound.BigButtonPress);
             });
         resetButton.Set(onInteract:()=>{
-            if(tookTooLong)
+            if(tookTooLong&&!Status.IsSolved)
                 Solve("Solved by pressing the Reset button after generation took too long.");
             else if(mazeGenerated&&!Status.IsSolved&&!viewingWholeMaze){
                 Log("Reset the maze.");
@@ -620,7 +620,7 @@ public class _cannymaze:ModdedModule{
             Shake(maze,.75f,Sound.BigButtonPress);
         });
         numbersButton.Set(onInteract:()=>{
-            if(tookTooLong)
+            if(tookTooLong&&!Status.IsSolved)
                 Solve("Solved by pressing the Numbers button after generation took too long.");
             if(mazeGenerated&&viewingWholeMaze&&!Status.IsSolved){
                 if(!numbers.activeInHierarchy){

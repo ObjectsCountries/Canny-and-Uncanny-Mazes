@@ -54,7 +54,7 @@ public class TextureGeneratorUncanny : MonoBehaviour
                     randomIndex = Random.Range(0, textures.Length);
                 }
                 amountOfEachNumber[randomIndex] += 1;
-                textureIndices[y, x] = randomIndex + 1;
+                textureIndices[y, x] = randomIndex;
                 layout[y, x] = new UncannyMazeTile(x, y, randomIndex, gridDimensions);
                 Texture2D texture = textures[randomIndex];
                 Color[] pixels = texture.GetPixels();

@@ -261,13 +261,17 @@
                         number to its 14-bit binary equivalent, with leading zeros. For each sequence of bits, if the
                         goal
                         is in its quadrant, prepend a 1; if not, prepend a 0. Repeat this with the starting position,
-                        placing its bit to the left. Concatenate each sequence of bits in reading order to get a 64-bit
+                        placing its bit to the left of the goal position’s bit. Concatenate each sequence of bits in
+                        reading order to get a 64-bit
                         unsigned long. For each digit in the unsigned long, starting from the most significant digit,
                         find
                         the tile with the smallest Manhattan
-                        distance to the last appended tile that has this digit (at the start, use the starting tile as a
+                        distance (difference in column + difference in row) to the last appended tile that has this
+                        digit (at the start, use the starting tile as a
                         point of reference but
-                        do <b>not</b> press APPEND on the starting tile), then press APPEND while on that tile.</p>
+                        do <b>not</b> press APPEND on the starting tile), then press APPEND while on that tile. If more
+                        than one tile has the same number and Manhattan distance, the first one in reading order is
+                        valid. Do not press APPEND on the same tile twice in a row.</p>
                     <h4>5×5</h4>
                     <p>Create a playfair cipher table with the tiles; the first 0 in reading order is A, the second is
                         B,
@@ -283,7 +287,8 @@
                     <p>Assign base-36 digits to each of the tiles (the first 0 in reading order is 0, the second is A,
                         the third is B, etc.; the first 1 in reading order is 1, the second is the next letter, etc.).
                         Multiply the numbers in each quadrant, ignoring 0, and add them all together. Convert this
-                        number to base-36, and submit the resulting sequence by pressing APPEND while on the tile of
+                        number to base-36 (0-9, A-Z), and submit the resulting sequence by pressing APPEND while on the
+                        tile of
                         each digit.
                     </p>
                 </div>

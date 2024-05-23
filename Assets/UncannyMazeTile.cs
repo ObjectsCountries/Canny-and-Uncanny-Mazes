@@ -104,6 +104,21 @@ public class UncannyMazeTile
         new char[]{'U', 'V', 'W', 'X', 'Y'}
     };
 
+    public static string[] playfairWords = new string[]{
+        "SUPRGMNG",
+        "UNCANXNY",
+        "TRACTORX",
+        "INCREDBL",
+        "ONLYOHIO",
+        "SKIBDITL",
+        "JMBOJOSH",
+        "WHISTLNG",
+        "FORGORXD",
+        "TROLFACE"
+    };
+
+    public string playfairWord { get; private set; }
+
     ///<value>The starting tile.</value>
     public static UncannyMazeTile start { get; private set; }
     ///<value>The current tile.</value>
@@ -153,6 +168,7 @@ public class UncannyMazeTile
             throw new ArgumentOutOfRangeException("Tile should be from 0 to 9.");
         }
         uncannyValue = value;
+        playfairWord = playfairWords[value];
         mazeType = (mazeTypes)((int)(value / 2));
         character = null;
         submit5x5Character = null;
@@ -176,15 +192,19 @@ public class UncannyMazeTile
         }
         if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
         {
-            return true;
+            return false;
         }
         return first.x == second.x && first.y == second.y;
     }
     public static bool operator !=(UncannyMazeTile first, UncannyMazeTile second)
     {
-        if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
+        if (Object.ReferenceEquals(first, null) && Object.ReferenceEquals(second, null))
         {
             return false;
+        }
+        if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
+        {
+            return true;
         }
         return first.x != second.x || first.y != second.y;
     }
