@@ -31,13 +31,13 @@
                 }
                 for (var i = 0; i < parseInt(this.value); i++) {
                     if (i != 10) {
-                        document.getElementById("uncanny" + i).style.filter = "none";
-                        document.getElementById("uncanny" + i + "second").style.filter = "none";
+                        document.getElementById("uncanny" + i).src = "img/Uncanny Maze/uncanny" + i + ".png"
+                        document.getElementById("uncanny" + i + "second").src = "img/Uncanny Maze/uncanny" + i + ".png"
                     }
                 }
                 for (var j = 9; j >= parseInt(this.value); j--) {
-                    document.getElementById("uncanny" + j).style.filter = "blur(4px)";
-                    document.getElementById("uncanny" + j + "second").style.filter = "blur(4px)";
+                    document.getElementById("uncanny" + j).src = "img/Uncanny Maze/uncanny" + j + "blurred.png"
+                    document.getElementById("uncanny" + j + "second").src = "img/Uncanny Maze/uncanny" + j + "blurred.png"
                 }
             }
             slider.oninput();
@@ -160,7 +160,7 @@
                 <span class="page-header-section-title">Uncanny Maze</span>
             </div>
             <div class="page-content">
-                <p>In the case that the maze takes more than thirty seconds to generate (starting from the bomb
+                <p>In the case that the maze takes more than one minute to generate (starting from the bomb
                     creation), the module will activate a failsafe in which it can be automatically solved by pressing
                     the NUMBERS, RESET or APPEND button.</p>
                 <h3>Maze Types</h3>

@@ -36,7 +36,7 @@ public class UncannyMaze : ModdedModule
     private int totalMazeTotal;
     private string output;
     private UncannyMazeTile[,] map;
-    internal List<string> correctPath;
+    internal List<string> correctPath = new List<string>();
     private List<UncannyMazeTile> mustAppend = new List<UncannyMazeTile>();
     private List<UncannyMazeTile> sequence = new List<UncannyMazeTile>();
     private Config<UncannyMazeSettings> umSettings;
@@ -237,7 +237,6 @@ public class UncannyMaze : ModdedModule
         int index;
         UncannyMazeTile.setStartAndGoal(map[(dims - yStart - 1), xStart], map[(dims - yGoal - 1), xGoal]);
         UncannyMazeTile.current = map[(dims - yCoords - 1), xCoords];
-        correctPath = new List<string>();
         try
         {
             Setup();
@@ -245,10 +244,11 @@ public class UncannyMaze : ModdedModule
         catch (IndexOutOfRangeException e)
         {
             string[] exceptionLines = e.ToString().Split('\n');
-            Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:");
+            Log("Ran into an IndexOutOfRangeException during setup. Regenerating… The following is the content of the exception:");
             foreach (string line in exceptionLines)
                 Log(line);
             t.Awake();
+            correctPath.Clear();
             mustAppend.Clear();
             StartCoroutine(Initialization());
             yield break;
@@ -256,7 +256,7 @@ public class UncannyMaze : ModdedModule
         catch (InvalidOperationException e)
         {
             string[] exceptionLines = e.ToString().Split('\n');
-            Log("Ran into an InvalidOperationException. Regenerating… The following is the content of the exception:");
+            Log("Ran into an InvalidOperationException during setup. Regenerating… The following is the content of the exception:");
             foreach (string line in exceptionLines)
                 Log(line);
             t.Awake();
@@ -276,17 +276,18 @@ public class UncannyMaze : ModdedModule
             else
             {
                 index = UnityEngine.Random.Range(0, canGo.Count);
-                correctPath.Add(canGo.ElementAt(index));
+                correctPath.Add(canGo[index]);
                 try
                 {
-                    yield return StartCoroutine(Moving(canGo.ElementAt(index), 2));
+                    yield return StartCoroutine(Moving(canGo[index], 2));
                 }
                 catch (IndexOutOfRangeException e)
                 {
                     string[] exceptionLines = e.ToString().Split('\n');
-                    Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:");
+                    Log("Ran into an IndexOutOfRangeException while generating a solvable maze. Regenerating… The following is the content of the exception:");
                     foreach (string line in exceptionLines)
                         Log(line);
+                    mustAppend.Clear();
                     correctPath.Clear();
                     t.Awake();
                     StartCoroutine(Initialization());
@@ -300,6 +301,7 @@ public class UncannyMaze : ModdedModule
                     movements = 0;
                     correctPath.Clear();
                     attempts++;
+                    continue;
                 }
             }
             if (UncannyMazeTile.current == mustAppend[appendIndex])
@@ -320,8 +322,9 @@ public class UncannyMaze : ModdedModule
             logging = true;
             sequence.Clear();
             mustAppend.Clear();
-            Log("A possible route is: " + string.Join(", ", correctPath.ToArray()));
             Setup();
+            Log("DEBUG: How many times does correctPath contain \"append\"? " + correctPath.Count(x => x == "append"));
+            Log("A possible route is: " + string.Join(", ", correctPath.ToArray()));
             mazeGenerated = true;
             gm.SetActive(false);
             t.changeTexture(t.finalTexture);
@@ -333,7 +336,6 @@ public class UncannyMaze : ModdedModule
         {
             t.Awake();
             mustAppend.Clear();
-            correctPath.Clear();
             StartCoroutine(Initialization());
             yield break;
         }
@@ -1065,7 +1067,9 @@ public class UncannyMaze : ModdedModule
         {
             gm.GetComponent<TextMesh>().text = gen;
             yield return new WaitForSeconds(.75f);
-            if (totaltime == 13 && !mazeGenerated)
+            gm.GetComponent<TextMesh>().text = gen + ".";
+            yield return new WaitForSeconds(.75f);
+            if (totaltime == 25 && !mazeGenerated)
             {
                 gm.GetComponent<TextMesh>().fontSize = 27;
                 gm.GetComponent<TextMesh>().text = "SORRY THE MAZE\nTOOK SO LONG TO\nLOAD, PRESS ANY\nOF THE THREE WHITE\nBUTTONS TO\nSOLVE IMMEDIATELY.";
@@ -1073,8 +1077,6 @@ public class UncannyMaze : ModdedModule
                 music = false;
                 yield break;
             }
-            gm.GetComponent<TextMesh>().text = gen + ".";
-            yield return new WaitForSeconds(.75f);
             gm.GetComponent<TextMesh>().text = gen + "..";
             yield return new WaitForSeconds(.75f);
             totaltime++;
