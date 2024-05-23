@@ -2195,6 +2195,17 @@ MonoBehaviour:
   numbersButton: {fileID: 114234330779308098}
   resetButton: {fileID: 114674458667244534}
   appendButton: {fileID: 114239982744604328}
+  blurred:
+  - {fileID: 2800000, guid: 5925150ad938a42be8bea94dd16300ab, type: 3}
+  - {fileID: 2800000, guid: 74f1382817f1244f6b901f331eacb7bd, type: 3}
+  - {fileID: 2800000, guid: cb5284553a0834099aea9fc3f0a46f21, type: 3}
+  - {fileID: 2800000, guid: 96d470d53ed364914898f28fc6a2edaa, type: 3}
+  - {fileID: 2800000, guid: d0207591a6f764f149eec99d1b209e52, type: 3}
+  - {fileID: 2800000, guid: 3dea2f996331846ffbdf5b7451f17389, type: 3}
+  - {fileID: 2800000, guid: e28730acdef4a4afdb6080300227ea12, type: 3}
+  - {fileID: 2800000, guid: 012dd407de077489bbb56bf8c2095090, type: 3}
+  - {fileID: 2800000, guid: b8ae9c8541fe349f69549a5285e4632a, type: 3}
+  - {fileID: 2800000, guid: 93d1c8d13c12943feb458829e91c51d2, type: 3}
   numbers: {fileID: 1763468268425316}
   gm: {fileID: 1154019255207304}
   currentBox: {fileID: 1545531537698046}

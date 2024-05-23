@@ -11,6 +11,7 @@ public class UncannyMaze : ModdedModule
 {
     private readonly string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public KMSelectable arrowleft, arrowright, arrowup, arrowdown, maze, numbersButton, resetButton, appendButton;
+    public Texture2D[] blurred;
     internal bool viewingWholeMaze = false;
     internal int animSpeed = 30;
     private int leftSum, rightSum, aboveSum, belowSum;
@@ -23,6 +24,7 @@ public class UncannyMaze : ModdedModule
     private bool tookTooLong = false;
     private bool generatingMazeIdleCurrentlyRunning = false;
     private bool music = false;
+    private int blur = 2;
     private bool logging = false;
     private Vector2 currentPosition, startingPosition;
     private Vector2[] cornerCombinations;
@@ -37,12 +39,57 @@ public class UncannyMaze : ModdedModule
     internal List<string> correctPath;
     private List<UncannyMazeTile> mustAppend = new List<UncannyMazeTile>();
     private List<UncannyMazeTile> sequence = new List<UncannyMazeTile>();
+    private Config<UncannyMazeSettings> umSettings;
     private string sequenceCharacters = "";
     public TextureGeneratorUncanny t;
     List<string> canGo = new List<string>();
 
+    [Serializable]
+    public sealed class UncannyMazeSettings
+    {
+        public int animationSpeed = 30;
+        public bool playMusicOnSolve = true;
+        public int blurThreshold = 2;
+    }
+    public static Dictionary<string, object>[] TweaksEditorSettings = new Dictionary<string, object>[]{
+        new Dictionary<string,object>{
+            {"Filename","uncannymaze-settings.json"},
+            {"Name","Uncanny Maze"},
+            {"Listings",new List<Dictionary<string,object>>{
+                new Dictionary<string,object>{
+                    {"Key","animationSpeed"},
+                    {"Text","Animation Speed"},
+                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
+                },
+                new Dictionary<string, object>{
+                    {"Key","playMusicOnSolve"},
+                    {"Text","Play Music On Solve"},
+                    {"Description","If streaming, disable this to avoid copyright claims."}
+                },
+                new Dictionary<string,object>{
+                    {"Key","blurThreshold"},
+                    {"Text","Blur Threshold"},
+                    {"Description","Blur all images from this number onward. Numbers outside 0 to 9 will leave all images unblurred."}
+                }
+            }}
+        }
+    };
     void Start()
     {
+        umSettings = new Config<UncannyMazeSettings>();
+        animSpeed = umSettings.Read().animationSpeed;
+        if (umSettings.Read().animationSpeed != 2)
+            animSpeed = Mathf.Clamp(umSettings.Read().animationSpeed, 10, 60);
+        music = umSettings.Read().playMusicOnSolve;
+        blur = umSettings.Read().blurThreshold;
+        if (blur >= 0 && blur <= 9)
+        {
+            for (int i = blur; i < 10; i++)
+            {
+                t.textures[i] = blurred[i];
+            }
+        }
+        umSettings.Write("{\"animationSpeed\":" + animSpeed + ",\"playMusicOnSolve\":" + music.ToString().ToLowerInvariant() + ",\"blurThreshold\":" + blur + "}");
         StartCoroutine(Initialization());
         arrowleft.Set(onInteract: () =>
         {
@@ -135,6 +182,12 @@ public class UncannyMaze : ModdedModule
         {
             if (tookTooLong)
                 Solve("Solved by pressing the Append button after generation took too long.");
+            else if (mazeGenerated && !Status.IsSolved && !viewingWholeMaze)
+            {
+                StartCoroutine(Moving("append", 2));
+            }
+            Shake(resetButton, .75f, Sound.BigButtonPress);
+
         });
     }
 
@@ -207,6 +260,7 @@ public class UncannyMaze : ModdedModule
             foreach (string line in exceptionLines)
                 Log(line);
             t.Awake();
+            correctPath.Clear();
             mustAppend.Clear();
             StartCoroutine(Initialization());
             yield break;
@@ -230,16 +284,17 @@ public class UncannyMaze : ModdedModule
                 catch (IndexOutOfRangeException e)
                 {
                     string[] exceptionLines = e.ToString().Split('\n');
-                    Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:", LogType.Exception);
+                    Log("Ran into an IndexOutOfRangeException. Regenerating… The following is the content of the exception:");
                     foreach (string line in exceptionLines)
-                        Log(line, LogType.Exception);
+                        Log(line);
+                    correctPath.Clear();
                     t.Awake();
                     StartCoroutine(Initialization());
                     yield break;
                 }
                 finally { }//needed for the yield return StartCoroutine in the try block to function properly
                 movements++;
-                if (movements >= 20)
+                if (movements >= 50)
                 {
                     yield return StartCoroutine(Moving("reset", 2));
                     movements = 0;
@@ -255,6 +310,7 @@ public class UncannyMaze : ModdedModule
                 }
                 else
                 {
+                    correctPath.Add("append");
                     appendIndex++;
                 }
             }
@@ -277,6 +333,7 @@ public class UncannyMaze : ModdedModule
         {
             t.Awake();
             mustAppend.Clear();
+            correctPath.Clear();
             StartCoroutine(Initialization());
             yield break;
         }
@@ -452,7 +509,7 @@ public class UncannyMaze : ModdedModule
                         for (int i = 0; i < allTilesWithValue.Length; i++)
                         {
                             UncannyMazeTile tile = allTilesWithValue[i];
-                            if (tile == allTilesWithValue[i - 1])
+                            if (i > 0 && tile == allTilesWithValue[i - 1])
                             {
                                 manhattanDistances.Add(-1);
                             }
@@ -464,7 +521,7 @@ public class UncannyMaze : ModdedModule
                         for (int i = 0; i < allTilesWithValue.Length; i++)
                         {
                             UncannyMazeTile tile = allTilesWithValue[i];
-                            if (tile == allTilesWithValue[i - 1])
+                            if (i > 0 && tile == allTilesWithValue[i - 1])
                             {
                                 manhattanDistances.Add(-1);
                             }
@@ -741,7 +798,7 @@ public class UncannyMaze : ModdedModule
         || (yCoords == dims - 1 && direction == "up")
         || (yCoords == 0 && direction == "down"))
             yield break;
-        if (direction != "reset" && !canGo.Contains(direction) && logging)
+        if (direction != "reset" && direction != "append" && !canGo.Contains(direction) && logging)
         {
             Strike("Tried to move " + direction + ", not allowed.");
             yield break;
@@ -852,14 +909,14 @@ public class UncannyMaze : ModdedModule
                 Log("Appended " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ".");
                 sequence.Add(UncannyMazeTile.current);
             }
+            else
+            {
+                Strike("Tried to append " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ", was supposed to append" + mustAppend[sequence.Count].letterCoord + mustAppend[sequence.Count].numberCoord + ".");
+            }
             if (UncannyMazeTile.current == UncannyMazeTile.goal && sequence.SequenceEqual(mustAppend) && logging)
             {
                 Solve("Your module is: solved module");
                 yield break;
-            }
-            else
-            {
-                Strike("Tried to append " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ", incorrect.");
             }
         }
         else
@@ -1008,7 +1065,7 @@ public class UncannyMaze : ModdedModule
         {
             gm.GetComponent<TextMesh>().text = gen;
             yield return new WaitForSeconds(.75f);
-            if (totaltime == 4 && !mazeGenerated)
+            if (totaltime == 13 && !mazeGenerated)
             {
                 gm.GetComponent<TextMesh>().fontSize = 27;
                 gm.GetComponent<TextMesh>().text = "SORRY THE MAZE\nTOOK SO LONG TO\nLOAD, PRESS ANY\nOF THE THREE WHITE\nBUTTONS TO\nSOLVE IMMEDIATELY.";
