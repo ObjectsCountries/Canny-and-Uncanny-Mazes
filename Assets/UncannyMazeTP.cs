@@ -14,12 +14,11 @@ public class UncannyMazeTP : Twitch<UncannyMaze>
         {
             if (IsTP)
                 Module.animSpeed = 2;
+        }, onPass: () =>
+        {
+            if (!IsTP && Module.music)
+                Module.Play(new Sound("uncanny" + UncannyMazeTile.current.uncannyValue));
         }
-        // , onPass: () =>
-        // {
-        //     if (!IsTP && Module.music)
-        //         Module.Play(new Sound("song" + Module.currentTile));
-        // }
         );
     }
 
@@ -96,39 +95,39 @@ public class UncannyMazeTP : Twitch<UncannyMaze>
         if (Module.tookTooLong)
         {
             Module.numbersButton.OnInteract();
-            yield return new WaitForSeconds(.01f);
+            yield return new WaitForSeconds(.05f);
             yield break;
         }
         if (Module.viewingWholeMaze)
         {
             Module.maze.OnInteract();
-            yield return new WaitForSeconds(.01f);
+            yield return new WaitForSeconds(.05f);
         }
         Module.resetButton.OnInteract();
-        yield return new WaitForSeconds(.01f);
+        yield return new WaitForSeconds(.05f);
         foreach (string dir in Module.correctPath)
         {
             switch (dir)
             {
                 case "up":
                     Module.arrowup.OnInteract();
-                    yield return new WaitForSeconds(.01f);
+                    yield return new WaitForSeconds(.05f);
                     break;
                 case "down":
                     Module.arrowdown.OnInteract();
-                    yield return new WaitForSeconds(.01f);
+                    yield return new WaitForSeconds(.05f);
                     break;
                 case "left":
                     Module.arrowleft.OnInteract();
-                    yield return new WaitForSeconds(.01f);
+                    yield return new WaitForSeconds(.05f);
                     break;
                 case "right":
                     Module.arrowright.OnInteract();
-                    yield return new WaitForSeconds(.01f);
+                    yield return new WaitForSeconds(.05f);
                     break;
                 case "append":
                     Module.appendButton.OnInteract();
-                    yield return new WaitForSeconds(.01f);
+                    yield return new WaitForSeconds(.05f);
                     break;
             }
         }

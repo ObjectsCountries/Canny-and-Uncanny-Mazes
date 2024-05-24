@@ -11,7 +11,7 @@ public class UncannyMaze : ModdedModule
 {
     private readonly string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public KMSelectable arrowleft, arrowright, arrowup, arrowdown, maze, numbersButton, resetButton, appendButton;
-    public Texture2D[] blurred;
+    public Texture2D[] unblurred;
     internal bool viewingWholeMaze = false;
     internal int animSpeed = 30;
     private int leftSum, rightSum, aboveSum, belowSum;
@@ -22,7 +22,7 @@ public class UncannyMaze : ModdedModule
     internal bool currentlyMoving = false;
     internal bool tookTooLong = false;
     private bool generatingMazeIdleCurrentlyRunning = false;
-    private bool music = false;
+    internal bool music = false;
     private int blur = 2;
     private bool logging = false;
     private Vector2 currentPosition, startingPosition;
@@ -49,8 +49,8 @@ public class UncannyMaze : ModdedModule
     [Serializable]
     public sealed class UncannyMazeSettings
     {
-        public int uncannyAnimationSpeed = 30;
-        public bool uncannyPlayMusicOnSolve = true;
+        public int uncannyAnimationSpeed = 2;
+        public bool uncannyPlayMusicOnSolve = false;
         public int uncannyBlurThreshold = 2;
     }
 
@@ -60,9 +60,9 @@ public class UncannyMaze : ModdedModule
         blur = umSettings.Read().uncannyBlurThreshold;
         if (blur >= 0 && blur <= 9)
         {
-            for (int i = blur; i < 10; i++)
+            for (int i = 0; i < blur; i++)
             {
-                t.textures[i] = blurred[i];
+                t.textures[i] = unblurred[i];
             }
         }
         animSpeed = umSettings.Read().uncannyAnimationSpeed;
@@ -341,9 +341,9 @@ public class UncannyMaze : ModdedModule
             }
             if (UncannyMazeTile.current == mustAppend[appendIndex])
             {
-                correctPath.Add("append");
                 if (appendIndex >= mustAppend.Count - 1)
                 {
+                    correctPath.Add("append");
                     attempts = 3;
                     failed = false;
                     break;
@@ -351,6 +351,10 @@ public class UncannyMaze : ModdedModule
                 else
                 {
                     int notiar = numberOfTimesInARow(mustAppend, appendIndex);
+                    for (int i = 0; i < notiar; i++)
+                    {
+                        correctPath.Add("append");
+                    }
                     appendIndex += notiar;
                 }
             }
@@ -963,11 +967,6 @@ public class UncannyMaze : ModdedModule
             case "up":
                 if (currentPosition.y + .01f >= ((dims - 1f) / dims))
                     yield break;
-                else if (n == 2)
-                {
-                    currentPosition.y += 1f / dims;
-                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
-                }
                 else
                 {
                     currentlyMoving = true;
@@ -984,11 +983,6 @@ public class UncannyMaze : ModdedModule
             case "down":
                 if (currentPosition.y <= .01f)
                     yield break;
-                else if (n == 2)
-                {
-                    currentPosition.y -= 1f / dims;
-                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
-                }
                 else
                 {
                     currentlyMoving = true;
@@ -1005,11 +999,6 @@ public class UncannyMaze : ModdedModule
             case "left":
                 if (currentPosition.x <= .01f)
                     yield break;
-                else if (n == 2)
-                {
-                    currentPosition.x -= 1f / dims;
-                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
-                }
                 else
                 {
                     currentlyMoving = true;
@@ -1026,11 +1015,6 @@ public class UncannyMaze : ModdedModule
             case "right":
                 if (currentPosition.x + .01f >= ((dims - 1f) / dims))
                     yield break;
-                else if (n == 2)
-                {
-                    currentPosition.x += 1f / dims;
-                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
-                }
                 else
                 {
                     currentlyMoving = true;
@@ -1107,8 +1091,6 @@ public class UncannyMaze : ModdedModule
         if (xCoords != 0)
         {
             leftTile = map[dims - yCoords - 1, xCoords - 1];
-            if (logging && direction != "append")
-                Log("Your left tile is: " + leftTile);
         }
         else leftTile = null;
         directions["left"] = leftTile;
@@ -1116,8 +1098,6 @@ public class UncannyMaze : ModdedModule
         if (xCoords != dims - 1)
         {
             rightTile = map[dims - yCoords - 1, xCoords + 1];
-            if (logging && direction != "append")
-                Log("Your right tile is: " + rightTile);
         }
         else rightTile = null;
         directions["right"] = rightTile;
@@ -1125,8 +1105,6 @@ public class UncannyMaze : ModdedModule
         if (yCoords != dims - 1)
         {
             aboveTile = map[dims - yCoords - 2, xCoords];
-            if (logging && direction != "append")
-                Log("Your above tile is: " + aboveTile);
         }
         else aboveTile = null;
         directions["up"] = aboveTile;
@@ -1134,8 +1112,6 @@ public class UncannyMaze : ModdedModule
         if (yCoords != 0)
         {
             belowTile = map[dims - yCoords, xCoords];
-            if (logging && direction != "append")
-                Log("Your below tile is: " + belowTile);
         }
         else belowTile = null;
         directions["down"] = belowTile;
