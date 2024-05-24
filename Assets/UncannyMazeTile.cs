@@ -90,10 +90,10 @@ public class UncannyMazeTile
     public enum mazeTypes
     {
         GOAL,
+        CENTER,
         TOTAL,
         CROSS,
-        BORDER,
-        CORNERS
+        BORDER
     }
 
     public static char[][] chosenMazeFor5x5 = new char[][]{

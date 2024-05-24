@@ -101,28 +101,28 @@
                             <td class="uncannyImage"><img id="uncanny3" src="img/Uncanny Maze/uncanny3.png"></td>
                         </tr>
                         <tr>
-                            <td colspan=2>TOTAL MAZE</td>
+                            <td colspan=2>CORNERS MAZE</td>
                         </tr>
                         <tr>
                             <td class="uncannyImage"><img id="uncanny4" src="img/Uncanny Maze/uncanny4.png"></td>
                             <td class="uncannyImage"><img id="uncanny5" src="img/Uncanny Maze/uncanny5.png"></td>
                         </tr>
                         <tr>
-                            <td colspan=2>CROSS MAZE</td>
+                            <td colspan=2>TOTAL MAZE</td>
                         </tr>
                         <tr>
                             <td class="uncannyImage"><img id="uncanny6" src="img/Uncanny Maze/uncanny6.png"></td>
                             <td class="uncannyImage"><img id="uncanny7" src="img/Uncanny Maze/uncanny7.png"></td>
                         </tr>
                         <tr>
-                            <td colspan=2>BORDER MAZE</td>
+                            <td colspan=2>CROSS MAZE</td>
                         </tr>
                         <tr>
                             <td class="uncannyImage"><img id="uncanny8" src="img/Uncanny Maze/uncanny8.png"></td>
                             <td class="uncannyImage"><img id="uncanny9" src="img/Uncanny Maze/uncanny9.png"></td>
                         </tr>
                         <tr>
-                            <td colspan=2>CORNERS MAZE</td>
+                            <td colspan=2>BORDER MAZE</td>
                         </tr>
                     </tbody>
                 </table>
@@ -164,20 +164,24 @@
                     creation), the module will activate a failsafe in which it can be automatically solved by pressing
                     the NUMBERS, RESET or APPEND button.</p>
                 <h3>Maze Types</h3>
-                <p>Goal Maze: whichever surrounding tile(s) are closest in value to that of the goal tile are okay to
+                <p>Goal Maze: whichever surrounding tiles are closest and furthest in value to that of the goal tile are
+                    okay to
                     navigate to.</p>
-                <p>Total Maze: Sum up the entirety of the maze and modulo 10. Whichever surrounding tile(s) are closest
+                <p>Center Maze: If the maze is 5×5, take the center tile; if not; take the 4 center tiles and add them,
+                    then modulo 10. whichever surrounding tiles are closest and furthest in value are okay to navigate
+                    to.</p>
+                <p>Total Maze: Sum up the entirety of the maze and modulo 10. Whichever surrounding tiles are closest
+                    and furthest
                     in value to this number are okay to navigate to.</p>
                 <p>Cross Maze: Sum the current row, sum the current column, multiply the two numbers, and modulo 10.
-                    Whichever surrounding tile(s) are closest in value to this number are okay to navigate to.</p>
+                    Whichever surrounding tiles are closest and furthest in value to this number are okay to navigate
+                    to.</p>
                 <p>Border Maze: Individually sum up the leftmost column, rightmost column, highest row and lowest row,
-                    but do not modulo 10. Whichever tile is in the direction of the largest of these numbers is okay to
-                    navigate to. In the case that the current position is in the row/column with the largest number, the
+                    but do not modulo 10. Whichever tiles are in the direction of the largest and smallest of these
+                    numbers is okay to
+                    navigate to. In the case that the current position is in the row/column with the largest/smallest
+                    number, the
                     opposite direction can be navigated to.</p>
-                <p>Corners Maze: Take the numbers in the corners, modulo each by the dimensions of the maze, and
-                    create every combination of <a href="https://ktane.timwi.de/HTML/Coordinates.html">[x,y]</a>
-                    coordinates (including swapping the numbers). Whichever tiles are in these coordinates are okay to
-                    navigate to.</p>
             </div>
             <div class="page-footer relative-footer">2</div>
         </div>

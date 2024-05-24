@@ -15,13 +15,17 @@ public class TextureGeneratorUncanny : MonoBehaviour
     private Material mat;
     new private MeshRenderer renderer;
     public UncannyMazeTile[,] layout;
-    public Dictionary<int, int> amountOfEachNumber;
+    internal Dictionary<int, int> amountOfEachNumber = new Dictionary<int, int>();
+    private List<int> usedNumbers = new List<int>();
+    private int cellSize;
+    private Texture2D gridTexture, texture;
+    private int destX, destY, sourceX, sourceY, finalResolution;
 
     public void Awake()
     {
         gridDimensions = Random.Range(minWidthHeight, maxWidthHeight + 1);
-        List<int> usedNumbers = new List<int>();
-        amountOfEachNumber = new Dictionary<int, int>();
+        usedNumbers.Clear();
+        amountOfEachNumber.Clear();
         amountOfEachNumber.Add(0, 0);
         amountOfEachNumber.Add(1, 0);
         amountOfEachNumber.Add(2, 0);
@@ -32,9 +36,9 @@ public class TextureGeneratorUncanny : MonoBehaviour
         amountOfEachNumber.Add(7, 0);
         amountOfEachNumber.Add(8, 0);
         amountOfEachNumber.Add(9, 0);
-        int cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
+        cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
         layout = new UncannyMazeTile[gridDimensions, gridDimensions];
-        Texture2D gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
+        gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
         textureIndices = new int[gridDimensions, gridDimensions];
         int randomIndex;
         for (int y = 0; y < gridDimensions; y++)
@@ -56,20 +60,20 @@ public class TextureGeneratorUncanny : MonoBehaviour
                 amountOfEachNumber[randomIndex] += 1;
                 textureIndices[y, x] = randomIndex;
                 layout[y, x] = new UncannyMazeTile(x, y, randomIndex, gridDimensions);
-                Texture2D texture = textures[randomIndex];
+                texture = textures[randomIndex];
                 Color[] pixels = texture.GetPixels();
 
                 for (int j = 0; j < cellSize; j++)
                 {
                     for (int i = 0; i < cellSize; i++)
                     {
-                        int destX = x * cellSize + i;
-                        int destY = (gridDimensions - y - 1) * cellSize + j;
+                        destX = x * cellSize + i;
+                        destY = (gridDimensions - y - 1) * cellSize + j;
 
                         if (destX < gridTexture.width && destY < gridTexture.height)
                         {
-                            int sourceX = Mathf.FloorToInt(i * (float)texture.width / cellSize);
-                            int sourceY = Mathf.FloorToInt(j * (float)texture.height / cellSize);
+                            sourceX = Mathf.FloorToInt(i * (float)texture.width / cellSize);
+                            sourceY = Mathf.FloorToInt(j * (float)texture.height / cellSize);
 
                             gridTexture.SetPixel(destX, destY, pixels[sourceY * texture.width + sourceX]);
                         }
@@ -81,7 +85,7 @@ public class TextureGeneratorUncanny : MonoBehaviour
         gridTexture.Apply();
 
         // Create a RenderTexture to scale up the texture
-        int finalResolution = gridDimensions * cellSize; // Choose the desired final resolution
+        finalResolution = gridDimensions * cellSize; // Choose the desired final resolution
         renderTexture = new RenderTexture(finalResolution, finalResolution, 24);
         Graphics.Blit(gridTexture, renderTexture);
 
@@ -101,10 +105,13 @@ public class TextureGeneratorUncanny : MonoBehaviour
 
     internal void changeTexture(Texture2D t)
     {
-        RenderTexture.active = renderTexture;
-        t.Apply();
-        RenderTexture.active = null;
-        mat.mainTexture = t;
-        renderer.material = mat;
+        if (renderTexture != null && mat != null && renderer != null)
+        {
+            RenderTexture.active = renderTexture;
+            t.Apply();
+            RenderTexture.active = null;
+            mat.mainTexture = t;
+            renderer.material = mat;
+        }
     }
 }

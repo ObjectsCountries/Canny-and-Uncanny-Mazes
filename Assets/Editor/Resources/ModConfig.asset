@@ -17,13 +17,13 @@ MonoBehaviour:
   description: 'IDs: cannymaze, uncannymaze
 
 
-    [b]NOTE FOR CANNY MAZE:[/b] There are two settings that control the speed of moving
-    from one tile to another and whether music plays upon solving. Please turn off
-    the "Play Music on Solve" setting if streaming KTaNE on YouTube/Twitch/etc., as
-    5 of the 7 songs are copyrighted (the songs associated with images 1 and 6 are
-    not). [b]When in Twitch Plays, neither of these settings have any effect;[/b]
-    the module moves instantaneously from one tile to the next, and it never plays
-    music upon solving.
+    [b]Settings:[/b] There are two settings that control the speed of moving from
+    one tile to another and whether music plays upon solving. Please turn off the
+    "Play Music on Solve" setting if streaming KTaNE on YouTube/Twitch/etc., as 5
+    of the 7 songs in Canny Maze are copyrighted (the songs associated with images
+    1 and 6 are not). [b]When in Twitch Plays, neither of these settings have any
+    effect;[/b] the module moves instantaneously from one tile to the next, and it
+    never plays music upon solving.
 
 
     [b]NOTE FOR UNCANNY MAZE:[/b] Because the images are disturbing, there is a setting
