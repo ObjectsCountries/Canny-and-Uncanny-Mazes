@@ -17,7 +17,6 @@ public class UncannyMaze : ModdedModule
     internal bool viewingWholeMaze = false;
     internal int animSpeed = 30;
     private int leftSum, rightSum, aboveSum, belowSum;
-    private int topLeft, topRight, bottomLeft, bottomRight;
     private List<UncannyMazeTile> possibleDirections;
     List<int> borderSums = new List<int>();
     private float m, b;
@@ -29,7 +28,6 @@ public class UncannyMaze : ModdedModule
     private int blur = 2;
     private bool logging = false;
     private Vector2 currentPosition, startingPosition;
-    private Vector2[] cornerCombinations;
     private Dictionary<string, UncannyMazeTile> directions;
     private UncannyMazeTile leftTile, rightTile, aboveTile, belowTile;
     private int xStart, yStart, xCoords, yCoords, xGoal, yGoal;
@@ -52,28 +50,28 @@ public class UncannyMaze : ModdedModule
     [Serializable]
     public sealed class UncannyMazeSettings
     {
-        public int animationSpeed = 30;
-        public bool playMusicOnSolve = true;
-        public int blurThreshold = 2;
+        public int uncannyAnimationSpeed = 30;
+        public bool uncannyPlayMusicOnSolve = true;
+        public int uncannyBlurThreshold = 2;
     }
     public static Dictionary<string, object>[] TweaksEditorSettings = new Dictionary<string, object>[]{
         new Dictionary<string,object>{
-            {"Filename","uncannymaze-settings.json"},
-            {"Name","Uncanny Maze"},
+            {"Filename","cannyanduncannymazes-settings.json"},
+            {"Name","Canny and Uncanny Mazes"},
             {"Listings",new List<Dictionary<string,object>>{
                 new Dictionary<string,object>{
-                    {"Key","animationSpeed"},
-                    {"Text","Animation Speed"},
+                    {"Key","uncannyAnimationSpeed"},
+                    {"Text","Uncanny Maze: Animation Speed"},
                     {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
                 },
                 new Dictionary<string, object>{
-                    {"Key","playMusicOnSolve"},
-                    {"Text","Play Music On Solve"},
+                    {"Key","uncannyPlayMusicOnSolve"},
+                    {"Text","Uncanny Maze: Play Music On Solve"},
                     {"Description","If streaming, disable this to avoid copyright claims."}
                 },
                 new Dictionary<string,object>{
-                    {"Key","blurThreshold"},
-                    {"Text","Blur Threshold"},
+                    {"Key","uncannyBlurThreshold"},
+                    {"Text","Uncanny Maze: Blur Threshold"},
                     {"Description","Blur all images from this number onward. Numbers outside 0 to 9 will leave all images unblurred."}
                 }
             }}
@@ -84,11 +82,7 @@ public class UncannyMaze : ModdedModule
     {
         proc = Process.GetCurrentProcess();
         umSettings = new Config<UncannyMazeSettings>();
-        animSpeed = umSettings.Read().animationSpeed;
-        if (umSettings.Read().animationSpeed != 2)
-            animSpeed = Mathf.Clamp(umSettings.Read().animationSpeed, 10, 60);
-        music = umSettings.Read().playMusicOnSolve;
-        blur = umSettings.Read().blurThreshold;
+        blur = umSettings.Read().uncannyBlurThreshold;
         if (blur >= 0 && blur <= 9)
         {
             for (int i = blur; i < 10; i++)
@@ -96,6 +90,10 @@ public class UncannyMaze : ModdedModule
                 t.textures[i] = blurred[i];
             }
         }
+        animSpeed = umSettings.Read().uncannyAnimationSpeed;
+        if (umSettings.Read().uncannyAnimationSpeed != 2)
+            animSpeed = Mathf.Clamp(umSettings.Read().uncannyAnimationSpeed, 10, 60);
+        music = umSettings.Read().uncannyPlayMusicOnSolve;
         umSettings.Write("{\"animationSpeed\":" + animSpeed + ",\"playMusicOnSolve\":" + music.ToString().ToLowerInvariant() + ",\"blurThreshold\":" + blur + "}");
     }
 
@@ -209,7 +207,15 @@ public class UncannyMaze : ModdedModule
         t.changeTexture(t.whiteBG);
         output = "";
         dims = t.gridDimensions;
-        map = t.layout;
+        int max = t.layout.Select(l => l).Max(l => l.Count());
+        map = new UncannyMazeTile[t.layout.Count, max];
+        for (int i = 0; i < t.layout.Count; i++)
+        {
+            for (int j = 0; j < t.layout[i].Count(); j++)
+            {
+                map[i, j] = t.layout[i][j];
+            }
+        }
         for (int r = 0; r < dims; r++)
         {
             for (int c = 0; c < dims; c++)
@@ -381,7 +387,6 @@ public class UncannyMaze : ModdedModule
 
     private void Setup()
     {
-        map = t.layout;
         UncannyMazeTile.setStartAndGoal(map[(dims - yStart - 1), xStart], map[(dims - yGoal - 1), xGoal]);
         UncannyMazeTile.current = map[(dims - yCoords - 1), xCoords];
         UncannyMazeTile.chosenMazeFor5x5 = UncannyMazeTile.submit5x5Mazes[UncannyMazeTile.start.uncannyValue];
@@ -635,24 +640,6 @@ public class UncannyMaze : ModdedModule
         borderSums.Add(rightSum);
         borderSums.Add(aboveSum);
         borderSums.Add(belowSum);
-        topLeft = map[0, 0].uncannyValue % dims;
-        topRight = map[0, dims - 1].uncannyValue % dims;
-        bottomLeft = map[dims - 1, 0].uncannyValue % dims;
-        bottomRight = map[dims - 1, dims - 1].uncannyValue % dims;
-        cornerCombinations = new Vector2[]{
-            new Vector2(topLeft, topRight),
-            new Vector2(topLeft, bottomLeft),
-            new Vector2(topLeft, bottomRight),
-            new Vector2(topRight, bottomLeft),
-            new Vector2(topRight, bottomRight),
-            new Vector2(bottomLeft, bottomRight),
-            new Vector2(topRight, topLeft),
-            new Vector2(bottomLeft, topLeft),
-            new Vector2(bottomRight, topLeft),
-            new Vector2(bottomLeft, topRight),
-            new Vector2(bottomRight, topRight),
-            new Vector2(bottomRight, bottomLeft)
-        };
         directions = new Dictionary<string, UncannyMazeTile>();
         directions.Add("left", null);
         directions.Add("right", null);
@@ -825,7 +812,6 @@ public class UncannyMaze : ModdedModule
 
     private IEnumerator Moving(string direction, int n)
     {
-        map = t.layout;
         if (viewingWholeMaze || (currentlyMoving && logging)
         || (xCoords == 0 && direction == "left")
         || (xCoords == dims - 1 && direction == "right")
@@ -1035,7 +1021,6 @@ public class UncannyMaze : ModdedModule
                 canGo.Add(directions.First(x => x.Value == tile).Key);
             }
         }
-        canGo = canGo.Distinct().ToList();
         if (logging)
             Log("Possible directions are: " + string.Join(", ", canGo.ToArray()));
     }
@@ -1079,20 +1064,10 @@ public class UncannyMaze : ModdedModule
         return ClosestAndFurthestInValue(total, false, adjacent);
     }
 
-    private List<UncannyMazeTile> CornersMaze()
-    {
-        List<UncannyMazeTile> allCombinations = new List<UncannyMazeTile>();
-        foreach (Vector2 combination in cornerCombinations)
-        {
-            allCombinations.AddRange((from UncannyMazeTile u in map where u.y == combination.x && u.x == combination.y select u).ToList());
-            allCombinations.AddRange((from UncannyMazeTile u in map where u.x == combination.x && u.y == combination.y select u).ToList());
-        }
-        return allCombinations.Distinct().ToList();
-    }
-
     private IEnumerator generatingMazeIdle()
     {
         generatingMazeIdleCurrentlyRunning = true;
+        long initialRam = proc.PrivateMemorySize64;
         gm.GetComponent<TextMesh>().fontSize = 45;
         string gen = "GENERATING\nMAZE.";
         int totaltime = 0;
@@ -1110,7 +1085,7 @@ public class UncannyMaze : ModdedModule
                 music = false;
                 yield break;
             }
-            if (proc.PrivateMemorySize64 >= 1750000000L)
+            if (proc.PrivateMemorySize64 >= initialRam + 500000000L)
             {
                 gm.GetComponent<TextMesh>().fontSize = 25;
                 gm.GetComponent<TextMesh>().text = "MEMORY LEAK DETECTED!\nPRESS ANY OF THE\nTHREE WHITE BUTTONS\nTO SOLVE IMMEDIATELY.";

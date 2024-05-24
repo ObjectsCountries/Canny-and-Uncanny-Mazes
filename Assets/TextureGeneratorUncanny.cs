@@ -9,16 +9,17 @@ public class TextureGeneratorUncanny : MonoBehaviour
     public int maxWidthHeight;
     public Texture2D whiteBG;
     internal int gridDimensions;
-    internal int[,] textureIndices;
-    internal Texture2D finalTexture;
-    internal RenderTexture renderTexture;
+    internal Texture2D finalTexture = null;
+    internal RenderTexture renderTexture = null;
     private Material mat;
     new private MeshRenderer renderer;
-    public UncannyMazeTile[,] layout;
+    public List<List<UncannyMazeTile>> layout = null;
+    List<UncannyMazeTile> tempList = null;
     internal Dictionary<int, int> amountOfEachNumber = new Dictionary<int, int>();
     private List<int> usedNumbers = new List<int>();
     private int cellSize;
-    private Texture2D gridTexture, texture;
+    private Texture2D gridTexture = null;
+    private Texture2D texture = null;
     private int destX, destY, sourceX, sourceY, finalResolution;
 
     public void Awake()
@@ -37,12 +38,23 @@ public class TextureGeneratorUncanny : MonoBehaviour
         amountOfEachNumber.Add(8, 0);
         amountOfEachNumber.Add(9, 0);
         cellSize = Mathf.FloorToInt(Mathf.Min(Screen.width, Screen.height) / gridDimensions);
-        layout = new UncannyMazeTile[gridDimensions, gridDimensions];
+        if (layout == null)
+        {
+            layout = new List<List<UncannyMazeTile>>();
+        }
+        else
+        {
+            layout.Clear();
+        }
         gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
-        textureIndices = new int[gridDimensions, gridDimensions];
         int randomIndex;
+        if (tempList == null)
+        {
+            tempList = new List<UncannyMazeTile>();
+        }
         for (int y = 0; y < gridDimensions; y++)
         {
+            tempList.Clear();
             for (int x = 0; x < gridDimensions; x++)
             {
                 if (gridDimensions == 4)
@@ -58,8 +70,7 @@ public class TextureGeneratorUncanny : MonoBehaviour
                     randomIndex = Random.Range(0, textures.Length);
                 }
                 amountOfEachNumber[randomIndex] += 1;
-                textureIndices[y, x] = randomIndex;
-                layout[y, x] = new UncannyMazeTile(x, y, randomIndex, gridDimensions);
+                tempList.Add(new UncannyMazeTile(x, y, randomIndex, gridDimensions));
                 texture = textures[randomIndex];
                 Color[] pixels = texture.GetPixels();
 
@@ -80,6 +91,7 @@ public class TextureGeneratorUncanny : MonoBehaviour
                     }
                 }
             }
+            layout.Add(new List<UncannyMazeTile>(tempList));
         }
 
         gridTexture.Apply();

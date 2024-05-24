@@ -467,23 +467,23 @@ public class _cannymaze:ModdedModule{
     };
     [Serializable]
     public sealed class cannymazesettings{
-        public int animationSpeed=30;
-        public bool playMusicOnSolve=true;
+        public int cannyAnimationSpeed=30;
+        public bool cannyPlayMusicOnSolve=true;
     }
 
     public static Dictionary<string,object>[]TweaksEditorSettings=new Dictionary<string,object>[]{
         new Dictionary<string,object>{
-            {"Filename","cannymaze-settings.json"},
-            {"Name","Canny Maze"},
+            {"Filename","cannyanduncannymazes-settings.json"},
+            {"Name","Canny and Uncanny Mazes"},
             {"Listings",new List<Dictionary<string,object>>{
                 new Dictionary<string,object>{
-                    {"Key","animationSpeed"},
-                    {"Text","Animation Speed"},
+                    {"Key","cannyAnimationSpeed"},
+                    {"Text","Canny Maze: Animation Speed"},
                     {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
                 },
                 new Dictionary<string, object>{
-                    {"Key","playMusicOnSolve"},
-                    {"Text","Play Music On Solve"},
+                    {"Key","cannyPlayMusicOnSolve"},
+                    {"Text","Canny Maze: Play Music On Solve"},
                     {"Description","If streaming, disable this to avoid copyright claims."}
                 }
             }}
@@ -560,11 +560,11 @@ public class _cannymaze:ModdedModule{
         allDirs=new List<string>(){"left","right","up","down"};
         correctPath=new List<string>();
         cmSettings=new Config<cannymazesettings>();
-        animSpeed=cmSettings.Read().animationSpeed;
-        if(cmSettings.Read().animationSpeed!=2)
-            animSpeed=Mathf.Clamp(cmSettings.Read().animationSpeed,10,60);
-        music=cmSettings.Read().playMusicOnSolve;
-        cmSettings.Write("{\"animationSpeed\":"+animSpeed+",\"playMusicOnSolve\":"+music.ToString().ToLowerInvariant()+"}");
+        animSpeed=cmSettings.Read().cannyAnimationSpeed;
+        if(cmSettings.Read().cannyAnimationSpeed!=2)
+            animSpeed=Mathf.Clamp(cmSettings.Read().cannyAnimationSpeed,10,60);
+        music=cmSettings.Read().cannyPlayMusicOnSolve;
+        cmSettings.Write("{\"cannyAnimationSpeed\":"+animSpeed+",\"cannyPlayMusicOnSolve\":"+music.ToString().ToLowerInvariant()+"}");
         numbers.SetActive(false);
         StartCoroutine(Initialization());
         arrowleft.Set(onInteract:()=>{
