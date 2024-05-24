@@ -22,11 +22,6 @@ public class UncannyMazeTP : Twitch<UncannyMaze>
         // }
         );
     }
-    [Command("")]
-    public IEnumerable<Instruction> input()
-    {
-        yield return null;
-    }
 
     [Command("")]
     IEnumerable<Instruction> Press(string movement)
@@ -101,8 +96,41 @@ public class UncannyMazeTP : Twitch<UncannyMaze>
         if (Module.tookTooLong)
         {
             Module.numbersButton.OnInteract();
-            yield return Instruction.Pause;
+            yield return new WaitForSeconds(.01f);
             yield break;
+        }
+        if (Module.viewingWholeMaze)
+        {
+            Module.maze.OnInteract();
+            yield return new WaitForSeconds(.01f);
+        }
+        Module.resetButton.OnInteract();
+        yield return new WaitForSeconds(.01f);
+        foreach (string dir in Module.correctPath)
+        {
+            switch (dir)
+            {
+                case "up":
+                    Module.arrowup.OnInteract();
+                    yield return new WaitForSeconds(.01f);
+                    break;
+                case "down":
+                    Module.arrowdown.OnInteract();
+                    yield return new WaitForSeconds(.01f);
+                    break;
+                case "left":
+                    Module.arrowleft.OnInteract();
+                    yield return new WaitForSeconds(.01f);
+                    break;
+                case "right":
+                    Module.arrowright.OnInteract();
+                    yield return new WaitForSeconds(.01f);
+                    break;
+                case "append":
+                    Module.appendButton.OnInteract();
+                    yield return new WaitForSeconds(.01f);
+                    break;
+            }
         }
     }
 }

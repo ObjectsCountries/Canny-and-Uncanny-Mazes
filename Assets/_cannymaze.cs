@@ -472,23 +472,23 @@ public class _cannymaze:ModdedModule{
     }
 
     public static Dictionary<string,object>[]TweaksEditorSettings=new Dictionary<string,object>[]{
-        new Dictionary<string,object>{
-            {"Filename","cannyanduncannymazes-settings.json"},
-            {"Name","Canny and Uncanny Mazes"},
-            {"Listings",new List<Dictionary<string,object>>{
-                new Dictionary<string,object>{
-                    {"Key","cannyAnimationSpeed"},
-                    {"Text","Canny Maze: Animation Speed"},
-                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
-                },
-                new Dictionary<string, object>{
-                    {"Key","cannyPlayMusicOnSolve"},
-                    {"Text","Canny Maze: Play Music On Solve"},
-                    {"Description","If streaming, disable this to avoid copyright claims."}
-                }
-            }}
-        }
-    };
+            new Dictionary<string,object>{
+                {"Filename","cannymaze-settings.json"},
+                {"Name","Canny Maze"},
+                {"Listings",new List<Dictionary<string,object>>{
+                    new Dictionary<string,object>{
+                        {"Key","cannyAnimationSpeed"},
+                        {"Text","Animation Speed"},
+                        {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
+                    },
+                    new Dictionary<string, object>{
+                        {"Key","cannyPlayMusicOnSolve"},
+                        {"Text","Play Music On Solve"},
+                        {"Description","If streaming, disable this to avoid copyright claims."}
+                    }
+                }}
+            }
+        };
 
     private string[]swap(string[]array,int index1,int index2){
         string[]arr=array;
@@ -559,7 +559,7 @@ public class _cannymaze:ModdedModule{
         tilesTraversed=new List<string>();
         allDirs=new List<string>(){"left","right","up","down"};
         correctPath=new List<string>();
-        cmSettings=new Config<cannymazesettings>();
+        cmSettings=new Config<cannymazesettings>("cannymaze-settings.json");
         animSpeed=cmSettings.Read().cannyAnimationSpeed;
         if(cmSettings.Read().cannyAnimationSpeed!=2)
             animSpeed=Mathf.Clamp(cmSettings.Read().cannyAnimationSpeed,10,60);
@@ -778,9 +778,9 @@ public class _cannymaze:ModdedModule{
                     yield break;
                 else{
                     currentlyMoving=true;
-                    currentPosition+=new Vector2(0,1f/(n*dims));//Difference between the integral of movement and the Riemann sum
+                    currentPosition.y+=1f/(n*dims);//Difference between the integral of movement and the Riemann sum
                     for(int i=n-1;i>0;i--){
-                        currentPosition-=new Vector2(0,f(i*1f/n)*1f/n);//Riemann sum
+                        currentPosition.y-=f(i*1f/n)/n;//Riemann sum
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;//necessary for the animation to play
                     }
@@ -792,9 +792,9 @@ public class _cannymaze:ModdedModule{
                     yield break;
                 else{
                     currentlyMoving=true;
-                    currentPosition-=new Vector2(0,1f/(n*dims));
+                    currentPosition.y-=1f/(n*dims);
                     for(int i=n-1;i>0;i--){
-                        currentPosition+=new Vector2(0,f(i*1f/n)*1f/n);
+                        currentPosition.y+=f(i*1f/n)/n;
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;
                     }
@@ -806,9 +806,9 @@ public class _cannymaze:ModdedModule{
                     yield break;
                 else{
                     currentlyMoving=true;
-                    currentPosition-=new Vector2(1f/(n*dims),0);
+                    currentPosition.x-=1f/(n*dims);
                     for(int i=n-1;i>0;i--){
-                        currentPosition+=new Vector2(f(i*1f/n)*1f/n,0);
+                        currentPosition.x+=f(i*1f/n)/n;
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;
                     }
@@ -820,9 +820,9 @@ public class _cannymaze:ModdedModule{
                     yield break;
                 else{
                     currentlyMoving=true;
-                    currentPosition+=new Vector2(1f/(n*dims),0);
+                    currentPosition.x+=1f/(n*dims);
                     for(int i=n-1;i>0;i--){
-                        currentPosition-=new Vector2(f(i*1f/n)*1f/n,0);
+                        currentPosition.x-=f(i*1f/n)/n;
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset=currentPosition;
                         yield return null;
                     }

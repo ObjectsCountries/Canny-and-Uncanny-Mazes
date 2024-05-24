@@ -46,7 +46,14 @@ public class TextureGeneratorUncanny : MonoBehaviour
         {
             layout.Clear();
         }
-        gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
+        if (gridTexture == null)
+        {
+            gridTexture = new Texture2D(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
+        }
+        else
+        {
+            gridTexture.Resize(gridDimensions * cellSize, gridDimensions * cellSize, TextureFormat.RGB24, false);
+        }
         int randomIndex;
         if (tempList == null)
         {
@@ -57,18 +64,11 @@ public class TextureGeneratorUncanny : MonoBehaviour
             tempList.Clear();
             for (int x = 0; x < gridDimensions; x++)
             {
-                if (gridDimensions == 4)
+                do
                 {
-                    do
-                    {
-                        randomIndex = Random.Range(0, textures.Length);
-                    } while (usedNumbers.Contains(randomIndex) && usedNumbers.Distinct().Count() != 10);
-                    usedNumbers.Add(randomIndex);
-                }
-                else
-                {
-                    randomIndex = Random.Range(0, textures.Length);
-                }
+                    randomIndex = UnityEngine.Random.Range(0, textures.Length);
+                } while (usedNumbers.Contains(randomIndex) && usedNumbers.Distinct().Count() < 10);
+                usedNumbers.Add(randomIndex);
                 amountOfEachNumber[randomIndex] += 1;
                 tempList.Add(new UncannyMazeTile(x, y, randomIndex, gridDimensions));
                 texture = textures[randomIndex];
@@ -98,11 +98,28 @@ public class TextureGeneratorUncanny : MonoBehaviour
 
         // Create a RenderTexture to scale up the texture
         finalResolution = gridDimensions * cellSize; // Choose the desired final resolution
-        renderTexture = new RenderTexture(finalResolution, finalResolution, 24);
+        if (renderTexture == null)
+        {
+            renderTexture = new RenderTexture(finalResolution, finalResolution, 24);
+        }
+        else
+        {
+            renderTexture.Release();
+            renderTexture.width = finalResolution;
+            renderTexture.height = finalResolution;
+            renderTexture.depth = 24;
+        }
         Graphics.Blit(gridTexture, renderTexture);
 
         // Create a new Texture2D from the RenderTexture
-        finalTexture = new Texture2D(finalResolution, finalResolution, TextureFormat.RGB24, false);
+        if (finalTexture == null)
+        {
+            finalTexture = new Texture2D(finalResolution, finalResolution, TextureFormat.RGB24, false);
+        }
+        else
+        {
+            finalTexture.Resize(finalResolution, finalResolution, TextureFormat.RGB24, false);
+        }
         RenderTexture.active = renderTexture;
         finalTexture.filterMode = FilterMode.Trilinear;
         finalTexture.ReadPixels(new Rect(0, 0, finalResolution, finalResolution), 0, 0, false);
@@ -110,7 +127,10 @@ public class TextureGeneratorUncanny : MonoBehaviour
         RenderTexture.active = null;
 
         renderer = GetComponent<MeshRenderer>();
-        mat = new Material(Shader.Find("KT/Blend Unlit"));
+        if (mat == null)
+        {
+            mat = new Material(Shader.Find("KT/Blend Unlit"));
+        }
         mat.mainTexture = finalTexture;
         renderer.material = mat;
     }

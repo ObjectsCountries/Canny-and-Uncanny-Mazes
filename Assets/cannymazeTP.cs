@@ -80,32 +80,32 @@ public sealed class cannymazeTP:Twitch<_cannymaze> {
         Module.Log("Force solved by Twitch mod.");
         if(Module.tookTooLong){
             Module.numbersButton.OnInteract();
-            yield return Instruction.Pause;
+            yield return new WaitForSeconds(.01f);
             yield break;
         }
         if(Module.viewingWholeMaze){
 			Module.maze.OnInteract();
-            yield return Instruction.Pause;
+            yield return new WaitForSeconds(.01f);
         }
         Module.resetButton.OnInteract();
-        yield return Instruction.Pause;
+        yield return new WaitForSeconds(.01f);
         foreach(string dir in Module.correctPath){
             switch(dir){
                 case "up":
                     Module.arrowup.OnInteract();
-                    yield return Instruction.Pause;
+                    yield return new WaitForSeconds(.01f);
                     break;
                 case "down":
                     Module.arrowdown.OnInteract();
-                    yield return Instruction.Pause;
+                    yield return new WaitForSeconds(.01f);
                     break;
                 case "left":
                     Module.arrowleft.OnInteract();
-                    yield return Instruction.Pause;
+                    yield return new WaitForSeconds(.01f);
                     break;
                 case "right":
                     Module.arrowright.OnInteract();
-                    yield return Instruction.Pause;
+                    yield return new WaitForSeconds(.01f);
                     break;
             }
         }

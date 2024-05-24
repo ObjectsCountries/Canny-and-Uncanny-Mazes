@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using Wawa.Modules;
@@ -10,7 +9,6 @@ using Wawa.IO;
 
 public class UncannyMaze : ModdedModule
 {
-    private Process proc;
     private readonly string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public KMSelectable arrowleft, arrowright, arrowup, arrowdown, maze, numbersButton, resetButton, appendButton;
     public Texture2D[] blurred;
@@ -46,6 +44,7 @@ public class UncannyMaze : ModdedModule
     int movements, attempts, index, appendIndex;
     private string lastDirection;
     List<string> canGo = new List<string>();
+    internal List<string> correctPath = new List<string>();
 
     [Serializable]
     public sealed class UncannyMazeSettings
@@ -54,34 +53,10 @@ public class UncannyMaze : ModdedModule
         public bool uncannyPlayMusicOnSolve = true;
         public int uncannyBlurThreshold = 2;
     }
-    public static Dictionary<string, object>[] TweaksEditorSettings = new Dictionary<string, object>[]{
-        new Dictionary<string,object>{
-            {"Filename","cannyanduncannymazes-settings.json"},
-            {"Name","Canny and Uncanny Mazes"},
-            {"Listings",new List<Dictionary<string,object>>{
-                new Dictionary<string,object>{
-                    {"Key","uncannyAnimationSpeed"},
-                    {"Text","Uncanny Maze: Animation Speed"},
-                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
-                },
-                new Dictionary<string, object>{
-                    {"Key","uncannyPlayMusicOnSolve"},
-                    {"Text","Uncanny Maze: Play Music On Solve"},
-                    {"Description","If streaming, disable this to avoid copyright claims."}
-                },
-                new Dictionary<string,object>{
-                    {"Key","uncannyBlurThreshold"},
-                    {"Text","Uncanny Maze: Blur Threshold"},
-                    {"Description","Blur all images from this number onward. Numbers outside 0 to 9 will leave all images unblurred."}
-                }
-            }}
-        }
-    };
 
     void Awake()
     {
-        proc = Process.GetCurrentProcess();
-        umSettings = new Config<UncannyMazeSettings>();
+        umSettings = new Config<UncannyMazeSettings>("uncannymaze-settings.json");
         blur = umSettings.Read().uncannyBlurThreshold;
         if (blur >= 0 && blur <= 9)
         {
@@ -94,8 +69,32 @@ public class UncannyMaze : ModdedModule
         if (umSettings.Read().uncannyAnimationSpeed != 2)
             animSpeed = Mathf.Clamp(umSettings.Read().uncannyAnimationSpeed, 10, 60);
         music = umSettings.Read().uncannyPlayMusicOnSolve;
-        umSettings.Write("{\"animationSpeed\":" + animSpeed + ",\"playMusicOnSolve\":" + music.ToString().ToLowerInvariant() + ",\"blurThreshold\":" + blur + "}");
+        umSettings.Write("{\"uncannyAnimationSpeed\":" + animSpeed + ",\"uncannyPlayMusicOnSolve\":" + music.ToString().ToLowerInvariant() + ",\"uncannyBlurThreshold\":" + blur + "}");
     }
+
+    public static Dictionary<string, object>[] TweaksEditorSettings = new Dictionary<string, object>[]{
+        new Dictionary<string,object>{
+            {"Filename","uncannymaze-settings.json"},
+            {"Name","Uncanny Maze"},
+            {"Listings",new List<Dictionary<string,object>>{
+                new Dictionary<string,object>{
+                    {"Key","uncannyAnimationSpeed"},
+                    {"Text","Animation Speed"},
+                    {"Description","Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation."}
+                },
+                new Dictionary<string, object>{
+                    {"Key","uncannyPlayMusicOnSolve"},
+                    {"Text","Play Music On Solve"},
+                    {"Description","If streaming, disable this to avoid copyright claims."}
+                },
+                new Dictionary<string,object>{
+                    {"Key","uncannyBlurThreshold"},
+                    {"Text","Blur Threshold"},
+                    {"Description","Blur all images from this number onward.\nNumbers outside 0 to 9 will leave all images unblurred."}
+                }
+            }}
+        }
+    };
 
     void Start()
     {
@@ -156,7 +155,7 @@ public class UncannyMaze : ModdedModule
         numbersButton.Set(onInteract: () =>
         {
             if (tookTooLong)
-                Solve("Solved by pressing the Numbers button after generation took too long or there was a memory leak.");
+                Solve("Solved by pressing the Numbers button after generation took too long.");
             else if (mazeGenerated && viewingWholeMaze && !Status.IsSolved)
             {
                 if (!numbers.activeInHierarchy)
@@ -179,7 +178,7 @@ public class UncannyMaze : ModdedModule
         resetButton.Set(onInteract: () =>
         {
             if (tookTooLong)
-                Solve("Solved by pressing the Reset button after generation took too long or there was a memory leak.");
+                Solve("Solved by pressing the Reset button after generation took too long.");
             else if (mazeGenerated && !Status.IsSolved && !viewingWholeMaze)
             {
                 Log("Reset the maze.");
@@ -190,7 +189,7 @@ public class UncannyMaze : ModdedModule
         appendButton.Set(onInteract: () =>
         {
             if (tookTooLong)
-                Solve("Solved by pressing the Append button after generation took too long or there was a memory leak.");
+                Solve("Solved by pressing the Append button after generation took too long.");
             else if (mazeGenerated && !Status.IsSolved && !viewingWholeMaze)
             {
                 StartCoroutine(Moving("append", 2));
@@ -204,6 +203,10 @@ public class UncannyMaze : ModdedModule
     {
         totalMazeTotal = 0;
         centerMazeSum = 0;
+        leftSum = 0;
+        rightSum = 0;
+        aboveSum = 0;
+        belowSum = 0;
         t.changeTexture(t.whiteBG);
         output = "";
         dims = t.gridDimensions;
@@ -264,17 +267,19 @@ public class UncannyMaze : ModdedModule
         {
             t.Awake();
             mustAppend.Clear();
+            correctPath.Clear();
             StartCoroutine(Initialization());
             yield break;
         }
         catch (InvalidOperationException e)
         {
-            string[] exceptionLines = e.ToString().Split('\n');
             Log("Ran into an InvalidOperationException during setup. Regenerating… The following is the content of the exception:");
+            string[] exceptionLines = e.ToString().Split('\n');
             foreach (string line in exceptionLines)
                 Log(line);
             t.Awake();
             mustAppend.Clear();
+            correctPath.Clear();
             StartCoroutine(Initialization());
             yield break;
         }
@@ -299,17 +304,19 @@ public class UncannyMaze : ModdedModule
                    || (lastDirection == "up" && canGo[index] == "down")
                    || (lastDirection == "down" && canGo[index] == "up")));
                 lastDirection = canGo[index];
+                correctPath.Add(canGo.ElementAt(index));
                 try
                 {
                     yield return StartCoroutine(Moving(canGo[index], 2));
                 }
                 catch (IndexOutOfRangeException e)
                 {
-                    string[] exceptionLines = e.ToString().Split('\n');
                     Log("Ran into an IndexOutOfRangeException while generating a solvable maze. Regenerating… The following is the content of the exception:");
+                    string[] exceptionLines = e.ToString().Split('\n');
                     foreach (string line in exceptionLines)
                         Log(line);
                     mustAppend.Clear();
+                    correctPath.Clear();
                     t.Awake();
                     StartCoroutine(Initialization());
                     yield break;
@@ -334,6 +341,7 @@ public class UncannyMaze : ModdedModule
             }
             if (UncannyMazeTile.current == mustAppend[appendIndex])
             {
+                correctPath.Add("append");
                 if (appendIndex >= mustAppend.Count - 1)
                 {
                     attempts = 3;
@@ -346,13 +354,16 @@ public class UncannyMaze : ModdedModule
                     appendIndex += notiar;
                 }
             }
-        } while (UncannyMazeTile.current != mustAppend[appendIndex] && attempts < 3);
+        } while (appendIndex < mustAppend.Count && UncannyMazeTile.current != mustAppend[appendIndex] && attempts < 3);
         if (attempts >= 3 && canGo.Count != 0 && !failed)
         {
             logging = true;
             sequence.Clear();
             mustAppend.Clear();
             Setup();
+            correctPath = removeOpposites(correctPath);
+            correctPath = removeGoingInCircles(correctPath);
+            Log("A possible path is: " + string.Join(", ", correctPath.ToArray()));
             mazeGenerated = true;
             gm.SetActive(false);
             t.changeTexture(t.finalTexture);
@@ -364,8 +375,135 @@ public class UncannyMaze : ModdedModule
             failed = false;
             t.Awake();
             mustAppend.Clear();
+            correctPath.Clear();
             StartCoroutine(Initialization());
         }
+    }
+
+    ///<summary>Removes opposing directions from the path.</summary>
+    ///<param name="path">The path to edit.</param>
+    ///<returns>The path without any consecutive opposing directions.</returns>
+    private List<string> removeOpposites(List<string> path)
+    {
+        List<string> pathCopy = new List<string>(path);
+        bool stillHasOpposites;
+        do
+        {
+            stillHasOpposites = false;
+            for (int i = pathCopy.Count - 2; i >= 0; i--)
+            {
+                switch (pathCopy[i])
+                {
+                    case "left":
+                        if (pathCopy[i + 1] == "right")
+                        {
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasOpposites = true;
+                        }
+                        break;
+                    case "right":
+                        if (pathCopy[i + 1] == "left")
+                        {
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasOpposites = true;
+                        }
+                        break;
+                    case "up":
+                        if (pathCopy[i + 1] == "down")
+                        {
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasOpposites = true;
+                        }
+                        break;
+                    case "down":
+                        if (pathCopy[i + 1] == "up")
+                        {
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasOpposites = true;
+                        }
+                        break;
+                    case "append":
+                    default:
+                        break;
+                }
+            }
+        } while (stillHasOpposites);
+        return pathCopy;
+    }
+
+    ///<summary>Removes opposing directions from the path.</summary>
+    ///<param name="path">The path to edit.</param>
+    ///<returns>The path without any consecutive opposing directions.</returns>
+    private List<string> removeGoingInCircles(List<string> path)
+    {
+        List<string> pathCopy = new List<string>(path);
+        bool stillHasCircles;
+        do
+        {
+            stillHasCircles = false;
+            for (int i = pathCopy.Count - 4; i >= 0; i--)
+            {
+                switch (pathCopy[i])
+                {
+                    case "left":
+                        if (pathCopy[i + 2] == "right" &&
+                          ((pathCopy[i + 1] == "down" && pathCopy[i + 3] == "up")
+                        || (pathCopy[i + 1] == "up" && pathCopy[i + 3] == "down")))
+                        {
+                            pathCopy.RemoveAt(i + 3);
+                            pathCopy.RemoveAt(i + 2);
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasCircles = true;
+                        }
+                        break;
+                    case "right":
+                        if (pathCopy[i + 2] == "left" &&
+                          ((pathCopy[i + 1] == "down" && pathCopy[i + 3] == "up")
+                        || (pathCopy[i + 1] == "up" && pathCopy[i + 3] == "down")))
+                        {
+                            pathCopy.RemoveAt(i + 3);
+                            pathCopy.RemoveAt(i + 2);
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasCircles = true;
+                        }
+                        break;
+                    case "up":
+                        if (pathCopy[i + 2] == "down" &&
+                          ((pathCopy[i + 1] == "left" && pathCopy[i + 3] == "right")
+                        || (pathCopy[i + 1] == "right" && pathCopy[i + 3] == "left")))
+                        {
+                            pathCopy.RemoveAt(i + 3);
+                            pathCopy.RemoveAt(i + 2);
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasCircles = true;
+                        }
+                        break;
+                    case "down":
+                        if (pathCopy[i + 2] == "up" &&
+                          ((pathCopy[i + 1] == "left" && pathCopy[i + 3] == "right")
+                        || (pathCopy[i + 1] == "right" && pathCopy[i + 3] == "left")))
+                        {
+                            pathCopy.RemoveAt(i + 3);
+                            pathCopy.RemoveAt(i + 2);
+                            pathCopy.RemoveAt(i + 1);
+                            pathCopy.RemoveAt(i);
+                            stillHasCircles = true;
+                        }
+                        break;
+                    case "append":
+                    default:
+                        break;
+                }
+            }
+        } while (stillHasCircles);
+        return pathCopy;
     }
 
     private int numberOfTimesInARow(List<UncannyMazeTile> list, int index)
@@ -618,10 +756,6 @@ public class UncannyMaze : ModdedModule
         goalBox.transform.localPosition = new Vector3(m * xGoal - b, -.01f, -m * yGoal + b);
         if (logging)
             Log("Your sum of maze modulo 10 is: " + totalMazeTotal);
-        leftSum = 0;
-        rightSum = 0;
-        aboveSum = 0;
-        belowSum = 0;
         for (int i = 0; i < dims; i++)
         {
             leftSum += map[i, 0].uncannyValue;
@@ -636,6 +770,7 @@ public class UncannyMaze : ModdedModule
             Log("The sum of the top border is: " + aboveSum);
             Log("The sum of the bottom border is: " + belowSum);
         }
+        borderSums.Clear();
         borderSums.Add(leftSum);
         borderSums.Add(rightSum);
         borderSums.Add(aboveSum);
@@ -828,13 +963,18 @@ public class UncannyMaze : ModdedModule
             case "up":
                 if (currentPosition.y + .01f >= ((dims - 1f) / dims))
                     yield break;
+                else if (n == 2)
+                {
+                    currentPosition.y += 1f / dims;
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
+                }
                 else
                 {
                     currentlyMoving = true;
-                    currentPosition += new Vector2(0, 1f / (n * dims));//Difference between the integral of movement and the Riemann sum
+                    currentPosition.y += 1f / (n * dims);//Difference between the integral of movement and the Riemann sum
                     for (int i = n - 1; i > 0; i--)
                     {
-                        currentPosition -= new Vector2(0, f(i * 1f / n) * 1f / n);//Riemann sum
+                        currentPosition.y -= f(i * 1f / n) / n;//Riemann sum
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
                         yield return null;//necessary for the animation to play
                     }
@@ -844,13 +984,18 @@ public class UncannyMaze : ModdedModule
             case "down":
                 if (currentPosition.y <= .01f)
                     yield break;
+                else if (n == 2)
+                {
+                    currentPosition.y -= 1f / dims;
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
+                }
                 else
                 {
                     currentlyMoving = true;
-                    currentPosition -= new Vector2(0, 1f / (n * dims));
+                    currentPosition.y -= 1f / (n * dims);
                     for (int i = n - 1; i > 0; i--)
                     {
-                        currentPosition += new Vector2(0, f(i * 1f / n) * 1f / n);
+                        currentPosition.y += f(i * 1f / n) / n;
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
                         yield return null;
                     }
@@ -860,13 +1005,18 @@ public class UncannyMaze : ModdedModule
             case "left":
                 if (currentPosition.x <= .01f)
                     yield break;
+                else if (n == 2)
+                {
+                    currentPosition.x -= 1f / dims;
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
+                }
                 else
                 {
                     currentlyMoving = true;
-                    currentPosition -= new Vector2(1f / (n * dims), 0);
+                    currentPosition.x -= 1f / (n * dims);
                     for (int i = n - 1; i > 0; i--)
                     {
-                        currentPosition += new Vector2(f(i * 1f / n) * 1f / n, 0);
+                        currentPosition.x += f(i * 1f / n) / n;
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
                         yield return null;
                     }
@@ -876,13 +1026,18 @@ public class UncannyMaze : ModdedModule
             case "right":
                 if (currentPosition.x + .01f >= ((dims - 1f) / dims))
                     yield break;
+                else if (n == 2)
+                {
+                    currentPosition.x += 1f / dims;
+                    maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
+                }
                 else
                 {
                     currentlyMoving = true;
-                    currentPosition += new Vector2(1f / (n * dims), 0);
+                    currentPosition.x += 1f / (n * dims);
                     for (int i = n - 1; i > 0; i--)
                     {
-                        currentPosition -= new Vector2(f(i * 1f / n) * 1f / n, 0);
+                        currentPosition.x -= f(i * 1f / n) / n;
                         maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
                         yield return null;
                     }
@@ -893,6 +1048,7 @@ public class UncannyMaze : ModdedModule
                 maze.GetComponent<MeshRenderer>().material.mainTextureOffset = startingPosition;
                 break;
             case "append":
+            default:
                 break;
         }
         currentPosition = maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
@@ -915,7 +1071,6 @@ public class UncannyMaze : ModdedModule
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert((dims - yCoords - 1) * 2 * dims + (xCoords * 2) + 1, "</color>");
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert((dims - yCoords - 1) * 2 * dims + (xCoords * 2), "<color=\"blue\">");
         }
-
         if (logging)
             Log("---");//makes the log a bit easier to read
         if (direction == "reset")
@@ -945,14 +1100,14 @@ public class UncannyMaze : ModdedModule
                 Log("Pressed " + direction + ", going to " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ".");
         }
         coordsText.GetComponent<TextMesh>().text = "CURRENT: " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + "\nGOAL: " + UncannyMazeTile.goal.letterCoord + UncannyMazeTile.goal.numberCoord;
-        if (logging)
+        if (logging && direction != "append")
         {
             Log("Your current tile is: " + UncannyMazeTile.current);
         }
         if (xCoords != 0)
         {
             leftTile = map[dims - yCoords - 1, xCoords - 1];
-            if (logging)
+            if (logging && direction != "append")
                 Log("Your left tile is: " + leftTile);
         }
         else leftTile = null;
@@ -961,7 +1116,7 @@ public class UncannyMaze : ModdedModule
         if (xCoords != dims - 1)
         {
             rightTile = map[dims - yCoords - 1, xCoords + 1];
-            if (logging)
+            if (logging && direction != "append")
                 Log("Your right tile is: " + rightTile);
         }
         else rightTile = null;
@@ -970,7 +1125,7 @@ public class UncannyMaze : ModdedModule
         if (yCoords != dims - 1)
         {
             aboveTile = map[dims - yCoords - 2, xCoords];
-            if (logging)
+            if (logging && direction != "append")
                 Log("Your above tile is: " + aboveTile);
         }
         else aboveTile = null;
@@ -979,7 +1134,7 @@ public class UncannyMaze : ModdedModule
         if (yCoords != 0)
         {
             belowTile = map[dims - yCoords, xCoords];
-            if (logging)
+            if (logging && direction != "append")
                 Log("Your below tile is: " + belowTile);
         }
         else belowTile = null;
@@ -988,27 +1143,27 @@ public class UncannyMaze : ModdedModule
         switch (UncannyMazeTile.current.mazeType)
         {
             case UncannyMazeTile.mazeTypes.GOAL:
-                if (logging)
+                if (logging && direction != "append")
                     Log("Your maze is: Goal Maze");
                 possibleDirections = ClosestAndFurthestInValue(UncannyMazeTile.goal.uncannyValue, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.CENTER:
-                if (logging)
+                if (logging && direction != "append")
                     Log("Your maze is: Center Maze");
                 possibleDirections = ClosestAndFurthestInValue(centerMazeSum, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.TOTAL:
-                if (logging)
+                if (logging && direction != "append")
                     Log("Your maze is: Total Maze");
                 possibleDirections = ClosestAndFurthestInValue(totalMazeTotal, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.CROSS:
-                if (logging)
+                if (logging && direction != "append")
                     Log("Your maze is: Cross Maze");
                 possibleDirections = CrossMaze(UncannyMazeTile.current.y, UncannyMazeTile.current.x, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.BORDER:
-                if (logging)
+                if (logging && direction != "append")
                     Log("Your maze is: Border Maze");
                 possibleDirections = ClosestAndFurthestInValue(0, true, leftTile, rightTile, aboveTile, belowTile);
                 break;
@@ -1021,7 +1176,7 @@ public class UncannyMaze : ModdedModule
                 canGo.Add(directions.First(x => x.Value == tile).Key);
             }
         }
-        if (logging)
+        if (logging && direction != "append")
             Log("Possible directions are: " + string.Join(", ", canGo.ToArray()));
     }
 
@@ -1067,7 +1222,6 @@ public class UncannyMaze : ModdedModule
     private IEnumerator generatingMazeIdle()
     {
         generatingMazeIdleCurrentlyRunning = true;
-        long initialRam = proc.PrivateMemorySize64;
         gm.GetComponent<TextMesh>().fontSize = 45;
         string gen = "GENERATING\nMAZE.";
         int totaltime = 0;
@@ -1075,9 +1229,7 @@ public class UncannyMaze : ModdedModule
         {
             gm.GetComponent<TextMesh>().text = gen;
             yield return new WaitForSeconds(.75f);
-            gm.GetComponent<TextMesh>().text = gen + ".";
-            yield return new WaitForSeconds(.75f);
-            if (totaltime == 26 && !mazeGenerated)
+            if (totaltime == 53 && !mazeGenerated)
             {
                 gm.GetComponent<TextMesh>().fontSize = 27;
                 gm.GetComponent<TextMesh>().text = "SORRY THE MAZE\nTOOK SO LONG TO\nLOAD. PRESS ANY\nOF THE THREE WHITE\nBUTTONS TO\nSOLVE IMMEDIATELY.";
@@ -1085,14 +1237,8 @@ public class UncannyMaze : ModdedModule
                 music = false;
                 yield break;
             }
-            if (proc.PrivateMemorySize64 >= initialRam + 500000000L)
-            {
-                gm.GetComponent<TextMesh>().fontSize = 25;
-                gm.GetComponent<TextMesh>().text = "MEMORY LEAK DETECTED!\nPRESS ANY OF THE\nTHREE WHITE BUTTONS\nTO SOLVE IMMEDIATELY.";
-                tookTooLong = true;
-                music = false;
-                yield break;
-            }
+            gm.GetComponent<TextMesh>().text = gen + ".";
+            yield return new WaitForSeconds(.75f);
             gm.GetComponent<TextMesh>().text = gen + "..";
             yield return new WaitForSeconds(.75f);
             totaltime++;
