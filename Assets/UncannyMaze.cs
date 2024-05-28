@@ -13,17 +13,18 @@ public class UncannyMaze : ModdedModule
     public KMSelectable arrowleft, arrowright, arrowup, arrowdown, maze, numbersButton, resetButton, appendButton;
     public Texture2D[] unblurred;
     internal bool viewingWholeMaze = false;
+    private bool invalidMovement = false;
     internal int animSpeed = 30;
     private int leftSum, rightSum, aboveSum, belowSum;
     private List<UncannyMazeTile> possibleDirections;
-    List<int> borderSums = new List<int>();
+    private List<int> borderSums = new List<int>();
     private float m, b;
     internal bool mazeGenerated = false;
     internal bool currentlyMoving = false;
     internal bool tookTooLong = false;
     private bool generatingMazeIdleCurrentlyRunning = false;
     internal bool music = false;
-    private int blur = 2;
+    internal int blur = 0;
     private bool logging = false;
     private Vector2 currentPosition, startingPosition;
     private Dictionary<string, UncannyMazeTile> directions;
@@ -33,6 +34,7 @@ public class UncannyMaze : ModdedModule
     private int dims;
     private int totalMazeTotal;
     private int centerMazeSum;
+    private int crossMazeTotal = 0;
     private string output;
     private UncannyMazeTile[,] map;
     private List<UncannyMazeTile> mustAppend = new List<UncannyMazeTile>();
@@ -40,16 +42,16 @@ public class UncannyMaze : ModdedModule
     private Config<UncannyMazeSettings> umSettings;
     private string sequenceCharacters = "";
     public TextureGeneratorUncanny t;
-    bool failed = false;
-    int movements, attempts, index, appendIndex;
-    private string lastDirection;
-    List<string> canGo = new List<string>();
+    private bool failed = false;
+    private int movements, attempts, appendIndex;
+    private string chosenDirection;
+    private List<string> canGo = new List<string>();
     internal List<string> correctPath = new List<string>();
 
     [Serializable]
     public sealed class UncannyMazeSettings
     {
-        public int uncannyAnimationSpeed = 2;
+        public int uncannyAnimationSpeed = 30;
         public bool uncannyPlayMusicOnSolve = false;
         public int uncannyBlurThreshold = 2;
     }
@@ -58,7 +60,7 @@ public class UncannyMaze : ModdedModule
     {
         umSettings = new Config<UncannyMazeSettings>("uncannymaze-settings.json");
         blur = umSettings.Read().uncannyBlurThreshold;
-        if (blur >= 0 && blur <= 9)
+        if (blur > 0 && blur <= 9)
         {
             for (int i = 0; i < blur; i++)
             {
@@ -256,7 +258,7 @@ public class UncannyMaze : ModdedModule
         } while (map[(dims - yCoords - 1), xCoords] == map[(dims - yGoal - 1), xGoal]);
         movements = 0;
         attempts = 0;
-        index = 0;
+        chosenDirection = "";
         UncannyMazeTile.setStartAndGoal(map[(dims - yStart - 1), xStart], map[(dims - yGoal - 1), xGoal]);
         UncannyMazeTile.current = map[(dims - yCoords - 1), xCoords];
         try
@@ -285,7 +287,7 @@ public class UncannyMaze : ModdedModule
         }
         appendIndex = 0;
         sequence.Clear();
-        lastDirection = "";
+        chosenDirection = canGo.PickRandom();
         do
         {
             if (canGo.Count == 0)
@@ -294,20 +296,12 @@ public class UncannyMaze : ModdedModule
             }
             else
             {
-                do
-                {
-                    index = UnityEngine.Random.Range(0, canGo.Count);
-                }
-                while (canGo.Count > 1 &&
-                     ((lastDirection == "right" && canGo[index] == "left")
-                   || (lastDirection == "left" && canGo[index] == "right")
-                   || (lastDirection == "up" && canGo[index] == "down")
-                   || (lastDirection == "down" && canGo[index] == "up")));
-                lastDirection = canGo[index];
-                correctPath.Add(canGo.ElementAt(index));
+                if (!invalidMovement)
+                    correctPath.Add(chosenDirection);
                 try
                 {
-                    yield return StartCoroutine(Moving(canGo[index], 2));
+                    yield return StartCoroutine(Moving(chosenDirection, 2));
+                    chosenDirection = canGo.PickRandom();
                 }
                 catch (IndexOutOfRangeException e)
                 {
@@ -384,9 +378,6 @@ public class UncannyMaze : ModdedModule
         }
     }
 
-    ///<summary>Removes opposing directions from the path.</summary>
-    ///<param name="path">The path to edit.</param>
-    ///<returns>The path without any consecutive opposing directions.</returns>
     private List<string> removeOpposites(List<string> path)
     {
         List<string> pathCopy = new List<string>(path);
@@ -439,9 +430,6 @@ public class UncannyMaze : ModdedModule
         return pathCopy;
     }
 
-    ///<summary>Removes opposing directions from the path.</summary>
-    ///<param name="path">The path to edit.</param>
-    ///<returns>The path without any consecutive opposing directions.</returns>
     private List<string> removeGoingInCircles(List<string> path)
     {
         List<string> pathCopy = new List<string>(path);
@@ -731,9 +719,8 @@ public class UncannyMaze : ModdedModule
         if (logging)
         {
             Log("Your starting tile is: " + UncannyMazeTile.start);
-            Log("Your current tile is: " + UncannyMazeTile.current);
             Log("Your goal tile is: " + UncannyMazeTile.goal);
-            Log("Your must append is: " + string.Join(", ", mustAppend.Select(u => "" + u.letterCoord + u.numberCoord).ToArray()));
+            Log("You must append: " + string.Join(", ", mustAppend.Select(u => "" + u.letterCoord + u.numberCoord).ToArray()));
         }
         switch (dims)
         {
@@ -951,6 +938,7 @@ public class UncannyMaze : ModdedModule
 
     private IEnumerator Moving(string direction, int n)
     {
+        invalidMovement = false;
         if (viewingWholeMaze || (currentlyMoving && logging)
         || (xCoords == 0 && direction == "left")
         || (xCoords == dims - 1 && direction == "right")
@@ -959,14 +947,19 @@ public class UncannyMaze : ModdedModule
             yield break;
         if (direction != "reset" && direction != "append" && !canGo.Contains(direction) && logging)
         {
-            Strike("Tried to move " + direction + ", not allowed.");
+            if (logging)
+                Strike("Tried to move " + direction + ", not allowed.");
+            invalidMovement = true;
             yield break;
         }
         switch (direction)
         {
             case "up":
                 if (currentPosition.y + .01f >= ((dims - 1f) / dims))
+                {
+                    invalidMovement = true;
                     yield break;
+                }
                 else
                 {
                     currentlyMoving = true;
@@ -982,7 +975,10 @@ public class UncannyMaze : ModdedModule
                 break;
             case "down":
                 if (currentPosition.y <= .01f)
+                {
+                    invalidMovement = true;
                     yield break;
+                }
                 else
                 {
                     currentlyMoving = true;
@@ -998,7 +994,10 @@ public class UncannyMaze : ModdedModule
                 break;
             case "left":
                 if (currentPosition.x <= .01f)
+                {
+                    invalidMovement = true;
                     yield break;
+                }
                 else
                 {
                     currentlyMoving = true;
@@ -1014,7 +1013,10 @@ public class UncannyMaze : ModdedModule
                 break;
             case "right":
                 if (currentPosition.x + .01f >= ((dims - 1f) / dims))
+                {
+                    invalidMovement = true;
                     yield break;
+                }
                 else
                 {
                     currentlyMoving = true;
@@ -1081,13 +1083,9 @@ public class UncannyMaze : ModdedModule
         else
         {
             if (logging)
-                Log("Pressed " + direction + ", going to " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ".");
+                Log("Pressed " + direction + ", going to " + UncannyMazeTile.current.ToString() + ".");
         }
         coordsText.GetComponent<TextMesh>().text = "CURRENT: " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + "\nGOAL: " + UncannyMazeTile.goal.letterCoord + UncannyMazeTile.goal.numberCoord;
-        if (logging && direction != "append")
-        {
-            Log("Your current tile is: " + UncannyMazeTile.current);
-        }
         if (xCoords != 0)
         {
             leftTile = map[dims - yCoords - 1, xCoords - 1];
@@ -1120,23 +1118,23 @@ public class UncannyMaze : ModdedModule
         {
             case UncannyMazeTile.mazeTypes.GOAL:
                 if (logging && direction != "append")
-                    Log("Your maze is: Goal Maze");
+                    Log("Your maze is: Goal Maze (goal is " + UncannyMazeTile.goal.uncannyValue + ")");
                 possibleDirections = ClosestAndFurthestInValue(UncannyMazeTile.goal.uncannyValue, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.CENTER:
                 if (logging && direction != "append")
-                    Log("Your maze is: Center Maze");
+                    Log("Your maze is: Center Maze (center sum is " + centerMazeSum + ")");
                 possibleDirections = ClosestAndFurthestInValue(centerMazeSum, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.TOTAL:
                 if (logging && direction != "append")
-                    Log("Your maze is: Total Maze");
+                    Log("Your maze is: Total Maze (total is " + totalMazeTotal + ")");
                 possibleDirections = ClosestAndFurthestInValue(totalMazeTotal, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.CROSS:
-                if (logging && direction != "append")
-                    Log("Your maze is: Cross Maze");
                 possibleDirections = CrossMaze(UncannyMazeTile.current.y, UncannyMazeTile.current.x, leftTile, rightTile, aboveTile, belowTile);
+                if (logging && direction != "append")
+                    Log("Your maze is: Cross Maze (result is " + crossMazeTotal + ")");
                 break;
             case UncannyMazeTile.mazeTypes.BORDER:
                 if (logging && direction != "append")
@@ -1145,13 +1143,8 @@ public class UncannyMaze : ModdedModule
                 break;
         }
         canGo.Clear();
-        foreach (UncannyMazeTile tile in possibleDirections)
-        {
-            if (tile != null && directions.ContainsValue(tile))
-            {
-                canGo.Add(directions.First(x => x.Value == tile).Key);
-            }
-        }
+        canGo.AddRange(directions.Where(x => possibleDirections.Contains(x.Value)).Select(x => x.Key));
+        canGo = canGo.Distinct().ToList();
         if (logging && direction != "append")
             Log("Possible directions are: " + string.Join(", ", canGo.ToArray()));
     }
@@ -1191,8 +1184,8 @@ public class UncannyMaze : ModdedModule
     {
         int columnSum = (from UncannyMazeTile u in map where u.y == column select u.uncannyValue).Sum();
         int rowSum = (from UncannyMazeTile u in map where u.x == row select u.uncannyValue).Sum();
-        int total = (columnSum * rowSum) % 10;
-        return ClosestAndFurthestInValue(total, false, adjacent);
+        int crossMazeTotal = (columnSum * rowSum) % 10;
+        return ClosestAndFurthestInValue(crossMazeTotal, false, adjacent);
     }
 
     private IEnumerator generatingMazeIdle()

@@ -8,6 +8,11 @@ using Wawa.TwitchPlays.Domains;
 
 public class UncannyMazeTP : Twitch<UncannyMaze>
 {
+    void Awake()
+    {
+        if (IsTP)
+            Module.blur = 0;
+    }
     void Start()
     {
         Module.GetComponent<KMBombModule>().Add(onActivate: () =>
