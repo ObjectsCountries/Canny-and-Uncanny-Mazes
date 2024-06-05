@@ -51,7 +51,7 @@ public class UncannyMaze : ModdedModule
     [Serializable]
     public sealed class UncannyMazeSettings
     {
-        public int uncannyAnimationSpeed = 30;
+        public int uncannyAnimationSpeed = 2;
         public bool uncannyPlayMusicOnSolve = false;
         public int uncannyBlurThreshold = 2;
     }
@@ -287,7 +287,6 @@ public class UncannyMaze : ModdedModule
         }
         appendIndex = 0;
         sequence.Clear();
-        chosenDirection = canGo.PickRandom();
         do
         {
             if (canGo.Count == 0)
@@ -296,12 +295,14 @@ public class UncannyMaze : ModdedModule
             }
             else
             {
-                if (!invalidMovement)
-                    correctPath.Add(chosenDirection);
                 try
                 {
-                    yield return StartCoroutine(Moving(chosenDirection, 2));
-                    chosenDirection = canGo.PickRandom();
+                    do
+                    {
+                        chosenDirection = canGo.PickRandom();
+                        yield return StartCoroutine(Moving(chosenDirection, 2));
+                    } while (invalidMovement);
+                    correctPath.Add(chosenDirection);
                 }
                 catch (IndexOutOfRangeException e)
                 {
@@ -944,8 +945,11 @@ public class UncannyMaze : ModdedModule
         || (xCoords == dims - 1 && direction == "right")
         || (yCoords == dims - 1 && direction == "up")
         || (yCoords == 0 && direction == "down"))
+        {
+            invalidMovement = true;
             yield break;
-        if (direction != "reset" && direction != "append" && !canGo.Contains(direction) && logging)
+        }
+        if (direction != "reset" && direction != "append" && !canGo.Contains(direction))
         {
             if (logging)
                 Strike("Tried to move " + direction + ", not allowed.");
@@ -1143,7 +1147,7 @@ public class UncannyMaze : ModdedModule
                 break;
         }
         canGo.Clear();
-        canGo.AddRange(directions.Where(x => possibleDirections.Contains(x.Value)).Select(x => x.Key));
+        canGo.AddRange(directions.Where(x => x.Value != null && possibleDirections.Contains(x.Value)).Select(x => x.Key));
         canGo = canGo.Distinct().ToList();
         if (logging && direction != "append")
             Log("Possible directions are: " + string.Join(", ", canGo.ToArray()));
