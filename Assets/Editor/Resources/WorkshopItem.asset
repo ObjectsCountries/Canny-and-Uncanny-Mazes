@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: WorkshopItem
   m_EditorClassIdentifier: 
   WorkshopPublishedFileID: 3030625248
-  Title: Canny Maze
+  Title: Canny and Uncanny Mazes
   Tags:
   - Regular Module

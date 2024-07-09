@@ -22,7 +22,7 @@ public class UncannyMazeTP : Twitch<UncannyMaze>
         }, onPass: () =>
         {
             if (!IsTP && Module.music)
-                Module.Play(new Sound("uncanny" + UncannyMazeTile.current.uncannyValue));
+                Module.Play(new Sound("uncanny" + Module.current.uncannyValue));
         }
         );
     }

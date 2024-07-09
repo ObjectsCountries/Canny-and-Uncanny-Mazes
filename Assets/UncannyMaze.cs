@@ -47,11 +47,14 @@ public class UncannyMaze : ModdedModule
     private string chosenDirection;
     private List<string> canGo = new List<string>();
     internal List<string> correctPath = new List<string>();
+    private UncannyMazeTile start, goal;
+    internal UncannyMazeTile current;
+    private char[][] chosenMazeFor5x5;
 
     [Serializable]
     public sealed class UncannyMazeSettings
     {
-        public int uncannyAnimationSpeed = 2;
+        public int uncannyAnimationSpeed = 30;
         public bool uncannyPlayMusicOnSolve = false;
         public int uncannyBlurThreshold = 2;
     }
@@ -259,8 +262,9 @@ public class UncannyMaze : ModdedModule
         movements = 0;
         attempts = 0;
         chosenDirection = "";
-        UncannyMazeTile.setStartAndGoal(map[(dims - yStart - 1), xStart], map[(dims - yGoal - 1), xGoal]);
-        UncannyMazeTile.current = map[(dims - yCoords - 1), xCoords];
+        start = map[(dims - yStart - 1), xStart];
+        goal = map[(dims - yGoal - 1), xGoal];
+        current = map[(dims - yCoords - 1), xCoords];
         try
         {
             Setup();
@@ -320,7 +324,7 @@ public class UncannyMaze : ModdedModule
                 movements++;
                 if (movements >= 100)
                 {
-                    yield return StartCoroutine(Moving("reset", 2));
+                    // yield return StartCoroutine(Moving("reset", 2));
                     movements = 0;
                     attempts++;
                     if (attempts < 3)
@@ -334,7 +338,7 @@ public class UncannyMaze : ModdedModule
                     }
                 }
             }
-            if (UncannyMazeTile.current == mustAppend[appendIndex])
+            if (current == mustAppend[appendIndex])
             {
                 if (appendIndex >= mustAppend.Count - 1)
                 {
@@ -353,7 +357,7 @@ public class UncannyMaze : ModdedModule
                     appendIndex += notiar;
                 }
             }
-        } while (appendIndex < mustAppend.Count && UncannyMazeTile.current != mustAppend[appendIndex] && attempts < 3);
+        } while (appendIndex < mustAppend.Count && current != mustAppend[appendIndex] && attempts < 3);
         if (attempts >= 3 && canGo.Count != 0 && !failed)
         {
             logging = true;
@@ -518,9 +522,10 @@ public class UncannyMaze : ModdedModule
 
     private void Setup()
     {
-        UncannyMazeTile.setStartAndGoal(map[(dims - yStart - 1), xStart], map[(dims - yGoal - 1), xGoal]);
-        UncannyMazeTile.current = map[(dims - yCoords - 1), xCoords];
-        UncannyMazeTile.chosenMazeFor5x5 = UncannyMazeTile.submit5x5Mazes[UncannyMazeTile.start.uncannyValue];
+        start = map[(dims - yStart - 1), xStart];
+        goal = map[(dims - yGoal - 1), xGoal];
+        current = map[(dims - yCoords - 1), xCoords];
+        chosenMazeFor5x5 = UncannyMazeTile.submit5x5Mazes[start.uncannyValue];
         currentBox.transform.localScale = new Vector3(7f / dims, 1, 7f / dims);
         if (logging)
         {
@@ -556,7 +561,7 @@ public class UncannyMaze : ModdedModule
                             {
                                 manhattanDistances.Add(-1);
                             }
-                            manhattanDistances.Add(Math.Abs(tile.x - UncannyMazeTile.start.x) + Math.Abs(tile.y - UncannyMazeTile.start.y));
+                            manhattanDistances.Add(Math.Abs(tile.x - start.x) + Math.Abs(tile.y - start.y));
                         }
                     }
                     else
@@ -583,7 +588,7 @@ public class UncannyMaze : ModdedModule
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    map[i, j].submit5x5Character = UncannyMazeTile.chosenMazeFor5x5[i][j];
+                    map[i, j].submit5x5Character = chosenMazeFor5x5[i][j];
                 }
             }
             int currentIndex = 0;
@@ -598,7 +603,7 @@ public class UncannyMaze : ModdedModule
                 }
             }
             string outputPlayfair = "";
-            char[][] playfairMaze = UncannyMazeTile.chosenMazeFor5x5;
+            char[][] playfairMaze = chosenMazeFor5x5;
             string outputPlayfairSubmit = "";
             for (int r = 0; r < dims; r++)
             {
@@ -636,8 +641,8 @@ public class UncannyMaze : ModdedModule
             sequenceCharacters = "";
             for (int i = 0; i < 8; i += 2)
             {
-                UncannyMazeTile firstTile = (from UncannyMazeTile u in map where u.character == UncannyMazeTile.goal.playfairWord[i] select u).ToArray()[0];
-                UncannyMazeTile secondTile = (from UncannyMazeTile u in map where u.character == UncannyMazeTile.goal.playfairWord[i + 1] select u).ToArray()[0];
+                UncannyMazeTile firstTile = (from UncannyMazeTile u in map where u.character == goal.playfairWord[i] select u).ToArray()[0];
+                UncannyMazeTile secondTile = (from UncannyMazeTile u in map where u.character == goal.playfairWord[i + 1] select u).ToArray()[0];
                 if (firstTile.x == secondTile.x)
                 {
                     sequenceCharacters += map[(1 + firstTile.y) % 5, firstTile.x].character;
@@ -716,11 +721,11 @@ public class UncannyMaze : ModdedModule
                 mustAppend.Add((from UncannyMazeTile u in map where u.character == character select u).ToArray()[0]);
             }
         }
-        mustAppend.Add(UncannyMazeTile.goal);
+        mustAppend.Add(goal);
         if (logging)
         {
-            Log("Your starting tile is: " + UncannyMazeTile.start);
-            Log("Your goal tile is: " + UncannyMazeTile.goal);
+            Log("Your starting tile is: " + start);
+            Log("Your goal tile is: " + goal);
             Log("You must append: " + string.Join(", ", mustAppend.Select(u => "" + u.letterCoord + u.numberCoord).ToArray()));
         }
         switch (dims)
@@ -785,15 +790,15 @@ public class UncannyMaze : ModdedModule
         if (dims != 4)
             return null;
         string startingQuadrant, goalQuadrant;
-        if (UncannyMazeTile.start == map[0, 0] || UncannyMazeTile.start == map[0, 1] || UncannyMazeTile.start == map[1, 0] || UncannyMazeTile.start == map[1, 1])
+        if (start == map[0, 0] || start == map[0, 1] || start == map[1, 0] || start == map[1, 1])
         {
             startingQuadrant = "1";
         }
-        else if (UncannyMazeTile.start == map[0, 2] || UncannyMazeTile.start == map[0, 3] || UncannyMazeTile.start == map[1, 2] || UncannyMazeTile.start == map[1, 3])
+        else if (start == map[0, 2] || start == map[0, 3] || start == map[1, 2] || start == map[1, 3])
         {
             startingQuadrant = "2";
         }
-        else if (UncannyMazeTile.start == map[2, 0] || UncannyMazeTile.start == map[2, 1] || UncannyMazeTile.start == map[3, 0] || UncannyMazeTile.start == map[3, 1])
+        else if (start == map[2, 0] || start == map[2, 1] || start == map[3, 0] || start == map[3, 1])
         {
             startingQuadrant = "3";
         }
@@ -801,15 +806,15 @@ public class UncannyMaze : ModdedModule
         {
             startingQuadrant = "4";
         }
-        if (UncannyMazeTile.goal == map[0, 0] || UncannyMazeTile.goal == map[0, 1] || UncannyMazeTile.goal == map[1, 0] || UncannyMazeTile.goal == map[1, 1])
+        if (goal == map[0, 0] || goal == map[0, 1] || goal == map[1, 0] || goal == map[1, 1])
         {
             goalQuadrant = "1";
         }
-        else if (UncannyMazeTile.goal == map[0, 2] || UncannyMazeTile.start == map[0, 3] || UncannyMazeTile.start == map[1, 2] || UncannyMazeTile.start == map[1, 3])
+        else if (goal == map[0, 2] || start == map[0, 3] || start == map[1, 2] || start == map[1, 3])
         {
             goalQuadrant = "2";
         }
-        else if (UncannyMazeTile.goal == map[2, 0] || UncannyMazeTile.goal == map[2, 1] || UncannyMazeTile.goal == map[3, 0] || UncannyMazeTile.goal == map[3, 1])
+        else if (goal == map[2, 0] || goal == map[2, 1] || goal == map[3, 0] || goal == map[3, 1])
         {
             goalQuadrant = "3";
         }
@@ -1044,7 +1049,7 @@ public class UncannyMaze : ModdedModule
         currentPosition = maze.GetComponent<MeshRenderer>().material.mainTextureOffset;
         xCoords = (int)(currentPosition.x * dims + .01f);
         yCoords = (int)(currentPosition.y * dims + .01f);
-        UncannyMazeTile.current = map[(dims - yCoords - 1), xCoords];
+        current = map[(dims - yCoords - 1), xCoords];
         currentBox.transform.localPosition = new Vector3(m * xCoords - b, -.01f, -m * yCoords + b);
         numbers.GetComponent<TextMesh>().text = output;
         if ((dims - yCoords - 1) * 2 * dims + (xCoords * 2) + 1 > (dims - yGoal - 1) * 2 * dims + (xGoal * 2) + 1)
@@ -1069,16 +1074,16 @@ public class UncannyMaze : ModdedModule
         }
         else if (direction == "append")
         {
-            if (UncannyMazeTile.current == mustAppend[sequence.Count])
+            if (current == mustAppend[sequence.Count])
             {
-                Log("Appended " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ".");
-                sequence.Add(UncannyMazeTile.current);
+                Log("Appended " + current.letterCoord + current.numberCoord + ".");
+                sequence.Add(current);
             }
             else
             {
-                Strike("Tried to append " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + ", was supposed to append " + mustAppend[sequence.Count].letterCoord + mustAppend[sequence.Count].numberCoord + ".");
+                Strike("Tried to append " + current.letterCoord + current.numberCoord + ", was supposed to append " + mustAppend[sequence.Count].letterCoord + mustAppend[sequence.Count].numberCoord + ".");
             }
-            if (UncannyMazeTile.current == UncannyMazeTile.goal && sequence.SequenceEqual(mustAppend) && logging)
+            if (current == goal && sequence.SequenceEqual(mustAppend) && logging)
             {
                 Solve("Your module is: solved module");
                 yield break;
@@ -1087,9 +1092,9 @@ public class UncannyMaze : ModdedModule
         else
         {
             if (logging)
-                Log("Pressed " + direction + ", going to " + UncannyMazeTile.current.ToString() + ".");
+                Log("Pressed " + direction + ", going to " + current.ToString() + ".");
         }
-        coordsText.GetComponent<TextMesh>().text = "CURRENT: " + UncannyMazeTile.current.letterCoord + UncannyMazeTile.current.numberCoord + "\nGOAL: " + UncannyMazeTile.goal.letterCoord + UncannyMazeTile.goal.numberCoord;
+        coordsText.GetComponent<TextMesh>().text = "CURRENT: " + current.letterCoord + current.numberCoord + "\nGOAL: " + goal.letterCoord + goal.numberCoord;
         if (xCoords != 0)
         {
             leftTile = map[dims - yCoords - 1, xCoords - 1];
@@ -1118,12 +1123,12 @@ public class UncannyMaze : ModdedModule
         else belowTile = null;
         directions["down"] = belowTile;
 
-        switch (UncannyMazeTile.current.mazeType)
+        switch (current.mazeType)
         {
             case UncannyMazeTile.mazeTypes.GOAL:
                 if (logging && direction != "append")
-                    Log("Your maze is: Goal Maze (goal is " + UncannyMazeTile.goal.uncannyValue + ")");
-                possibleDirections = ClosestAndFurthestInValue(UncannyMazeTile.goal.uncannyValue, false, leftTile, rightTile, aboveTile, belowTile);
+                    Log("Your maze is: Goal Maze (goal is " + goal.uncannyValue + ")");
+                possibleDirections = ClosestAndFurthestInValue(goal.uncannyValue, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.CENTER:
                 if (logging && direction != "append")
@@ -1136,7 +1141,7 @@ public class UncannyMaze : ModdedModule
                 possibleDirections = ClosestAndFurthestInValue(totalMazeTotal, false, leftTile, rightTile, aboveTile, belowTile);
                 break;
             case UncannyMazeTile.mazeTypes.CROSS:
-                possibleDirections = CrossMaze(UncannyMazeTile.current.y, UncannyMazeTile.current.x, leftTile, rightTile, aboveTile, belowTile);
+                possibleDirections = CrossMaze(current.y, current.x, leftTile, rightTile, aboveTile, belowTile);
                 if (logging && direction != "append")
                     Log("Your maze is: Cross Maze (result is " + crossMazeTotal + ")");
                 break;

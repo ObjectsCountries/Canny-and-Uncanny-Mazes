@@ -96,7 +96,7 @@ public class UncannyMazeTile
         BORDER
     }
 
-    public static char[][] chosenMazeFor5x5 = new char[][]{
+    public char[][] chosenMazeFor5x5 = new char[][]{
         new char[]{'A', 'B', 'C', 'D', 'E'},
         new char[]{'F', 'G', 'H', 'I', 'J'},
         new char[]{'K', 'L', 'M', 'N', 'O'},
@@ -118,13 +118,6 @@ public class UncannyMazeTile
     };
 
     public string playfairWord { get; private set; }
-
-    ///<value>The starting tile.</value>
-    public static UncannyMazeTile start { get; private set; }
-    ///<value>The current tile.</value>
-    public static UncannyMazeTile current { get; set; }
-    ///<value>The goal tile.</value>
-    public static UncannyMazeTile goal { get; private set; }
     ///<value>The maze type associated with this tile.</value>
     public mazeTypes mazeType { get; }
     ///<value>The value of this tile, from 0 to 9.</value>
@@ -177,12 +170,6 @@ public class UncannyMazeTile
     public override string ToString()
     {
         return "" + letterCoord + numberCoord + ": " + uncannyValue;
-    }
-
-    public static void setStartAndGoal(UncannyMazeTile startPosition, UncannyMazeTile goalPosition)
-    {
-        start = startPosition;
-        goal = goalPosition;
     }
     public static bool operator ==(UncannyMazeTile first, UncannyMazeTile second)
     {
