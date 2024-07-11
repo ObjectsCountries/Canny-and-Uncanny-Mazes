@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 ///<summary>Tiles for Uncanny Maze.</summary>
 public class UncannyMazeTile
@@ -87,7 +89,7 @@ public class UncannyMazeTile
         }
     };
     ///<value>The different types of mazes.</value>
-    public enum mazeTypes
+    public enum MazeTypes
     {
         GOAL,
         CENTER,
@@ -117,23 +119,24 @@ public class UncannyMazeTile
         "TROLFACE"
     };
 
-    public string playfairWord { get; private set; }
+    public string[] ValidDirections { get; set; }
+    public string PlayfairWord { get; private set; }
     ///<value>The maze type associated with this tile.</value>
-    public mazeTypes mazeType { get; }
+    public MazeTypes MazeType { get; private set; }
     ///<value>The value of this tile, from 0 to 9.</value>
-    public int uncannyValue { get; }
+    public int UncannyValue { get; private set; }
     ///<value>The x-coordinate of this tile in the maze.</value>
-    public int x { get; }
+    public int Xcoordinate { get; private set; }
     ///<value>The y-coordinate of this tile in the maze.</value>
-    public int y { get; }
+    public int Ycoordinate { get; private set; }
     ///<value>The x-coordinate of this tile in the maze as a letter.</value>
-    public char letterCoord { get; }
+    public char LetterCoord { get; private set; }
     ///<value>The y-coordinate of this tile in the maze, plus 1 to match with letter-number coordinates.</value>
-    public char numberCoord { get; }
+    public char NumberCoord { get; private set; }
     ///<value>The character associated with this tile for the 5×5 and 6×6 mazes.</value>
-    public char? character { get; set; }
+    public char? Character { get; set; }
     ///<value>The character associated with this tile for the 5×5 maze submission process.</value>
-    public char? submit5x5Character { get; set; }
+    public char? Submit5x5Character { get; set; }
 
     ///<summary>Creates a new tile.</summary>
     ///<param name="xCoord">The x-coordinate.</param>
@@ -152,47 +155,73 @@ public class UncannyMazeTile
         {
             throw new ArgumentOutOfRangeException("y-coordinate should be from 0 to " + (dimensions - 1) + ".");
         }
-        x = xCoord;
-        y = yCoord;
-        letterCoord = coordLetters[xCoord];
-        numberCoord = (char)(yCoord + 49);
+        Xcoordinate = xCoord;
+        Ycoordinate = yCoord;
+        LetterCoord = coordLetters[xCoord];
+        NumberCoord = (char)(yCoord + 49);
         if (value < 0 || value > 9)
         {
             throw new ArgumentOutOfRangeException("Tile should be from 0 to 9.");
         }
-        uncannyValue = value;
-        playfairWord = playfairWords[value];
-        mazeType = (mazeTypes)((int)(value / 2));
-        character = null;
-        submit5x5Character = null;
+        UncannyValue = value;
+        PlayfairWord = playfairWords[value];
+        MazeType = (MazeTypes)(value / 2);
+        Character = null;
+        Submit5x5Character = null;
+        ValidDirections = new string[] { };
     }
 
     public override string ToString()
     {
-        return "" + letterCoord + numberCoord + ": " + uncannyValue;
+        return "" + LetterCoord + NumberCoord + ": " + UncannyValue;
     }
+
+    public override bool Equals(object obj)
+    {
+        UncannyMazeTile tile = obj as UncannyMazeTile;
+        return !ReferenceEquals(tile, null) &&
+               EqualityComparer<char[][]>.Default.Equals(chosenMazeFor5x5, tile.chosenMazeFor5x5) &&
+               PlayfairWord == tile.PlayfairWord &&
+               MazeType == tile.MazeType &&
+               UncannyValue == tile.UncannyValue &&
+               Xcoordinate == tile.Xcoordinate &&
+               Ycoordinate == tile.Ycoordinate &&
+               LetterCoord == tile.LetterCoord &&
+               NumberCoord == tile.NumberCoord &&
+               Character == tile.Character &&
+               Submit5x5Character == tile.Submit5x5Character &&
+               ValidDirections.SequenceEqual(tile.ValidDirections);
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = -1359825686;
+        hashCode = (hashCode * -1521134295) + EqualityComparer<char[][]>.Default.GetHashCode(chosenMazeFor5x5);
+        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(PlayfairWord);
+        hashCode = (hashCode * -1521134295) + MazeType.GetHashCode();
+        hashCode = (hashCode * -1521134295) + UncannyValue.GetHashCode();
+        hashCode = (hashCode * -1521134295) + Xcoordinate.GetHashCode();
+        hashCode = (hashCode * -1521134295) + Ycoordinate.GetHashCode();
+        hashCode = (hashCode * -1521134295) + LetterCoord.GetHashCode();
+        hashCode = (hashCode * -1521134295) + NumberCoord.GetHashCode();
+        hashCode = (hashCode * -1521134295) + Character.GetHashCode();
+        hashCode = (hashCode * -1521134295) + Submit5x5Character.GetHashCode();
+        hashCode = (hashCode * -1521134295) + ValidDirections.GetHashCode();
+        return hashCode;
+    }
+
+    // i just let my LSP simplify these conditional statements to make it not bug me about them
+    // basically, if either is null, they're not equal
+    // if neither is null, compare their x and y coords
+    // same x and y coords? same tile
     public static bool operator ==(UncannyMazeTile first, UncannyMazeTile second)
     {
-        if (Object.ReferenceEquals(first, null) && Object.ReferenceEquals(second, null))
-        {
-            return true;
-        }
-        if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
-        {
-            return false;
-        }
-        return first.x == second.x && first.y == second.y;
+        return (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+|| (!ReferenceEquals(first, null) && !ReferenceEquals(second, null) && first.Xcoordinate == second.Xcoordinate && first.Ycoordinate == second.Ycoordinate);
     }
     public static bool operator !=(UncannyMazeTile first, UncannyMazeTile second)
     {
-        if (Object.ReferenceEquals(first, null) && Object.ReferenceEquals(second, null))
-        {
-            return false;
-        }
-        if (Object.ReferenceEquals(first, null) || Object.ReferenceEquals(second, null))
-        {
-            return true;
-        }
-        return first.x != second.x || first.y != second.y;
+        return (!ReferenceEquals(first, null) || !ReferenceEquals(second, null))
+&& (ReferenceEquals(first, null) || ReferenceEquals(second, null) || first.Xcoordinate != second.Xcoordinate || first.Ycoordinate != second.Ycoordinate);
     }
 }
