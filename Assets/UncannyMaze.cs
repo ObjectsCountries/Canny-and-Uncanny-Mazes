@@ -45,6 +45,7 @@ public class UncannyMaze : ModdedModule
     private UncannyMazeTile start, goal;
     internal UncannyMazeTile current;
     private char[][] chosenMazeFor5x5;
+    private string outputPlayfair, outputPlayfairSubmit, outputBase36;
 
     [Serializable]
     public sealed class UncannyMazeSettings
@@ -389,8 +390,169 @@ public class UncannyMaze : ModdedModule
         {
             logging = true;
             sequence.Clear();
-            mustAppend.Clear();
-            Setup();
+            current = map[dims - yStart - 1, xStart];
+            chosenMazeFor5x5 = UncannyMazeTile.submit5x5Mazes[start.UncannyValue];
+            currentBox.transform.localScale = new Vector3(7f / dims, 1, 7f / dims);
+            string filler = "\n       \n";
+            if (dims == 5)
+            {
+                filler = "\n         \n";
+            }
+            else if (dims == 6)
+            {
+                filler = "\n           \n";
+            }
+            output = "";
+            outputFiller = "";
+            for (int r = 0; r < dims; r++)
+            {
+                for (int c = 0; c < dims; c++)
+                {
+                    output += "" + map[r, c].UncannyValue;
+                    outputFiller += "" + map[r, c].UncannyValue;
+                    totalMazeTotal += map[r, c].UncannyValue;
+                    if (c != dims - 1)
+                    {
+                        output += " ";
+                        outputFiller += " ";
+                    }
+                }
+                if (r != dims - 1)
+                {
+                    output += "\n";
+                    outputFiller += filler;
+                }
+            }
+            if (logging)
+            {
+                for (int i = 0; i < dims; i++)
+                {
+                    for (int j = 0; j < dims; j++)
+                    {
+                        if (map[i, j].ValidDirections.Contains("left"))
+                        {
+                            outputFiller = outputFiller[(4 * dims * i) + (2 * j) - 1] == '>'
+                                ? outputFiller.Remove((4 * dims * i) + (2 * j) - 1, 1).Insert((4 * dims * i) + (2 * j) - 1, "x")
+                                : outputFiller.Remove((4 * dims * i) + (2 * j) - 1, 1).Insert((4 * dims * i) + (2 * j) - 1, "<");
+                        }
+                        if (map[i, j].ValidDirections.Contains("right"))
+                        {
+                            outputFiller = outputFiller.Remove((4 * dims * i) + (2 * j) + 1, 1).Insert((4 * dims * i) + (2 * j) + 1, ">");
+                        }
+                        if (map[i, j].ValidDirections.Contains("up"))
+                        {
+                            outputFiller = outputFiller[(4 * dims * i) + (2 * j) - (2 * dims)] == 'V'
+                                ? outputFiller.Remove((4 * dims * i) + (2 * j) - (2 * dims), 1).Insert((4 * dims * i) + (2 * j) - (2 * dims), "X")
+                                : outputFiller.Remove((4 * dims * i) + (2 * j) - (2 * dims), 1).Insert((4 * dims * i) + (2 * j) - (2 * dims), "^");
+                        }
+                        if (map[i, j].ValidDirections.Contains("down"))
+                        {
+                            outputFiller = outputFiller.Remove((4 * dims * i) + (2 * j) + (2 * dims), 1).Insert((4 * dims * i) + (2 * j) + (2 * dims), "V");
+                        }
+                    }
+                }
+                string[] outputLines = outputFiller.Split('\n');
+                Log("Your maze layout is:");
+                foreach (string line in outputLines)
+                {
+                    Log(line);
+                }
+            }
+            if (dims == 4)
+            {
+                sequenceCharacters = Sum4x4();
+                Log("Your unsigned long is: " + sequenceCharacters);
+            }
+            if (dims == 5)
+            {
+                string[] outputPlayfairLines = outputPlayfair.Split('\n');
+                string[] outputPlayfairSubmitLines = outputPlayfairSubmit.Split('\n');
+                Log("Your playfair cipher key is:");
+                foreach (string line in outputPlayfairLines)
+                {
+                    Log(line);
+                }
+                Log("Your playfair cipher submitting grid is:");
+                foreach (string line in outputPlayfairSubmitLines)
+                {
+                    Log(line);
+                }
+                Log("Your encrypted word is: " + sequenceCharacters);
+            }
+            else if (dims == 6)
+            {
+                centerMazeSum = map[2, 2].UncannyValue + map[2, 3].UncannyValue + map[3, 2].UncannyValue + map[3, 3].UncannyValue;
+                int currentIndex = 0;
+                UncannyMazeTile[] tilesWithValue;
+                int currentNumberIndex = 0;
+                for (int i = 0; i < 10; i++)
+                {
+                    tilesWithValue = (from UncannyMazeTile u in map where u.UncannyValue == i select u).ToArray();
+                    if (tilesWithValue.Length == 0)
+                    {
+                        currentNumberIndex++;
+                        continue;
+                    }
+                    tilesWithValue[0].Character = (char)(i + 48);
+                    for (int j = 1; j < tilesWithValue.Length; j++)
+                    {
+                        tilesWithValue[j].Character = alphabet[currentIndex % 26];
+                        currentIndex++;
+                    }
+                    currentNumberIndex++;
+                }
+                outputBase36 = "";
+                string[] outputBase36Lines = outputBase36.Split('\n');
+                if (logging)
+                {
+                    Log("Your base 36 key is:");
+                    foreach (string line in outputBase36Lines)
+                    {
+                        Log(line);
+                    }
+                }
+                sequenceCharacters = Sum6x6();
+                if (logging)
+                {
+                    Log("Your base-36 sum is: " + sequenceCharacters);
+                }
+            }
+            if (logging)
+            {
+                Log("Your starting tile is: " + start);
+                Log("Your goal tile is: " + goal);
+                Log("You must append: " + string.Join(", ", mustAppend.Select(u => "" + u.LetterCoord + u.NumberCoord).ToArray()));
+            }
+            switch (dims)
+            {
+                case 4:
+                    numbers.GetComponent<TextMesh>().fontSize = 35;
+                    m = .25f;
+                    b = 1.1226f;
+                    anchor.transform.localPosition = new Vector3(.75f, .75f, 0);
+                    break;
+                case 5:
+                    numbers.GetComponent<TextMesh>().fontSize = 30;
+                    m = .2f;
+                    b = 1.1f;
+                    anchor.transform.localPosition = new Vector3(.7f, .7f, 0);
+                    break;
+                case 6:
+                    numbers.GetComponent<TextMesh>().fontSize = 25;
+                    m = .167429f;
+                    b = 1.08143f;
+                    anchor.transform.localPosition = new Vector3(2 / 3f, 2 / 3f, 0);
+                    break;
+                default:
+                    throw new InvalidOperationException("erm what the sigma (dimensions)");
+            }
+            goalBox.transform.localScale = new Vector3(7f / dims, 1, 7f / dims);
+            goalBox.transform.localPosition = new Vector3((m * xGoal) - b, -.01f, (-m * yGoal) + b);
+            Log("Your sum of maze modulo 10 is: " + totalMazeTotal);
+            Log("The sum of the left border is: " + leftSum);
+            Log("The sum of the right border is: " + rightSum);
+            Log("The sum of the top border is: " + aboveSum);
+            Log("The sum of the bottom border is: " + belowSum);
             correctPath = RemoveOpposites(correctPath);
             correctPath = RemoveGoingInCircles(correctPath);
             Log("A possible path is: " + string.Join(", ", correctPath.ToArray()));
@@ -717,9 +879,9 @@ public class UncannyMaze : ModdedModule
                     currentIndex++;
                 }
             }
-            string outputPlayfair = "";
+            outputPlayfair = "";
             char[][] playfairMaze = chosenMazeFor5x5;
-            string outputPlayfairSubmit = "";
+            outputPlayfairSubmit = "";
             for (int r = 0; r < dims; r++)
             {
                 for (int c = 0; c < dims; c++)
@@ -805,7 +967,7 @@ public class UncannyMaze : ModdedModule
                 }
                 currentNumberIndex++;
             }
-            string outputBase36 = "";
+            outputBase36 = "";
             for (int r = 0; r < dims; r++)
             {
                 for (int c = 0; c < dims; c++)
@@ -1283,7 +1445,7 @@ public class UncannyMaze : ModdedModule
         {
             gm.GetComponent<TextMesh>().text = gen;
             yield return new WaitForSeconds(.75f);
-            if (totaltime == 53 && !mazeGenerated)
+            if (totaltime == 4 && !mazeGenerated)
             {
                 gm.GetComponent<TextMesh>().fontSize = 27;
                 gm.GetComponent<TextMesh>().text = "SORRY THE MAZE\nTOOK SO LONG TO\nLOAD. PRESS ANY\nOF THE THREE WHITE\nBUTTONS TO\nSOLVE IMMEDIATELY.";
