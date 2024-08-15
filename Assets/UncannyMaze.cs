@@ -404,6 +404,7 @@ public class UncannyMaze : ModdedModule
             }
             output = "";
             outputFiller = "";
+            totalMazeTotal = 0;
             for (int r = 0; r < dims; r++)
             {
                 for (int c = 0; c < dims; c++)
@@ -423,6 +424,7 @@ public class UncannyMaze : ModdedModule
                     outputFiller += filler;
                 }
             }
+            totalMazeTotal %= 10;
             if (logging)
             {
                 for (int i = 0; i < dims; i++)
@@ -501,7 +503,6 @@ public class UncannyMaze : ModdedModule
                     }
                     currentNumberIndex++;
                 }
-                outputBase36 = "";
                 string[] outputBase36Lines = outputBase36.Split('\n');
                 if (logging)
                 {
