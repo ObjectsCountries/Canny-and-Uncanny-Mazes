@@ -30,7 +30,6 @@ public class UncannyMaze : ModdedModule
     private int dims;
     private int totalMazeTotal;
     private int centerMazeSum;
-    private int crossMazeTotal = 0;
     private string output, outputFiller;
     private UncannyMazeTile[,] map;
     private List<UncannyMazeTile> mustAppend = new List<UncannyMazeTile>();
@@ -728,6 +727,7 @@ public class UncannyMaze : ModdedModule
         }
         output = "";
         outputFiller = "";
+        totalMazeTotal = 0;
         for (int r = 0; r < dims; r++)
         {
             for (int c = 0; c < dims; c++)
@@ -747,6 +747,7 @@ public class UncannyMaze : ModdedModule
                 outputFiller += filler;
             }
         }
+        totalMazeTotal %= 10;
         Dictionary<string, UncannyMazeTile> tempDirs = new Dictionary<string, UncannyMazeTile>
             {
                 { "left", null },
@@ -774,7 +775,7 @@ public class UncannyMaze : ModdedModule
                 tempDirs["right"] = j == dims - 1 ? null : map[i, j + 1];
                 tempDirs["up"] = i == 0 ? null : map[i - 1, j];
                 tempDirs["down"] = i == dims - 1 ? null : map[i + 1, j];
-                map[i, j].ValidDirections = DirectionsAvailable(map[i, j], "append", tempDirs);
+                map[i, j].ValidDirections = DirectionsAvailable(map[i, j], tempDirs);
             }
         }
         if (logging)
@@ -1003,6 +1004,7 @@ public class UncannyMaze : ModdedModule
                 mustAppend.Add((from UncannyMazeTile u in map where u.Character == character select u).ToArray()[0]);
             }
         }
+        centerMazeSum %= 10;
         mustAppend.Add(goal);
         if (logging)
         {
@@ -1304,12 +1306,18 @@ public class UncannyMaze : ModdedModule
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yGoal - 1) * 2 * dims) + (xGoal * 2) + 1, "</color>");
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yGoal - 1) * 2 * dims) + (xGoal * 2), "<color=\"red\">");
         }
-        else
+        else if (((dims - yCoords - 1) * 2 * dims) + (xCoords * 2) + 1 < ((dims - yGoal - 1) * 2 * dims) + (xGoal * 2) + 1)
         {
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yGoal - 1) * 2 * dims) + (xGoal * 2) + 1, "</color>");
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yGoal - 1) * 2 * dims) + (xGoal * 2), "<color=\"red\">");
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yCoords - 1) * 2 * dims) + (xCoords * 2) + 1, "</color>");
             numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yCoords - 1) * 2 * dims) + (xCoords * 2), "<color=\"blue\">");
+        }
+        else
+        {
+            numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yGoal - 1) * 2 * dims) + (xGoal * 2) + 1, "</color>");
+            numbers.GetComponent<TextMesh>().text = numbers.GetComponent<TextMesh>().text.Insert(((dims - yGoal - 1) * 2 * dims) + (xGoal * 2), "<color=\"purple\">");
+
         }
         if (logging)
         {
@@ -1347,50 +1355,53 @@ public class UncannyMaze : ModdedModule
         coordsText.GetComponent<TextMesh>().text = "CURRENT: " + current.LetterCoord + current.NumberCoord + "\nGOAL: " + goal.LetterCoord + goal.NumberCoord;
         if (logging && direction != "append")
         {
+            switch(current.MazeType)
+            {
+                case UncannyMazeTile.MazeTypes.GOAL:
+                    Log("Your maze is: Goal Maze (goal is " + goal.UncannyValue + ")");
+                break;
+                case UncannyMazeTile.MazeTypes.CENTER:
+                    Log("Your maze is: Center Maze (center sum is " + centerMazeSum + ")");
+                    break;
+                case UncannyMazeTile.MazeTypes.TOTAL:
+                    Log("Your maze is: Total Maze (total is " + totalMazeTotal + ")");
+                    break;
+                case UncannyMazeTile.MazeTypes.CROSS:
+                    int columnSum = (from UncannyMazeTile u in map where u.Ycoordinate == current.Ycoordinate select u.UncannyValue).Sum();
+                    int rowSum = (from UncannyMazeTile u in map where u.Xcoordinate == current.Xcoordinate select u.UncannyValue).Sum();
+                    Log("Your maze is: Cross Maze (result is " + (columnSum * rowSum) % 10 + ")");
+                    break;
+                case UncannyMazeTile.MazeTypes.BORDER:
+                    Log("Your maze is: Border Maze");
+                    break;
+                default:
+                    throw new InvalidOperationException("erm what the sigma (enum) (this should NEVER happen; if it somehow does, ping or dm @objectscountries on discord)");
+
+            }
             Log("Possible directions are: " + string.Join(", ", current.ValidDirections));
         }
     }
 
-    private string[] DirectionsAvailable(UncannyMazeTile tile, string direction, Dictionary<string, UncannyMazeTile> dict)
+    private string[] DirectionsAvailable(UncannyMazeTile tile, Dictionary<string, UncannyMazeTile> dict)
     {
-        bool log = logging && direction != "append";
         List<UncannyMazeTile> temp;
         switch (tile.MazeType)
         {
             case UncannyMazeTile.MazeTypes.GOAL:
-                if (log)
-                {
-                    Log("Your maze is: Goal Maze (goal is " + goal.UncannyValue + ")");
-                }
                 temp = ClosestAndFurthestInValue(goal.UncannyValue, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
             case UncannyMazeTile.MazeTypes.CENTER:
-                if (log)
-                {
-                    Log("Your maze is: Center Maze (center sum is " + centerMazeSum + ")");
-                }
                 temp = ClosestAndFurthestInValue(centerMazeSum, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
             case UncannyMazeTile.MazeTypes.TOTAL:
-                if (log)
-                {
-                    Log("Your maze is: Total Maze (total is " + totalMazeTotal + ")");
-                }
                 temp = ClosestAndFurthestInValue(totalMazeTotal, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
             case UncannyMazeTile.MazeTypes.CROSS:
                 temp = CrossMaze(current.Ycoordinate, current.Xcoordinate, dict["left"], dict["right"], dict["up"], dict["down"]);
-                if (log)
-                {
-                    Log("Your maze is: Cross Maze (result is " + crossMazeTotal + ")");
-                }
                 break;
             case UncannyMazeTile.MazeTypes.BORDER:
-                if (log)
-                {
-                    Log("Your maze is: Border Maze");
-                }
-                temp = ClosestAndFurthestInValue(0, true, dict["left"], dict["right"], dict["up"], dict["down"]); break;
+                temp = ClosestAndFurthestInValue(0, true, dict["left"], dict["right"], dict["up"], dict["down"]);
+                break;
             default:
                 throw new InvalidOperationException("erm what the sigma (enum) (this should NEVER happen; if it somehow does, ping or dm @objectscountries on discord)");
         }
@@ -1432,8 +1443,7 @@ public class UncannyMaze : ModdedModule
     {
         int columnSum = (from UncannyMazeTile u in map where u.Ycoordinate == column select u.UncannyValue).Sum();
         int rowSum = (from UncannyMazeTile u in map where u.Xcoordinate == row select u.UncannyValue).Sum();
-        crossMazeTotal = columnSum * rowSum % 10;
-        return ClosestAndFurthestInValue(crossMazeTotal, false, adjacent);
+        return ClosestAndFurthestInValue((columnSum * rowSum) % 10, false, adjacent);
     }
 
     private IEnumerator GeneratingMazeIdle()
