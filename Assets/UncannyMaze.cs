@@ -30,6 +30,7 @@ public class UncannyMaze : ModdedModule
     private int dims;
     private int totalMazeTotal;
     private int centerMazeSum;
+    private int cornersMazeSum;
     private string output, outputFiller;
     private UncannyMazeTile[,] map;
     private List<UncannyMazeTile> mustAppend = new List<UncannyMazeTile>();
@@ -548,7 +549,10 @@ public class UncannyMaze : ModdedModule
             }
             goalBox.transform.localScale = new Vector3(7f / dims, 1, 7f / dims);
             goalBox.transform.localPosition = new Vector3((m * xGoal) - b, -.01f, (-m * yGoal) + b);
+            cornersMazeSum = (map[0, 0].UncannyValue + map[0, dims - 1].UncannyValue + map[dims - 1, 0].UncannyValue + map[dims - 1, dims - 1].UncannyValue) % 10;
             Log("Your sum of maze modulo 10 is: " + totalMazeTotal);
+            Log("Your sum of center modulo 10 is: " + centerMazeSum);
+            Log("Your sum of corners modulo 10 is: " + cornersMazeSum);
             Log("The sum of the left border is: " + leftSum);
             Log("The sum of the right border is: " + rightSum);
             Log("The sum of the top border is: " + aboveSum);
@@ -1366,10 +1370,8 @@ public class UncannyMaze : ModdedModule
                 case UncannyMazeTile.MazeTypes.TOTAL:
                     Log("Your maze is: Total Maze (total is " + totalMazeTotal + ")");
                     break;
-                case UncannyMazeTile.MazeTypes.CROSS:
-                    int columnSum = (from UncannyMazeTile u in map where u.Ycoordinate == current.Ycoordinate select u.UncannyValue).Sum();
-                    int rowSum = (from UncannyMazeTile u in map where u.Xcoordinate == current.Xcoordinate select u.UncannyValue).Sum();
-                    Log("Your maze is: Cross Maze (result is " + (columnSum * rowSum) % 10 + ")");
+                case UncannyMazeTile.MazeTypes.CORNERS:
+                    Log("Your maze is: Corners Maze (corners sum is " + cornersMazeSum + ")");
                     break;
                 case UncannyMazeTile.MazeTypes.BORDER:
                     Log("Your maze is: Border Maze");
@@ -1396,8 +1398,8 @@ public class UncannyMaze : ModdedModule
             case UncannyMazeTile.MazeTypes.TOTAL:
                 temp = ClosestAndFurthestInValue(totalMazeTotal, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
-            case UncannyMazeTile.MazeTypes.CROSS:
-                temp = CrossMaze(current.Ycoordinate, current.Xcoordinate, dict["left"], dict["right"], dict["up"], dict["down"]);
+            case UncannyMazeTile.MazeTypes.CORNERS:
+                temp = ClosestAndFurthestInValue(centerMazeSum, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
             case UncannyMazeTile.MazeTypes.BORDER:
                 temp = ClosestAndFurthestInValue(0, true, dict["left"], dict["right"], dict["up"], dict["down"]);
@@ -1437,13 +1439,6 @@ public class UncannyMaze : ModdedModule
             }
         }
         return result;
-    }
-
-    private List<UncannyMazeTile> CrossMaze(int column, int row, params UncannyMazeTile[] adjacent)
-    {
-        int columnSum = (from UncannyMazeTile u in map where u.Ycoordinate == column select u.UncannyValue).Sum();
-        int rowSum = (from UncannyMazeTile u in map where u.Xcoordinate == row select u.UncannyValue).Sum();
-        return ClosestAndFurthestInValue((columnSum * rowSum) % 10, false, adjacent);
     }
 
     private IEnumerator GeneratingMazeIdle()

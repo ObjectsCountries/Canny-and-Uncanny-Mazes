@@ -94,7 +94,7 @@ public class UncannyMazeTile
         GOAL,
         CENTER,
         TOTAL,
-        CROSS,
+        CORNERS,
         BORDER
     }
 
