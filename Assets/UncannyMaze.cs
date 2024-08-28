@@ -1403,7 +1403,7 @@ public class UncannyMaze : ModdedModule
                 temp = ClosestAndFurthestInValue(totalMazeTotal, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
             case UncannyMazeTile.MazeTypes.CORNERS:
-                temp = ClosestAndFurthestInValue(centerMazeSum, false, dict["left"], dict["right"], dict["up"], dict["down"]);
+                temp = ClosestAndFurthestInValue(cornersMazeSum, false, dict["left"], dict["right"], dict["up"], dict["down"]);
                 break;
             case UncannyMazeTile.MazeTypes.BORDER:
                 temp = ClosestAndFurthestInValue(0, true, dict["left"], dict["right"], dict["up"], dict["down"]);
