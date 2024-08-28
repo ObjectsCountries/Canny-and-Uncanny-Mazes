@@ -566,6 +566,9 @@ public class UncannyMaze : ModdedModule
             t.changeTexture(t.finalTexture);
             maze.GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1f / dims, 1f / dims);
             maze.GetComponent<MeshRenderer>().material.mainTextureOffset = currentPosition;
+            xCoords = xStart;
+            yCoords = yStart;
+            current = start;
         }
         else
         {
@@ -1360,11 +1363,11 @@ public class UncannyMaze : ModdedModule
         coordsText.GetComponent<TextMesh>().text = "CURRENT: " + current.LetterCoord + current.NumberCoord + "\nGOAL: " + goal.LetterCoord + goal.NumberCoord;
         if (logging && direction != "append")
         {
-            switch(current.MazeType)
+            switch (current.MazeType)
             {
                 case UncannyMazeTile.MazeTypes.GOAL:
                     Log("Your maze is: Goal Maze (goal is " + goal.UncannyValue + ")");
-                break;
+                    break;
                 case UncannyMazeTile.MazeTypes.CENTER:
                     Log("Your maze is: Center Maze (center sum is " + centerMazeSum + ")");
                     break;
