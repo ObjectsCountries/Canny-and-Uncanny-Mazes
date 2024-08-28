@@ -550,6 +550,7 @@ public class UncannyMaze : ModdedModule
             goalBox.transform.localScale = new Vector3(7f / dims, 1, 7f / dims);
             goalBox.transform.localPosition = new Vector3((m * xGoal) - b, -.01f, (-m * yGoal) + b);
             cornersMazeSum = (map[0, 0].UncannyValue + map[0, dims - 1].UncannyValue + map[dims - 1, 0].UncannyValue + map[dims - 1, dims - 1].UncannyValue) % 10;
+            centerMazeSum %= 10;
             Log("Your sum of maze modulo 10 is: " + totalMazeTotal);
             Log("Your sum of center modulo 10 is: " + centerMazeSum);
             Log("Your sum of corners modulo 10 is: " + cornersMazeSum);

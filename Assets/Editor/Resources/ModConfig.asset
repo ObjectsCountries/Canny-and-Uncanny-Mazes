@@ -57,7 +57,7 @@ MonoBehaviour:
     [/list]
 
 '
-  version: 2.2
+  version: 2.21
   outputFolder: /home/kasra/.local/share/Steam/steamapps/common/Keep Talking and Nobody
     Explodes/mods
   previewImage: {fileID: 2800000, guid: 6fced7928e6914e4c97d1735242ec871, type: 3}
