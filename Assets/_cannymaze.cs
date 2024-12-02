@@ -1,6 +1,7 @@
-﻿using Wawa.Modules;
-using Wawa.Extensions;
-using Wawa.IO;
+﻿using wawa.Modules;
+using wawa.Extensions;
+using wawa.IO;
+using wawa.Schemas;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -465,12 +466,32 @@ public class _cannymaze:ModdedModule{
         {"G8",new List<string>(){}},
         {"H8",new List<string>(){}}
     };
+
     [Serializable]
     public sealed class cannymazesettings{
+
+
+        [TweaksSetting.Number("Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation.", "Animation Speed")]
         public int cannyAnimationSpeed=30;
+
+        [TweaksSetting.Checkbox("If streaming, disable this to avoid copyright claims.", "Play Music on Solve")]
         public bool cannyPlayMusicOnSolve=true;
+
+        public cannymazesettings(){}
+
+        public cannymazesettings(int speed){
+            if (speed == 2){
+                cannyAnimationSpeed = 2;
+            }
+            else {
+                cannyAnimationSpeed = Mathf.Clamp(speed, 10, 60);
+            }
+        }
     }
 
+    static readonly TweaksEditorSettings TweaksEditorSettings = TweaksEditorSettings.CreateListing("Canny Maze", "cannymaze").Register<cannymazesettings>().BuildAndClear();
+
+    /*
     public static Dictionary<string,object>[]TweaksEditorSettings=new Dictionary<string,object>[]{
             new Dictionary<string,object>{
                 {"Filename","cannymaze-settings.json"},
@@ -489,6 +510,7 @@ public class _cannymaze:ModdedModule{
                 }}
             }
         };
+    */
 
     private string[]swap(string[]array,int index1,int index2){
         string[]arr=array;
@@ -564,7 +586,7 @@ public class _cannymaze:ModdedModule{
         if(cmSettings.Read().cannyAnimationSpeed!=2)
             animSpeed=Mathf.Clamp(cmSettings.Read().cannyAnimationSpeed,10,60);
         music=cmSettings.Read().cannyPlayMusicOnSolve;
-        cmSettings.Write("{\"cannyAnimationSpeed\":"+animSpeed+",\"cannyPlayMusicOnSolve\":"+music.ToString().ToLowerInvariant()+"}");
+        cmSettings.Write(new cannymazesettings(animSpeed));
         numbers.SetActive(false);
         StartCoroutine(Initialization());
         arrowleft.Set(onInteract:()=>{

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Wawa.Modules;
-using Wawa.Extensions;
-using Wawa.TwitchPlays;
-using Wawa.TwitchPlays.Domains;
+using wawa.Modules;
+using wawa.Extensions;
+using wawa.TwitchPlays;
+using wawa.TwitchPlays.Domains;
 
 public class UncannyMazeTP : Twitch<UncannyMaze>
 {

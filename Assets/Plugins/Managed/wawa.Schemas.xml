@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <doc>
     <assembly>
-        <name>wawa.DDL</name>
+        <name>wawa.Schemas</name>
     </assembly>
     <members>
         <member name="T:System.Diagnostics.Contracts.PureAttribute">
@@ -1016,230 +1016,228 @@
             <see cref="M:NullGuard.NullGuardAttribute.#ctor(NullGuard.ValidationFlags)" />.
             </returns>
         </member>
-        <member name="T:wawa.DDL.Access">
-            <summary>A class for accessing things from the game.</summary>
+        <member name="T:wawa.Schemas.Fluent.CanCreateSeparateListingOrBuild">
+            <summary>Contains the method for registering a listing.<p /><c>[PublicAPI]</c></summary>
         </member>
-        <member name="T:wawa.DDL.Access.Overrides`2">
-            <summary>The class for accessing external methods specifically exported for use in this library.</summary>
-            <typeparam name="T">The type of the parameter.</typeparam>
-            <typeparam name="TResult">The type of return.</typeparam>
+        <member name="M:wawa.Schemas.Fluent.CanCreateSeparateListingOrBuild.CreateSeparateListing(System.String,System.String)">
+            <summary>Creates a new listing in the <see cref="T:wawa.Schemas.TweaksEditorSettings" />.<p /><c>[MustUseReturnValue, NotNull, PublicAPI]</c></summary>
+            <param name="name">The name of the new listing.<p /><c>[NotNull]</c></param>
+            <param name="fileName">The file name of the new listing.<p /><c>[NotNull]</c></param>
+            <returns>Itself.</returns>
         </member>
-        <member name="F:wawa.DDL.Access.Overrides`2.s_cache">
-            <summary>The cache of delegates.</summary>
-        </member>
-        <member name="M:wawa.DDL.Access.Overrides`2.GetOrAdd(System.String)">
-            <summary>Gets or adds the method with the specified name.</summary>
-            <param name="name">The name of the method.</param>
-            <returns>The method.</returns>
-        </member>
-        <member name="M:wawa.DDL.Access.Overrides`2.Create``1(System.String)">
-            <summary>Creates the delegate around the method with the specified name.</summary>
-            <typeparam name="TO">The return type.</typeparam>
-            <param name="name">The name of the method.</param>
-            <returns>The delegate.</returns>
-        </member>
-        <member name="F:wawa.DDL.Access.Binds">
-            <summary>The flags for binding methods.</summary>
-        </member>
-        <member name="F:wawa.DDL.Access.s_type">
-            <summary>The type that contains the requested overrides.</summary>
-        </member>
-        <member name="P:wawa.DDL.Access.IsRewritten">
-            <summary>Gets a value indicating whether the runtime is in a non-official game.</summary>
-        </member>
-        <member name="P:wawa.DDL.Access.IsKtane">
-            <summary>Gets a value indicating whether the runtime is in-game.</summary>
-        </member>
-        <member name="M:wawa.DDL.Access.FromGame``1(System.Converter{System.DBNull,``0},``0,System.String)">
-            <summary>Method for obtaining something from the game, ensuring that the Unity editor stays happy.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanCreateSeparateListingOrBuild.BuildAndClear">
+            <summary>Clears the builder and returns the finalized <see cref="T:wawa.Schemas.TweaksEditorSettings" />.<p /><c>[NotNull, PublicAPI]</c></summary>
             <remarks><para>
-            This API primarily exists for if you already have a reference to Assembly-CSharp.dll, typically involving using
-            a class library to allow such a reference. If you do not use a class library, then this method can be ignored in
-            favor of wrappers such as <see cref="T:wawa.DDL.Lookup" />, <see cref="T:wawa.DDL.Missions" />, or <see cref="T:wawa.DDL.Preferences" />.
-            </para><para>
-            Unlike the other APIs exposed by these libraries, the return value of <typeparamref name="T" />'s
-            nullability may not be trusted if it is a reference type or <see cref="T:System.Nullable`1" />, even when
-            <paramref name="def" /> itself is non-null. As such, enable nullable reference types or use
-            <see cref="M:wawa.Optionals.Maybe.AsMaybe``1(System.Nullable{``0})" /> to enforce type safety.
-            </para><para>
-            To guarantee the DDL pattern, ensure that <typeparamref name="T" /> is not from a potentially
-            unavailable reference, and avoid creating closures that capture state without first
-            downcasting to <see cref="T:System.Object" /> beforehand, and recasting within the closure.
-            </para><para>
-            Never assume functions or fields pulled directly from Assembly-CSharp.dll are safe and guaranteed non-null.
-            </para></remarks>
-            <typeparam name="T">The type of the return, be sure that this doesn't come from the game.</typeparam>
-            <param name="ktane">The factory containing one or more references that may be unavailable.<p /><c>[RequireStaticDelegate]</c></param>
-            <param name="def">The value to return instead, since <paramref name="ktane" /> is for in-game only.</param>
-            <param name="overriden">The name of the factory to invoke.</param>
-            <returns>The value from <paramref name="ktane" />, or <see langword="default" />.</returns>
-        </member>
-        <member name="M:wawa.DDL.Access.FromGame``2(``0,System.Converter{``0,``1},``1,System.String)">
-            <summary>Method for obtaining something from the game, ensuring that the Unity editor stays happy.</summary>
-            <remarks><para>
-            This API primarily exists for if you already have a reference to Assembly-CSharp.dll, typically involving using
-            a class library to allow such a reference. If you do not use a class library, then this method can be ignored in
-            favor of wrappers such as <see cref="T:wawa.DDL.Lookup" />, <see cref="T:wawa.DDL.Missions" />, or <see cref="T:wawa.DDL.Preferences" />.
-            </para><para>
-            Unlike the other APIs exposed by these libraries, the return value of <typeparamref name="TResult" />'s
-            nullability may not be trusted if it is a reference type or <see cref="T:System.Nullable`1" />, even when
-            <paramref name="def" /> itself is non-null. As such, enable nullable reference types or use
-            <see cref="M:wawa.Optionals.Maybe.AsMaybe``1(System.Nullable{``0})" /> to enforce type safety.
-            </para><para>
-            To guarantee the DDL pattern, ensure that <typeparamref name="T" /> and <typeparamref name="TResult" /> are not
-            from a potentially unavailable reference, and avoid creating closures that capture state without first
-            downcasting to <see cref="T:System.Object" /> beforehand, and recasting within the closure.
-            </para><para>
-            Never assume functions or fields pulled directly from Assembly-CSharp.dll are safe and guaranteed non-null.
-            </para></remarks>
-            <typeparam name="T">The context item, be sure that this doesn't come from the game.</typeparam>
-            <typeparam name="TResult">The type of the return, be sure that this doesn't come from the game.</typeparam>
-            <param name="context">The context element to pass into the callback.</param>
-            <param name="ktane">The factory containing one or more references that may be unavailable.<p /><c>[RequireStaticDelegate]</c></param>
-            <param name="def">The value to return instead, since <paramref name="ktane" /> is for in-game only.</param>
-            <param name="overriden">The name of the factory to invoke.</param>
-            <returns>The value from <paramref name="ktane" />, or <see langword="default" />.</returns>
-        </member>
-        <member name="T:wawa.DDL.KMBombStrikeExtensions">
-            <summary>Exposes strike-related methods that <see cref="T:KMBomb" /> instances can act on.</summary>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.GetStrikes(KMBomb)">
-            <summary>Gets the number of strikes.<p /><c>[MustUseReturnValue, NonNegativeValue]</c></summary>
-            <remarks><para>In the editor, this value always returns <c>0</c>.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to grab strikes from.</param>
-            <returns>The number of strikes.</returns>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.GetMaxStrikes(KMBomb)">
-            <summary>Gets the number of max strikes.<p /><c>[MustUseReturnValue, NonNegativeValue]</c></summary>
-            <remarks><para>In the editor, this value always returns <c>0</c>.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to grab max strikes from.</param>
-            <returns>The number of max strikes.</returns>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.GetRate(KMBomb,System.Boolean)">
-            <summary>Gets the rate in which the timer ticks.<p /><c>[MustUseReturnValue]</c></summary>
-            <remarks><para>In the editor, this value always returns <c>1</c>.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to grab the rate from.</param>
-            <param name="signFlip">
-            When <see langword="true" />, invert the returned value when
-            the component from <paramref name="that" /> ticks backwards.
-            </param>
-            <returns>The speed of the ticking.</returns>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.Detonate(KMBomb)">
-            <summary>Detonates the bomb.<p /><c>[NonNegativeValue]</c></summary>
-            <remarks><para>In the editor, this method does nothing.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to detonate.</param>
-            <returns>The parameter <paramref name="that" />.</returns>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.SetRate(KMBomb,System.Single,System.Boolean)">
-            <summary>Sets the rate in which the timer ticks.</summary>
-            <remarks><para>In the editor, this method does nothing.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to grab the rate from.</param>
-            <param name="value">The value to set it to.</param>
-            <param name="signFlip">
-            When <see langword="true" />, invert <paramref name="value" /> when
-            the component from <paramref name="that" /> ticks backwards.
-            </param>
-            <returns>The parameter <paramref name="that" />.</returns>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.SetStrikes(KMBomb,System.Int32,System.Boolean)">
-            <summary>Sets the number of strikes.<p /><c>[NonNegativeValue]</c></summary>
-            <remarks><para>In the editor, this method does nothing.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to grab strikes from.</param>
-            <param name="value">The value to set it to.</param>
-            <param name="tryDetonate">When <see langword="true" />, check for whether detonation should occur.</param>
-            <returns>The parameter <paramref name="that" />.</returns>
-        </member>
-        <member name="M:wawa.DDL.KMBombStrikeExtensions.SetMaxStrikes(KMBomb,System.Int32,System.Boolean)">
-            <summary>Sets the number of max strikes.<p /><c>[NonNegativeValue]</c></summary>
-            <remarks><para>In the editor, this method does nothing.</para></remarks>
-            <param name="that">The <see cref="T:KMBomb" /> module instance to grab max strikes from.</param>
-            <param name="value">The value to set it to.</param>
-            <param name="tryDetonate">When <see langword="true" />, check for whether detonation should occur.</param>
-            <returns>The parameter <paramref name="that" />.</returns>
-        </member>
-        <member name="T:wawa.DDL.Lookup">
-            <summary>Allows for querying general data from the game.</summary>
-        </member>
-        <member name="F:wawa.DDL.Lookup.Name">
-            <summary>The field name for the dictionary of loaded mods.</summary>
-        </member>
-        <member name="F:wawa.DDL.Lookup.Binds">
-            <summary>The binding flags for obtaining the dictionary of loaded mods.</summary>
-        </member>
-        <member name="P:wawa.DDL.Lookup.Mods">
-            <summary>Gets the dictionary of loaded mods.</summary>
-            <remarks><para>
-            In the editor, this value returns an instance of <see cref="T:System.Collections.Hashtable" />, initialized as empty.
+            If you want to re-use it after this method is invoked, <see cref="M:wawa.Schemas.Fluent.CanCreateSeparateListingOrBuild.CreateSeparateListing(System.String,System.String)" /> needs
+            to be first invoked before registering again with <see cref="M:wawa.Schemas.Fluent.CanRegister.Register``1" />.
             </para></remarks>
         </member>
-        <member name="M:wawa.DDL.Lookup.Localized(System.String)">
-            <summary>Gets the localized value of a <see cref="T:System.String" /> term.</summary>
-            <remarks><para>In the editor, this value returns <see cref="M:wawa.Optionals.Maybe.None``1" />.</para></remarks>
-            <param name="term">The term to get the localized <see cref="T:System.String" /> of.</param>
-            <returns>The localized <see cref="T:System.String" /> of the parameter <paramref name="term" />.</returns>
+        <member name="T:wawa.Schemas.Fluent.CanRegister">
+            <summary>Contains the method for registering a type.</summary>
         </member>
-        <member name="M:wawa.DDL.Lookup.ModNameOf(UnityEngine.Component)">
-            <summary>Gets the mod name attached to the component.</summary>
-            <remarks><para>In the editor, this value returns <see cref="M:wawa.Optionals.Maybe.None``1" />.</para></remarks>
-            <param name="component">The component to get the mod source from.</param>
-            <returns>The mod name attached to the parameter <paramref name="component" />.</returns>
+        <member name="F:wawa.Schemas.Fluent.CanRegister.Message">
+            <summary>The message to display when a developer uses the implicit methods created by classes.</summary>
         </member>
-        <member name="T:wawa.DDL.Missions">
-            <summary>Allows access into current mission metadata.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanRegister.Register``1">
+            <summary>Adds the schema of <typeparamref name="T" /> to the <see cref="T:wawa.Schemas.TweaksEditorSettings" />.<p /><c>[MustUseReturnValue, NotNull, PublicAPI]</c></summary>
+            <typeparam name="T">The type to register.</typeparam>
+            <exception cref="T:System.Reflection.AmbiguousMatchException">
+            A member within <typeparamref name="T" /> has more than one <see cref="T:wawa.Schemas.TweaksSettingAttribute" /> annotated.
+            </exception>
+            <returns>Itself.</returns>
         </member>
-        <member name="F:wawa.DDL.Missions.ExampleDescription">
-            <summary>The default value for the respective property.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanRegister.Equals(System.Object)">
+            <inheritdoc />
         </member>
-        <member name="F:wawa.DDL.Missions.ExampleId">
-            <summary>The default value for the respective property.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanRegister.GetHashCode">
+            <inheritdoc />
         </member>
-        <member name="F:wawa.DDL.Missions.ExampleLanguageCode">
-            <summary>The default value for the respective property.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanRegister.ToString">
+            <inheritdoc />
         </member>
-        <member name="F:wawa.DDL.Missions.ExampleName">
-            <summary>The default value for the respective property.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanRegister.GetType">
+            <inheritdoc cref="M:System.Object.GetType" />
         </member>
-        <member name="P:wawa.DDL.Missions.HasPacingEvents">
-            <summary>Gets or sets a value indicating whether pacing events are enabled.</summary>
-            <remarks><para>In the editor, this returns <see keyword="false" />.</para></remarks>
+        <member name="T:wawa.Schemas.Fluent.CanSection">
+            <summary>Contains the method for registering a section.<p /><c>[PublicAPI]</c></summary>
         </member>
-        <member name="P:wawa.DDL.Missions.LightsOn">
-            <summary>Gets or sets a value indicating whether the lights are on.</summary>
+        <member name="M:wawa.Schemas.Fluent.CanSection.Section(System.String)">
+            <summary>Creates a new section in the <see cref="T:wawa.Schemas.TweaksEditorSettings" />.<p /><c>[MustUseReturnValue, NotNull, PublicAPI]</c></summary>
+            <param name="text">The text of the new section.<p /><c>[NotNull]</c></param>
+            <returns>The <see cref="T:wawa.Schemas.TweaksEditorSettings" /> itself.</returns>
         </member>
-        <member name="P:wawa.DDL.Missions.Description">
-            <summary>Gets the description as it appears in the bomb binder.</summary>
-            <remarks><para>In the editor, this returns <see cref="F:wawa.DDL.Missions.ExampleDescription" />.</para></remarks>
+        <member name="T:wawa.Schemas.Fluent.NamespaceDoc">
+            <summary>Contains objects returned by the fluent builder APIs.</summary>
         </member>
-        <member name="P:wawa.DDL.Missions.Id">
-            <summary>Gets the ID of the mission.</summary>
-            <remarks><para>In the editor, this returns <see cref="F:wawa.DDL.Missions.ExampleId" />.</para></remarks>
+        <member name="T:wawa.Schemas.AssemblyDoc">
+            <summary>
+            Provides a simple fluent builder API for building the <see cref="T:wawa.Schemas.TweaksEditorSettings" />
+            schema object that Tweaks can use to format your mod settings.
+            </summary>
         </member>
-        <member name="P:wawa.DDL.Missions.LanguageCode">
-            <summary>Gets the current language code.</summary>
-            <remarks><para>In the editor, this returns <see cref="F:wawa.DDL.Missions.ExampleLanguageCode" />.</para></remarks>
+        <member name="T:wawa.Schemas.NamespaceDoc">
+            <summary>Contains the core functionality of the library.</summary>
         </member>
-        <member name="P:wawa.DDL.Missions.Name">
-            <summary>Gets the mission name as it appears in the bomb binder.</summary>
-            <remarks><para>In the editor, this returns <see cref="F:wawa.DDL.Missions.ExampleName" />.</para></remarks>
+        <member name="T:wawa.Schemas.TweaksEditorSettings">
+            <summary>The class for holding the settings schema object used by tweaks for the mod settings.<p /><c>[PublicAPI]</c></summary>
         </member>
-        <member name="T:wawa.DDL.Preferences">
-            <summary>Allows access into current user preferences.</summary>
+        <member name="T:wawa.Schemas.TweaksEditorSettings.Builder">
+            <summary>The builder class for creating the settings schema object used by tweaks for the mod settings.</summary>
         </member>
-        <member name="F:wawa.DDL.Preferences.MaxVolume">
-            <summary>The maximum volume allowed by the game and default value for the respective properties.</summary>
+        <member name="F:wawa.Schemas.TweaksEditorSettings.Builder.Suffix">
+            <summary>The suffix for the default file name for mod settings.</summary>
         </member>
-        <member name="P:wawa.DDL.Preferences.IsVR">
-            <summary>Gets a value indicating whether the game is being played on VR.</summary>
-            <remarks><para>In the editor, this value always returns <see langword="false" />.</para></remarks>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.Builder.BuildAndClear">
+            <inheritdoc />
         </member>
-        <member name="P:wawa.DDL.Preferences.Music">
-            <summary>Gets or sets the current music volume from the dossier menu. Ranges 0 to 100.</summary>
-            <remarks><para>In the editor, this returns <see cref="F:wawa.DDL.Preferences.MaxVolume" />.</para></remarks>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.Builder.CreateSeparateListing(System.String,System.String)">
+            <inheritdoc />
         </member>
-        <member name="P:wawa.DDL.Preferences.Sound">
-            <summary>Gets or sets the current sound effect volume from the dossier menu. Ranges 0 to 100.</summary>
-            <remarks><para>In the editor, this returns <see cref="F:wawa.DDL.Preferences.MaxVolume" />.</para></remarks>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.Builder.Section(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.Builder.Register``1">
+            <inheritdoc />
+        </member>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.Builder.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.Builder.Add(System.String,System.String)">
+            <summary>Starts a new listing in the <see cref="T:wawa.Schemas.TweaksEditorSettings" />.</summary>
+            <param name="name">The name of the new listing.</param>
+            <param name="fileName">The file name of the new listing.</param>
+            <returns></returns>
+        </member>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.CreateListing(System.String,System.String)">
+            <summary>Creates the new builder.<p /><c>[PublicAPI]</c></summary>
+            <param name="name">The name of the initial listing.<p /><c>[NotNull]</c></param>
+            <param name="modId">
+            The mod id to get the file name from.
+            If <see langword="null" />, implicitly gets the file name of the mod from the name of the assembly.
+            <p /><c>[CanBeNull]</c></param>
+            <returns>Itself.</returns>
+        </member>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.System#Collections#Generic#IEnumerable{System#Collections#Generic#Dictionary{System#String,System#Object}}#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:wawa.Schemas.TweaksEditorSettings.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting">
+            <summary>Explicitly defines the type of listing to use for a setting.</summary>
+        </member>
+        <member name="F:wawa.Schemas.TweaksSetting.s_empty">
+            <summary>The default <see cref="T:wawa.Schemas.TweaksSettingAttribute" />.</summary>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.ArrayAttribute">
+            <summary>Indicates that the field or property is a setting serialized as an array.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.ArrayAttribute.#ctor(System.String,System.String)">
+            <summary>Indicates that the field or property is a setting serialized as an array.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.CheckboxAttribute">
+            <summary>Indicates that the field or property is a setting serialized as a boolean.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.CheckboxAttribute.#ctor(System.String,System.String)">
+            <summary>Indicates that the field or property is a setting serialized as a boolean.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.DropdownAttribute">
+            <summary>Indicates that the field or property is a setting serialized as one of a set of values.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+            <param name="dropdownItems">The set of possible values.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.DropdownAttribute.#ctor(System.String,System.String,System.Object[])">
+            <summary>Indicates that the field or property is a setting serialized as one of a set of values.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+            <param name="dropdownItems">The set of possible values.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="P:wawa.Schemas.TweaksSetting.DropdownAttribute.DropdownItems">
+            <summary>Gets the set of possible values.<p /><c>[CanBeNull]</c></summary>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.HiddenAttribute">
+            <summary>Indicates that the field or property is a setting serialized as one of a set of values.</summary>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.NumberAttribute">
+            <summary>Indicates that the field or property is a setting serialized as a number.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.NumberAttribute.#ctor(System.String,System.String)">
+            <summary>Indicates that the field or property is a setting serialized as a number.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.StringAttribute">
+            <summary>Indicates that the field or property is a setting serialized as a string.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.StringAttribute.#ctor(System.String,System.String)">
+            <summary>Indicates that the field or property is a setting serialized as a string.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSetting.SubmenuAttribute">
+            <summary>Indicates that the field or property is a setting serialized as a submenu.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.SubmenuAttribute.#ctor(System.String,System.String)">
+            <summary>Indicates that the field or property is a setting serialized as a submenu.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSetting.From(System.Reflection.MemberInfo)">
+            <summary>Gets the <see cref="T:wawa.Schemas.TweaksSettingAttribute" /> for the <paramref name="member" />.<p /><c>[CanBeNull]</c></summary>
+            <param name="member"></param>
+            <exception cref="T:System.Reflection.AmbiguousMatchException">
+            The member provided has more than one <see cref="T:wawa.Schemas.TweaksSettingAttribute" /> annotated.
+            </exception>
+            <returns>
+            The <see cref="T:wawa.Schemas.TweaksSettingAttribute" /> for the parameter <paramref name="member" />. If the <see cref="T:System.Reflection.MemberInfo" />
+            has no <see cref="T:wawa.Schemas.TweaksSettingAttribute" /> annotations, then the default instance is returned. If the parameter
+            <paramref name="member" /> is not a field or property, then <see langword="null" /> is returned instead.
+            </returns>
+        </member>
+        <member name="T:wawa.Schemas.TweaksSettingAttribute">
+            <summary>Indicates that the field or property is a setting for <see cref="T:wawa.Schemas.TweaksEditorSettings" />.</summary>
+            <param name="description">A longer description of the setting.</param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.</param>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSettingAttribute.#ctor(System.String,System.String)">
+            <summary>Indicates that the field or property is a setting for <see cref="T:wawa.Schemas.TweaksEditorSettings" />.</summary>
+            <param name="description">A longer description of the setting.<p /><c>[CanBeNull]</c></param>
+            <param name="text">The short label describing the setting, defaulting to the field or property name.<p /><c>[CanBeNull]</c></param>
+        </member>
+        <member name="F:wawa.Schemas.TweaksSettingAttribute.Key">
+            <summary>The names of overriding keys.</summary>
+        </member>
+        <member name="F:wawa.Schemas.TweaksSettingAttribute.KeyProperty">
+            <summary>The names of overriding keys.</summary>
+        </member>
+        <member name="F:wawa.Schemas.TweaksSettingAttribute.KeyType">
+            <summary>The names of overriding keys.</summary>
+        </member>
+        <member name="P:wawa.Schemas.TweaksSettingAttribute.Description">
+            <summary>Gets the longer description of the setting.<p /><c>[CanBeNull]</c></summary>
+        </member>
+        <member name="P:wawa.Schemas.TweaksSettingAttribute.Text">
+            <summary>Gets the short label describing the setting.<p /><c>[CanBeNull]</c></summary>
+        </member>
+        <member name="M:wawa.Schemas.TweaksSettingAttribute.ToDictionary(System.Reflection.MemberInfo)">
+            <summary>Converts the <see cref="T:wawa.Schemas.TweaksSettingAttribute" /> to the <see cref="T:System.Collections.Generic.Dictionary`2" />.</summary>
+            <param name="member">The member to use to infer <see cref="F:wawa.Schemas.TweaksSettingAttribute.Key" /> and <see cref="P:wawa.Schemas.TweaksSettingAttribute.Text" />.</param>
+            <returns>The dictionary for the <see cref="T:wawa.Schemas.TweaksEditorSettings" />.</returns>
         </member>
     </members>
 </doc>

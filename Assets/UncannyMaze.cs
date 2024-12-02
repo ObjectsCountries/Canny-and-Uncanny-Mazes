@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Wawa.Modules;
-using Wawa.Extensions;
-using Wawa.IO;
+using wawa.Modules;
+using wawa.Extensions;
+using wawa.IO;
+using wawa.Schemas;
 
 public class UncannyMaze : ModdedModule
 {
@@ -50,10 +51,26 @@ public class UncannyMaze : ModdedModule
     [Serializable]
     public sealed class UncannyMazeSettings
     {
+        [TweaksSetting.Number("Set the speed of the module's moving animation in frames.\nShould be from 10 to 60. Set to 2 to forgo moving animation.", "Animation Speed")]
         public int uncannyAnimationSpeed = 30;
+        [TweaksSetting.Checkbox("If streaming, disable this to avoid copyright claims.", "Play Music on Solve")]
         public bool uncannyPlayMusicOnSolve = false;
+        [TweaksSetting.Number("Blur all images from this number onward.\nNumbers outside 0 to 9 will leave all images unblurred.", "Blur Threshold")]
         public int uncannyBlurThreshold = 2;
+
+        public UncannyMazeSettings(){}
+
+        public UncannyMazeSettings(int speed){
+            if (speed == 2){
+                uncannyAnimationSpeed = 2;
+            }
+            else {
+                uncannyAnimationSpeed = Mathf.Clamp(speed, 10, 60);
+            }
+        }
     }
+
+    static readonly TweaksEditorSettings TweaksEditorSettings = TweaksEditorSettings.CreateListing("Uncanny Maze", "uncannymaze").Register<UncannyMazeSettings>().BuildAndClear();
 
     protected override void Awake()
     {
@@ -72,9 +89,11 @@ public class UncannyMaze : ModdedModule
             animSpeed = Mathf.Clamp(umSettings.Read().uncannyAnimationSpeed, 10, 60);
         }
         music = umSettings.Read().uncannyPlayMusicOnSolve;
-        umSettings.Write("{\"uncannyAnimationSpeed\":" + animSpeed + ",\"uncannyPlayMusicOnSolve\":" + music.ToString().ToLowerInvariant() + ",\"uncannyBlurThreshold\":" + blur + "}");
+        umSettings.Write(new UncannyMazeSettings(animSpeed));
     }
 
+
+    /*
     public static Dictionary<string, object>[] TweaksEditorSettings = new Dictionary<string, object>[]{
         new Dictionary<string,object>{
             {"Filename","uncannymaze-settings.json"},
@@ -98,6 +117,7 @@ public class UncannyMaze : ModdedModule
             }}
         }
     };
+    */
 
     public void Start()
     {
