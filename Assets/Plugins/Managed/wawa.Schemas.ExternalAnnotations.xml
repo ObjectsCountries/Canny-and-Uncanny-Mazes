@@ -104,6 +104,9 @@
   </member>
   <member name="M:wawa.Schemas.TweaksSetting.From(System.Reflection.MemberInfo)">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    <parameter name="member">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+    </parameter>
   </member>
   <member name="M:wawa.Schemas.TweaksSetting.NumberAttribute.#ctor(System.String,System.String)">
     <parameter name="description">
